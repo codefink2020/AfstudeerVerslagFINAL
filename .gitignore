@@ -1,0 +1,339 @@
+# Project exclude paths
+/out/
+## Core latex/pdflatex auxiliary files:
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+.*.lb
+
+## Intermediate documents:
+*.dvi
+*.xdv
+*-converted-to.*
+# these rules might exclude image files for figures etc.
+# *.ps
+# *.eps
+# *.pdf
+
+## Generated if empty string is given at "Please type another file name for output:"
+main.pdf
+
+## Bibliography auxiliary files (bibtex/biblatex/biber):
+*.bbl
+*.bcf
+*.blg
+*-blx.aux
+*-blx.bib
+*.run.xml
+
+## Build tool auxiliary files:
+*.fdb_latexmk
+*.synctex
+*.synctex(busy)
+*.synctex.gz
+*.synctex.gz(busy)
+*.pdfsync
+
+## Build tool directories for auxiliary files
+# latexrun
+latex.out/
+
+## Auxiliary and intermediate files from other packages:
+# algorithms
+*.alg
+*.loa
+
+# achemso
+acs-*.bib
+
+# amsthm
+*.thm
+
+# beamer
+*.nav
+*.pre
+*.snm
+*.vrb
+
+# changes
+*.soc
+
+# comment
+*.cut
+
+# cprotect
+*.cpt
+
+# elsarticle (documentclass of Elsevier journals)
+*.spl
+
+# endnotes
+*.ent
+
+# fixit
+*.lox
+
+# feynmf/feynmp
+*.mf
+*.mp
+*.t[1-9]
+*.t[1-9][0-9]
+*.tfm
+
+#(r)(e)ledmac/(r)(e)ledpar
+*.end
+*.?end
+*.[1-9]
+*.[1-9][0-9]
+*.[1-9][0-9][0-9]
+*.[1-9]R
+*.[1-9][0-9]R
+*.[1-9][0-9][0-9]R
+*.eledsec[1-9]
+*.eledsec[1-9]R
+*.eledsec[1-9][0-9]
+*.eledsec[1-9][0-9]R
+*.eledsec[1-9][0-9][0-9]
+*.eledsec[1-9][0-9][0-9]R
+
+# glossaries
+*.acn
+*.acr
+*.glg
+*.glo
+*.gls
+*.glsdefs
+*.lzo
+*.lzs
+
+# uncomment this for glossaries-extra (will ignore makeindex's style files!)
+# *.ist
+
+# gnuplottex
+*-gnuplottex-*
+
+# gregoriotex
+*.gaux
+*.gtex
+
+# htlatex
+*.4ct
+*.4tc
+*.idv
+*.lg
+*.trc
+*.xref
+
+# hyperref
+*.brf
+
+# knitr
+*-concordance.tex
+# Comment the next line if you want to keep your tikz graphics files
+*.tikz
+*-tikzDictionary
+
+# listings
+*.lol
+
+# luatexja-ruby
+*.ltjruby
+
+# makeidx
+*.idx
+*.ilg
+*.ind
+
+# minitoc
+*.maf
+*.mlf
+*.mlt
+*.mtc[0-9]*
+*.slf[0-9]*
+*.slt[0-9]*
+*.stc[0-9]*
+
+# minted
+_minted*
+*.pyg
+
+# morewrites
+*.mw
+
+# nomencl
+*.nlg
+*.nlo
+*.nls
+
+# pax
+*.pax
+
+# pdfpcnotes
+*.pdfpc
+
+# sagetex
+*.sagetex.sage
+*.sagetex.py
+*.sagetex.scmd
+
+# scrwfile
+*.wrt
+
+# sympy
+*.sout
+*.sympy
+sympy-plots-for-*.tex/
+
+# pdfcomment
+*.upa
+*.upb
+
+# pythontex
+*.pytxcode
+pythontex-files-*/
+
+# tcolorbox
+*.listing
+
+# thmtools
+*.loe
+
+# TikZ & PGF
+*.dpth
+*.md5
+*.auxlock
+
+# todonotes
+*.tdo
+
+# vhistory
+*.hst
+*.ver
+
+# easy-te doen
+*.lod
+
+# xcolor
+*.xcp
+
+# xmpincl
+*.xmpi
+
+# xindy
+*.xdy
+
+# xypic precompiled matrices and outlines
+*.xyc
+*.xyd
+
+# endfloat
+*.ttt
+*.fff
+
+# Latexian
+TSWLatexianTemp*
+
+## Editors:
+# WinEdt
+*.bak
+*.sav
+
+# Texpad
+.texpadtmp
+
+# LyX
+*.lyx~
+
+# Kile
+*.backup
+
+# gummi
+.*.swp
+
+# KBibTeX
+*~[0-9]*
+
+# TeXnicCenter
+*.tps
+
+# auto folder when using emacs and auctex
+./auto/*
+*.el
+
+# expex forward references with \gathertags
+*-tags.tex
+
+# standalone packages
+*.sta
+
+# Makeindex log files
+*.lpz
+/.idea/.gitignore
+/.idea/sonarlint/issuestore/1/b/1b9f16f60b030abec1289df3373b259af1bc57cf
+/.idea/sonarlint/issuestore/3/d/3de194b858dd5031e202a3c7c1c48c94ac105732
+/.idea/sonarlint/issuestore/0/3/03a641a3f588f9fd7f9932c30c91b95aa3301ca9
+/.idea/sonarlint/issuestore/4/f/4f0b79d5f8a4e076452f33605ee905f54bf49c23
+/.idea/sonarlint/issuestore/5/c/5cf21fa0be2c816016e65e31e4df93ff10b21dbf
+/.idea/sonarlint/issuestore/8/c/8c276065d7ed0a48814f4059615326025a2cdc74
+/.idea/sonarlint/issuestore/3/9/39aee522795bb4a322bbd46a1f84a7055e33985f
+/.idea/sonarlint/issuestore/6/6/66c30bd111f2a070447add4b2d0d04dbf853e4fc
+/.idea/sonarlint/issuestore/7/9/79bbb5764631108197bbb95d079e0c70b564ed41
+/.idea/sonarlint/issuestore/8/2/82b30d7ba67d9eac1b01746666954c9af428def2
+/.idea/sonarlint/issuestore/3/0/304cb8387f548e6df512a962f25f9195bb8ed822
+/.idea/sonarlint/issuestore/0/4/0437aa5515d7fae3c7d8cc075c26af0b998d91cc
+/.idea/sonarlint/issuestore/6/6/660eecc56c8a16ff46d8880e76ebd503b45d1656
+/.idea/sonarlint/issuestore/8/8/884ed643b1e6353cec48e36803db111294fc8eef
+/.idea/sonarlint/issuestore/9/0/906c62073dc37813e11431705494f6dcc58768e9
+/.idea/sonarlint/issuestore/9/9/993ea676df4fc797dec65586cc10f7d4e14c8c58
+/.idea/sonarlint/issuestore/9/9/997dc70a2c4c88f7c0c9a0e9c339923675f95cc0
+/.idea/sonarlint/issuestore/3/2/3291f067f755fefcc1acf94551e20a41c82f7373
+/.idea/sonarlint/issuestore/1/4/14073e823bda49bd63d9d1557705019be8ff75ec
+/.idea/sonarlint/issuestore/9/9/99776c915e9bd8a79c0ef23ab709c414c8757ae1
+/.idea/sonarlint/issuestore/5/1/51892420236231d8b4be7cfcf42975342f5b11a2
+/.idea/sonarlint/issuestore/a/7/a7a6e5d08a099fdab4a35a3705ddb6aebd5367dd
+/.idea/sonarlint/issuestore/a/6/a660ad1a240dc19a63ebde5a9df23b59b10fc804
+/.idea/afstudeerverslag.iml
+/.idea/sonarlint/issuestore/b/8/b8aa77cd4775b14e87044274d85f625b382da6d3
+/.idea/dictionaries/bas.xml
+/.idea/sonarlint/issuestore/c/7/c7cacbe3c98b201706adad1e1519b2dbafda3aa6
+/.idea/sonarlint/issuestore/c/7/c7617fc85f006e5cffaaa4dbcda863e460d24696
+/.idea/codeStyles/codeStyleConfig.xml
+/.idea/sonarlint/issuestore/d/6/d610a0ebd5633c37afb61ae16506536b29ee06d8
+/.idea/sonarlint/issuestore/d/8/d8081016a6373fd3eb115fbe2882ea314af87084
+/.idea/sonarlint/issuestore/e/7/e7e4c33b6eacef0dbba3c0d048647e63cf4a1be4
+/.idea/sonarlint/issuestore/e/8/e885644bbf3411a6ee3c401666c82e401f4f5737
+/.idea/sonarlint/issuestore/e/a/ea04a7f90810c5fbed04ce2a57ab81c30ac758e9
+/.idea/sonarlint/issuestore/f/b/fbe53e385aed238d7b5e12a2468e740c158f9676
+/.idea/sonarlint/issuestore/index.pb
+/.idea/modules.xml
+/.idea/codeStyles/Project.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/vcs.xml
+/.idea/sonarlint/issuestore/1/e/1ee6bcd5124ca0116644594e9797013ce92eedb3
+/.idea/sonarlint/issuestore/3/c/3cdd91d098fd05e5d01c33bc162f5660922fed70
+/.idea/sonarlint/issuestore/9/c/9c880c74a943812756078e0b03f312b26e95f894
+/.idea/sonarlint/issuestore/4/2/42b2328b81d2eda1ac026cb4894208220f8f0d1c
+/.idea/sonarlint/issuestore/3/4/346e507973e84499c92bc1e55f8dc19678704be7
+/.idea/sonarlint/issuestore/c/2/c21445089c6e7c045ed9dca3df4c8fe5f67ccd27
+/.idea/sonarlint/issuestore/d/a/dabf6a021b0a50726ac49da77cf0e26b2f356d2f
+/.idea/sonarlint/issuestore/f/5/f5002876dcdfc92fac87d105c045c7cfe0628132
+/.idea/runConfigurations.xml
+/.idea/misc.xml
+/.idea/AfstudeerVerslagFINAL.iml
+/Examples/classicthesis-article.pdf
+/Examples/classicthesis-article.tex
+/Examples/classicthesis-book.pdf
+/Examples/classicthesis-book.tex
+/Examples/classicthesis-book-xelatex.pdf
+/Examples/classicthesis-book-xelatex.tex
+/Examples/classicthesis-cv.pdf
+/Examples/classicthesis-cv.tex
+/.idea/sbt.xml
