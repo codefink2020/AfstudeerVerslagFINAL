@@ -1,0 +1,75 @@
+% Todo Betere titel vinden
+\chapter{Onderzoek: gebruik externe bibliotheken, het gevaar en hoe veiliger te maken}\label{ch:externeBibliothekengebruikGevaren}
+Voordat er een methode voor het analyseren van externe bibliotheken op kwetsbaarheden kan worden ontwikkeld is theoretische kennis over het gebruik van externe bibliotheken, het gevaar hiervan en op welke manier er veilig mee gewerkt kan worden noodzakelijk. De onderzoeksvraag voor dit onderzoek luidt dan ook: "Wat is het effect van het gebruik van externe bibliotheken bij de ontwikkeling van software, welke gevaren brengt het gebruik hiervan met zich mee en wat kan er gedaan worden om deze gevaren te minimaliseren?". Deze onderzoeksvraag is op te delen in de volgende deelvragen die ieders in een eigen sectie zullen worden behandeld.
+
+\begin{itemize}
+    \item Wat zijn externe componenten en waarom worden deze vaak SOUP genoemd?
+    \item Waarom en hoe veelvuldig worden externe bibliotheken gebruikt in het ontwikkelen van software?
+    \item Wat zijn potentïele gevaren die bij het gebruik van externe bibliotheken kunnen worden geïntroduceerd?
+    \item Hoe kunnen applicaties weerbaarder worden gemaakt tegen kwetsbaarheden die gepaard gaan met het gebruik van externe bibliotheken?
+    %TODO laatste item ook updaten in 1e deel verslag dat al is goedgekeurd
+\end{itemize}
+De uitkomsten hiervan zullen als input worden gebruikt voor het onderzoek naar een methode voor SOUP-analyses binnen Eaglescience. Daarnaast zullen de in dit onderzoek verkregen inzichten worden gedeeld met collega's om bewustwording over dit onderwerp te vergroten.
+
+De methode die voornamelijk gebruikt zal worden voor dit onderzoek is deskresearch. Dit zal worden aangevuld met het volgen van webinars.
+
+\section{Wat zijn externe componenten en waarom worden deze vaak SOUP genoemd?}\label{sec:watisSOUP}
+Heel kort door de bocht zijn externe componenten, componenten die niet door het bedrijf zelf zijn ontwikkeld. Enkele voorbeelden hiervan zijn operating systems, runtime omgevingen, Docker images, Database management systemen, bibliotheken en frameworks. Vaak zijn deze componenten open-source, dan al niet ontwikkeld door een community, of door een groot bedrijf. Op het moment dat er van een component niet kan worden achterhaald op welke manier deze ontwikkeld is wordt het "Software of Unkown Provenance (SOUP)" genoemd. Dit begrip is ontstaan voor veiligheids intensieve applicaties, zoals software die gebruikt wordt in bv. ziekenhuizen, verkeersleiding, energieleveranciers etc. Omdat de manier waarop deze componenenten zijn ontwikkeld niet altijd duidelijk is kan er daardoor ook niet worden nagegaan of deze componenten aan de veiligheidseisen voldoen die de gebruiker stelt. SOUP kan worden herkend aan één of meerdere van de volgende kenmerken \citep{Bishop:2001}:
+\begin{itemize}
+    \item Het moet al bestaan
+    \item Het kan niet opnieuw worden ontwikkeld door de gebruiker
+    \item Het is generiek en bevat mogelijk functies die niet toepasbaar zijn in de te ontwikkelen applicatie
+    \item Het wordt geregeld aangepast om aan klantwensen en competitie te voldoen
+\end{itemize}
+
+Zeker in het geval van open-source is de manier van ontwikkelen niet altijd volledig gedocumenteerd en kan een groot deel van deze software onder de noemer SOUP worden geplaatst. Het gebruik van SOUP hoeft niet per definitie gevaarlijk te zijn, echter moet er wel worden opgelet hoe het gebruikt wordt, zoals hieronder verder zal worden besproken. In verband met de eerder besproken scope van het onderzoek zal er hierna enkel worden ingegaan op externe bibliotheken en frameworks.
+
+\section{Waarom en hoe veelvuldig worden externe bibliotheken gebruikt in het ontwikkelen van software?}\label{sec:waarom-hoe}
+Softwareontwikkeling staat altijd onder druk van deadlines en collega's die wachten op een feature. Daarom zijn er een aantal principes ontstaan die in de programmeerwereld als mantra worden aangenomen. Het eerste principe is KISS (Keep it simple, Stupid!): Probeer de componenten die je ontwikkeld zo simpel mogelijk te houden ondanks de complexiteit van de software. Het tweede principe is YAGNI (You ain't gonna need it)" Ontwikkel de huidige requirements en probeer niet in de toekomst te kijken en hier al features voor te schrijven. Het derde en tevens belangrijkste principe is DRY (Don't reapeat yourself): Herhaling kost tijd die anders nuttiger kan worden besteed. Door functies op meerdere plekken te herhalen kunnen problemen worden ondervonden in de onderhoudbaarheid van de applicatie, omdat dezelfde methodes op meerdere plekken terug te vinden zijn. Datastructuren, functies, etc. die op verschillende plaatsen gedefineerd zijn, zijn indicatoren tot een zekerheid van bugs omdat er de kans bestaat dat een ontwikkelaar vergeet een functie te updaten op een plek waar deze onverwacht ook gedefineerdt wordt~\citep{Papadopoulo:2021}.
+
+Om de mantra's die hierboven beschreven zijn te kunnen volgen zijn er bibliotheken. Ze zorgen ervoor dat functies en datastructuren op één enkele plek worden gedefineerd waardoor er ontwikkeltijd bespaard wordt wanneer een functie aangepast moet worden. Door gebruik van bibliotheken hoeft dit maar op een enkele plaats te gebeuren. Ook wordt er op deze manier gegarandeerd dat er maar een enkele versie bestaat van die functie of datastructuur.
+
+In het geval van externe bibliotheken zijn er nog meer voordelen te benoemen. Bij het gebruik hiervan wordt de ontwikkeltijd uitbesteed of, in het geval van een bestaande bibliotheek, kan er zonder ontwikkeltijd functionaliteit worden overgenomen. Er is wel tijd nodig om deze functionaliteiten te implementeren, maar dat weegt niet op tegen de tijd die het kost om de functionaliteit zelf te ontwikkelen en te testen. Zeker in het geval van community driven bibliotheken wordt er veelvuldiger op functionaliteit getest, dan een individueel bedrijf kan doen op een zelf ontwikkelde bibliotheek.
+
+Door boven genoemde voordelen worden externe bibliotheken veelvuldig gebruikt. Volgens een onderzoek van Synopsys\footnote{Synopsys is een bedrijf dat zich bezig houdt met de ontwikkeling en verificatie van semiconductoren. Daarnaast ontwikkeld het tools voor verschillende taken in het domein software veiligheid.} bestond in 2020 98\% van de 1546 geanalyseerde codebases uit open-source componenten\citep{Synopsys:2021}. Daarnaast bevatte 84\% van deze codebases minimaal één kwetsbaarheid met een gemiddelde van 158 kwetsbaarheden. De gemiddelde kwetsbaarheid was 2.2 jaar oud. Een ander belangrijk signalement dat Synopsys beschreef was dat er steeds meer codebases ontstonden welke tenminste één kwetsbaarheid bevatte.
+
+Hiernaast heeft het bedrijf TideLift\footnote{TideLift is een bedrijf dat zich inzet voor het verbeteren van veilig gebruik van OpenSource software} meerdere onderzoeken gedaan naar hoe ontwikkelaars tegenover het gebruik van open-source componenten staan.
+
+Een onderzoek van TideLift wees uit dat ontwikkelaars over het algemeen eerder voor open-source kozen dan voor betaalde software. De redenen hiervoor waren onder andere: grotere flexibiliteit, snellere ontwikkeltijden, tevredenheid van de ontwikkelaar en een gunstiger kostenplaatje.\citep{TideLift:2021} De enige reden die werd opgemerkt om voor betaalde software te kiezen was de beschikking over betere support en consultancy service. Op het gebied van software veiligheid gaf 61\% aan meer te vertrouwen op open-source software dan op aangekochte software.
+Het onderzoek wees ook uit dat de selectie voor het gebruik van een open-source project vaak gedaan wordt op basis van hoe actief een project is, de betrouwbaarheid van de bron, en hoeveel mensen er aan het project werken.
+
+Ook al zijn de cijfers hierboven beschreven afkomstig van afhankelijke bronnen, met een mogelijke conflict of interest, ze geven wel aan dat externe bibliotheken veelvuldig worden gebruikt omdat dit vaak makkelijke, snel implementeerbare en mogelijk flexibele oplossingen biedt.
+
+%TODO bron toevoegen supply chain attack
+\section{Wat zijn potentïele gevaren die bij het gebruik van externe bibliotheken kunnen worden geintroduceerd?}\label{sec:wat-zijn-potienteel-gevaren-die-het-gebruik-van-externe-bibliotheken-kunnen-introduceren?}
+Hoewel er enorme voordelen gepaard gaan met het gebruik van externe bibliotheken bij de ontwikkeling van software, zijn er ook een aantal nadelen te benoemen. De grootste is dat er potentieel kwetsbaarheden kunnen worden geintroduceerd in de applicatie, welke niet of pas in een later stadium worden opgemerkt door ontwikkelaars die de bibliotheken gebruiken. Deze kwetsbaarheden kunnen zich op meerdere manieren manifesteren in de vorm van een "Supply Chain Attack". Zoals de naam al doet vermoeden vindt er hierbij een aanval plaats middels functionaliteiten die zich in de dependencies bevinden. Deze aanval kan op verschillende manieren plaatsvinden, maar heeft meestal als doel een gewin voor de aanvaller. Hierbij kan er enerzijds op één of andere manier data bemachtigd worden, en anderzijds de functionaliteit van de doelapplicatie op een dusdanige manier worden aangetast dat deze in het voordeel is van de aanvallers. Een probleem met dit soort aanvallen is vaak dat deze lange tijd onopgemerkt kunnen blijven omdat externe bibliotheken niet periodiek worden gecheckt op juistheid, en worden gebruikt op basis van goed vertrouwen. Op het moment dat kwetsbaarheden al opgemerkt worden en hiervan een verslag wordt gemaakt in een Vulnerablity database (NIST, NVD, Mitre) duurt het nog geruime tijd voor deze door andere gebruikers worden opgemerkt en hierop actie wordt ondernomen. Hierdoor is de tijd waarin meerdere gebruikers bloot worden gesteld aan mogelijke kwetsbaarheden groot. Daarnaast gebruiken ook aanvallers de beschikbare informatie die de Vulnerability database bevat om verdere aanvallen mee te plannen.
+
+Een ander nadeel van het gebruik van een externe bibliotheek is dat je niet zelf de verantwoordelijkheid hebt over de geschreven code en daarmee overgeleverd bent aan de ontwikkelaar daarvan voor het uitvoeren van updates om eventuele kwetsbaarheden te verwijderen. Wanneer dit niet gebeurd zal dit in eigen beheer moeten worden gedaan, of moet er worden gekozen voor een andere bibliotheek met vergelijkbare functionaliteiten.
+
+Onderzoek van SonaType\footnote{SonaType is een bedrijf dat tools maakt voor software veiligheid} uitgevoerd in 2021 gaf aan dat er een jaar op jaar steiging was van 650\% in het aantal aanvallen gepleegd middels kwetsbaarheden in open-source bibliotheken.\citep{Sonatype:2021}
+Hiernaast bleek dat een groot deel van de applicaties niet wordt bijgewerkt of vaak niet op de juiste manier zodat er altijd een kwetsbaarheid zal blijven bestaan.
+
+\section{Hoe kunnen applicaties weerbaarder worden gemaakt tegen kwetsbaarheden die gepaard gaan met het gebruik van externe bibliotheken?}\label{sec:hoe-kan-er-voorkomen-worden-dat-er-kkwetsbaarheden-onstaan-in-een-applicatie-die-gebruik-maakt-van-externe-bibliotheken?}
+
+Hoewel er veel bedrijven en instanties zich verantwoordelijk voelen om het mogelijk te maken om veiligere software te ontwikkelen, dan al niet vanuit een winstoogmerk, bestaat de Open Web Application Security Project(OWASP) puur en alleen om dit te doen op een vrijwillige basis. De OWASP is een stichting wat zich voornamelijk bezig houdt met het verbeteren van software veiligheid met in het bijzonder web applicaties. Zij doen dit door awareness te kweken over het veilig ontwikkelen van software.
+
+Eén van de belangrijkste methoden die zij hebben is de OWASP top 10 waarin iedere 5 jaar een lijst wordt gepresenteerd met de meest kritsiche aspecten voor het ontwikkelen van veilige software. In 2021 stond op plaats A06:2021 een item over Vulnerable and Outdated Components, wat kan helpen bij het onderzoek naar een methode en tools\citep{OWASP:2021}.
+Volgens dit item is de software kwetsbaar als er aan één van de volgende items kan worden voldaan: (vrij vertaald uit het originele document)
+\begin{itemize}
+    \item Als je niet alle versies van de gebruikte directe of geneste dependencies weet (zowel van de client als server side)
+    \item Als de gebruikte componenten zelf kwetsbaar zijn, out-of-date zijn of niet meer worden ondersteund. Dit geldt voor alle componenten zoals OS, web/application Servers, Database management systemen, afhankelijke applicaties, API's (met zijn componenten), runtime omgevingen en bibliotheken
+    \item Als er niet regelmatig gescanned wordt op kwetsbaarheden en er geen abonnement is op de security bulletins van de gebruikte componenten
+    \item Als het onderliggende platform, framework, of dependency niet gefixed of geupgrade wordt op een periodieke manier of op het moment dat er een kwetsbaarheid is gevonden. Dit komt vaak voor als een platform periodiek wordt geupdate. Vaak kan het voorkomen dat een systeem lekken heeft die pas laat worden gedicht op het moment dat een update wordt gedraaid
+    \item Als ontwikkelaars niet de compatibiliteit testen van geupdate, geupgrade en gepatchde bibliotheken
+    \item Als de componenten niet veilig zijn geconfigureerd (zie A05:2021- Security Misconfiguration)
+\end{itemize}
+
+
+\section{Registratie van kwetsbaarheden in componenten}\label{sec:registratie-van-kwetsbaarheden-in-bibliotheken}
+Kwetsbaarheden komen meestal pas aan het ligt als deze blootgelegd worden middels een aanval welke is onderschept of onderzocht. Deze kwetsbaarheden worden door het CVE-project van Mitre voorzien van een CVE-ID, Common Vulnerabilities & Exposures, op het moment dat deze nieuw is. Dit ID zorgt ervoor dat er naar deze kwetsbaarheid uniek kan worden gerefereerd in verdere documentatie. De resultaten van een onderzoek bij een aanval of constatering worden vervolgens in verschillende databases vastgelegd waarbij de belangrijkste het National Vulnerability Database(NVD),  van het National Institute of Standards and Technology(NIST), instituut is.
+In deze database zijn naast de bevindingen ook remedies, indien mogelijk te vinden. Het NVD-NIST is dus een belangrijke resource voor het vinden van kwetsbaarheden.
+
+%TODO: Wellicht nog aangeven hoe een CPE en CVE opgeslagen zijn en hoe deze te gebruiken zijn in een analyse.
+
+\section{conclusie}\label{sec:conclusie}
+\lipsum[01]
