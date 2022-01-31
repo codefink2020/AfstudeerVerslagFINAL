@@ -15,6 +15,8 @@ Dit hoofdstuk zal de architectuur van deze drie hoofddelen alsmede de relatie to
 
 \section{Jenkins pipeline}\label{sec:jenkins-pipeline}
 
+In het geval van een NPM project moet er op het moment dat npm install volledig is afgerond het volgende commando worden uitgevoerd: \texttt{npm run owasp}, waarbij in Package.json de volgende declaratie is toegevoegd: \texttt{$"$owasp$"$: $"$owasp-dependency-check --project $"$angularSandbox$"$ -f JSON$"$} Vervolgens moet het resultaat in de build artifacts worden geplaatst waarbij de
+
 \section{SOUP API}\label{sec:soup-api}
 
 \section{Portal}\label{sec:portal}
