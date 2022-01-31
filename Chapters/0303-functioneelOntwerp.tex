@@ -1,0 +1,20 @@
+\chapter{Functioneel ontwerp}\label{ch:impl-architectuur}
+
+Om SOUP-analyses periodiek en geautomatiseerd uit te kunnen voeren moet er een systeem worden ontworpen dat op verschillende plekken binnen de dev-stack van Eaglescience opereert.
+
+\begin{enumerate}
+    \item \textbf{Jenkins build Pipeline}: Verkrijgen van informatie over eventueel gevonden kwetsbaarhden, als ook meta data over de gebouwden en/of uitgerolde projcten.
+    \item \textbf{SOUPAPI}: De API is verantwoordelijk voor een aantal zaken binnen het systeem. Ten eerste moet het de rauwe informatie verkrgen uit de buildstraat omzetten in een uniform datamodel. Welke vervolgens kan worden gebruikt om middels een webapplicatie de relevantie informatie te serveren.
+    \item \textbf{Portal}: De Portal is de interface die het mogelijk maakt om interactie te verkrijgen met SOUP API. Interactie in de vorm van het opvragen van de gewenste informatie als ook instellingen waarbij de werking van de API kan worden beinvloed.
+\end{enumerate}
+Dit hoofdstuk zal de architectuur van deze drie hoofddelen alsmede de relatie tot elkaar toelichten.
+
+
+\section{Algehele opzet van het systeem}\label{sec:algehele-opzet-van-het-systeem}
+
+
+\section{Jenkins pipeline}\label{sec:jenkins-pipeline}
+
+\section{SOUP API}\label{sec:soup-api}
+
+\section{Portal}\label{sec:portal}
