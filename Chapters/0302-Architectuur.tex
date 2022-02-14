@@ -1,5 +1,5 @@
 \chapter{Architectuur}\label{ch:Architectuur}
-Om bruikbare informatie te kunnen tonen aan de gebruiker moet de informatie welke door de Software Composition Analysis (SCA) Tool wordt geleverd worden bewerkt naar een datamodel waarbij alleen de informatie die relevant is om te tonen wordt opgeslagen. Daarnaast moet het systeem in staat zijn om periodiek een analyse uit te voeren op projecten die bekend zijn binnen de module. In figuur~\ref{fig:SOUP-Components} is te zien hoe onderdelen met elkaar in verbinden staan.
+Om bruikbare informatie te kunnen tonen aan de gebruiker moet de informatie dat door de Software Composition Analysis (SCA) Tool wordt geleverd worden bewerkt naar een datamodel waarbij alleen de informatie die relevant is om te tonen wordt opgeslagen. Daarnaast moet het systeem in staat zijn om periodiek een analyse uit te voeren op projecten die bekend zijn binnen de module. In figuur~\ref{fig:SOUP-Components} is te zien hoe onderdelen met elkaar in verbinden staan.
 In de secties hieronder wordt ieder onderdeel ver uitgwerkt op een architectonisch niveau.
 
 \begin{figure}[bth]
@@ -10,7 +10,25 @@ In de secties hieronder wordt ieder onderdeel ver uitgwerkt op een architectonis
 \end{figure}
 
 \section{SOUPAPI}\label{sec:soupapi}
-De SOUP API staat centraal in het nieuwe systeem en is verantwoordelijk voor de verwerking van de informatie uit de SCA tooling te halen. Een andere taak is het mopgelijk maken van een systeem dat verantwoordelijk is voor het periodiek scannen van de door de module bekende projecten.
+De SOUP API staat centraal in het nieuwe systeem en is verantwoordelijk voor alle kerntaken die het nieuwe systeem moet uitvoeren. De twee hoofdtaken zijn: "Periodieke scannen van projecten " en "Verwerking van gegevens uit de verkregen resultaten uit de Software Composition Analysis Tool(SCA) en Jenkins, dat gebruikt wordt om een analyse uit te voeren."
+
+\subsection{Verwerking gegevens vanuit de builds}\label{subsec:verwerking-gegevens-vanuit-de-sca}
+De belangrijkste taak van de SOUP API is het verwerken van de gegevens die bechikbaar worden gemaakt vanuit een analyse door de SCA Tooling. Deze gegevens komen op twee momenten de applicatie binnen: 1: tijdens het bouwen en deployen van de applicatie. en twee nadat een periodieke scan is geweest
+
+Op het moment dat een project gebuild en/of gedeployed wordt middels de Jenkins Buildstraat moeten nieuwe gegevens over het gebouwde project worden gedeeld met de SOUP API. Deze gegevens bestaan naast meta data over het project, gegevens over de gebruikte dependencies en een rapport dat gegenereerd is door de SCA Tooling.
+
+\begin{figure}[bth]
+  \myfloatalign
+  \includegraphics[width=15cm]{gfx/SOUPAPI-ReportParseFlow}
+  \caption{Flow van gegevens uit Jenkins naar de SOUP API}
+  \label{fig:SOUP-ReportPArseFlow}
+\end{figure}
+
+In figuur~\ref{fig:SOUP-ReportPArseFlow} is een globale beschrijving van een flow te zien hoe de data die uit de jenkins buildstraat komt wordt verwerkt. De data komt binnen middels een CURL command dat afgevuurdt wordt in de pipeline van Jenkins( wordt beschreven in de sectie over Jenkins).
+De Dependency service is verantwoordelijk voor het borgen van de dependency informatie. Hier wordt iedere keer als er een build/deploy is geweest de dependency informatie toegevoegd aan de betreffende module. Op deze manier kan de periodieke scanner deze informatie gebruiken om op een later moment herhaaldelijk de project dependencies te scannan op kwetsbaarheden.
+
+
+
 
 Voor de verwerking van informatie is de ReportParser verantwoordelijk  Het wordt in gezet voor het vertalen en omzetten van de data uit rapporten die door de SCA Tooling worden gegenereerd naar data die gebruikt worden binnen de SOUP-module van de portal. In dit ontwerp is er een parser aanwezig voor het vertalen van de OWASP-engine rapporten\footnote{De SCA tooling in het vorige hoofdstuk genereren beide rapporten in het zelfde JSON schema}. In de toekomst zullen er meerdere parsers moeten worden toegevoegd op het moment dat er een andere runtime wordt meegenomen welke niet door de OWASP engine kunnen worden gescanned.
 

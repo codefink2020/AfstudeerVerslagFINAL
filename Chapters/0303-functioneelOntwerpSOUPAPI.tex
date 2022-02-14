@@ -1,22 +1,24 @@
-\chapter{Functioneel ontwerp}\label{ch:impl-architectuur}
+\chapter{Functioneel ontwerp SOUP API}\label{ch:impl soup api}
+De SOUP API is de centrale module voor het systeem dat verantwoordelijk is voor het periodiek scannen van de projecten en het parsen van de rapporten die uit de analyses komt. Deze module is ook opgedeeld in twee verschillende submodulen die ieders hieronder verder wordt uitgewerkt.
 
-Om SOUP-analyses periodiek en geautomatiseerd uit te kunnen voeren moet er een systeem worden ontworpen dat op verschillende plekken binnen de dev-stack van Eaglescience opereert.
+\section{Controller}\label{sec:Implcontroller}
+De controller is verantwoordelijk voor het aansturen van verschillende taken binnen de analyses van kwetsbaarheden binnen voor de soup module bekende projecten. Hieronder worden de verschillende onderdelen van deze controller en de relatie met elkaar verder uitgewerkt.
 
-\begin{enumerate}
-    \item \textbf{Jenkins build Pipeline}: Verkrijgen van informatie over eventueel gevonden kwetsbaarhden, als ook meta data over de gebouwden en/of uitgerolde projcten.
-    \item \textbf{SOUPAPI}: De API is verantwoordelijk voor een aantal zaken binnen het systeem. Ten eerste moet het de rauwe informatie verkrgen uit de buildstraat omzetten in een uniform datamodel. Welke vervolgens kan worden gebruikt om middels een webapplicatie de relevantie informatie te serveren.
-    \item \textbf{Portal}: De Portal is de interface die het mogelijk maakt om interactie te verkrijgen met SOUP API. Interactie in de vorm van het opvragen van de gewenste informatie als ook instellingen waarbij de werking van de API kan worden beinvloed.
-\end{enumerate}
-Dit hoofdstuk zal de architectuur van deze drie hoofddelen alsmede de relatie tot elkaar toelichten.
+Eén van de belangrijkste taken van de controller is het bijhouden van de gevonden kwetsbaarheden binnen projecten en deze inzichtelijk maken voor de gebruiker. Er moet zowel inzicht komen op basis van project als op basis van Dependency
+\subsection{ScanQ}
+De ScanQ is een lijst waarin alle analyses in geplanned staan. Bij deze lijst zijn een aantal functies de lijst beheren.
+
+De datastructuur van de lijst is als volgt:
+\begin{itemize}
+    \item projectnaam: Naam van het project
+    \item lastAnalyses: timestamp van de laatste analyse
+    \item nestAnalyses: timestamp voor de volgende analyse
+\end{itemize}
 
 
-\section{Algehele opzet van het systeem}\label{sec:algehele-opzet-van-het-systeem}
+
+De Controller is verantwoordelijk voor de taken die te maken hebben met het periodiek scannen van projecten Het heeft faciliteiten zoals een scanQ waarin de projecten staan die gescanned moeten worden. Een analyser die op het moment dat een project aan de beurt is om geanalyseerd te worden een aantal subtaken sequentieel uitvert per module binnen een project.
+In grote lijnen wordt er een dockercontainer opgezet per module waarin alle benodigde bestanden (dependency declaraties en dergelijke) worden geplaats. Vervolgens een analyse wordt uitgevoerf waaruit de resultaten naar de ReportParser kan worden gestuurt voor analyse. De exacte werking wpordt verderop in het document technisch uitgewerkt.
 
 
-\section{Jenkins pipeline}\label{sec:jenkins-pipeline}
-
-In het geval van een NPM project moet er op het moment dat npm install volledig is afgerond het volgende commando worden uitgevoerd: \texttt{npm run owasp}, waarbij in Package.json de volgende declaratie is toegevoegd: \texttt{$"$owasp$"$: $"$owasp-dependency-check --project $"$angularSandbox$"$ -f JSON$"$} Vervolgens moet het resultaat in de build artifacts worden geplaatst waarbij de
-
-\section{SOUP API}\label{sec:soup-api}
-
-\section{Portal}\label{sec:portal}
+\section{ReportParser}`
