@@ -4,16 +4,39 @@ In de secties hieronder wordt ieder onderdeel ver uitgwerkt op een architectonis
 
 \begin{figure}[bth]
     \myfloatalign
-    \includegraphics[width=9cm]{gfx/UMLcomponentDiagram}
+    \includegraphics[width=10cm]{gfx/UMLcomponentDiagram}
     \caption{Componenten SOUP Analyse Systeem}
     \label{fig:SOUP-Components}
 \end{figure}
-
+\newpage %TODO: tijdelijk
 \section{SOUPAPI}\label{sec:soupapi}
 De SOUP API staat centraal in het nieuwe systeem en is verantwoordelijk voor alle kerntaken die het nieuwe systeem moet uitvoeren. De twee hoofdtaken zijn: "Periodieke scannen van projecten " en "Verwerking van gegevens uit de verkregen resultaten uit de Software Composition Analysis Tool(SCA) en Jenkins, dat gebruikt wordt om een analyse uit te voeren."
 
+\subsection{Intern datamodel}
+Het interne datamodel voorziet in de informatie die benodigd is voor medewerkers om beslissing te maken over het handelen met gevonden kwetsbaarheden.
+
+\begin{figure}[bth]
+  \myfloatalign
+  \includegraphics[width=10cm]{gfx/SOUPAPI-SOUPAPI DM}
+  \caption{Intern Datamodel}
+  \label{fig:SOUP-SoupApiDm}
+\end{figure}
+%TODO begeleidende tekst over de datamodel
 \subsection{Verwerking gegevens vanuit de builds}\label{subsec:verwerking-gegevens-vanuit-de-sca}
-De belangrijkste taak van de SOUP API is het verwerken van de gegevens die bechikbaar worden gemaakt vanuit een analyse door de SCA Tooling. Deze gegevens komen op twee momenten de applicatie binnen: 1: tijdens het bouwen en deployen van de applicatie. en twee nadat een periodieke scan is geweest
+De belangrijkste taak van de SOUP API is het verwerken van de gegevens die bechikbaar worden gemaakt vanuit een analyse door de SCA Tooling. De gegevens komen binnen van twee verschillende plekken:
+\begin{itemize}
+  \item Jenkins buildstraat
+  \item Intern periodiek scan systeem (nog betere naam vinden)
+\end{itemize}
+Beiden krijgen een eigen REST endpoint waar de gegevens worden gevalideerd en het binnenkomende raport wordt omgezet naar een Json object. Het geheel wordt doorgestuurt naar de ReportService die vervolgens de juiste parser benaderd bij het binnengekomen rapport. Op deze manier is er ruimte om in de toekomst meerdere parsers toe te voegen die het binnenkomend rapport om kunnen zetten naar het hierboven beschreven interne datamodel.
+\begin{figure}[bth]
+  \myfloatalign
+  \includegraphics[width=10cm]{gfx/SOUPAPI-UploadAnalysis}
+  \caption{Upload Report Flow}
+  \label{fig:UploadReportFlow}
+\end{figure}
+
+
 
 Op het moment dat een project gebuild en/of gedeployed wordt middels de Jenkins Buildstraat moeten nieuwe gegevens over het gebouwde project worden gedeeld met de SOUP API. Deze gegevens bestaan naast meta data over het project, gegevens over de gebruikte dependencies en een rapport dat gegenereerd is door de SCA Tooling.
 
