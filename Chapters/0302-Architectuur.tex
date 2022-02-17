@@ -1,10 +1,24 @@
 \chapter{Architectuur}\label{ch:Architectuur}
-Inleiding geven over de restraints die bestaan voor de omgeving.
 
-Om bruikbare informatie te kunnen tonen aan de gebruiker moet de informatie dat door de Software Composition Analysis (SCA) Tool wordt geleverd worden bewerkt naar een datamodel waarbij alleen de informatie die relevant is om te tonen wordt opgeslagen. Daarnaast moet het systeem in staat zijn om periodiek een analyse uit te voeren op projecten die bekend zijn binnen de module. In figuur~\ref{fig:SOUP-Components} is te zien hoe onderdelen met elkaar in verbinden staan.
-In de secties hieronder wordt ieder onderdeel verder uitgwerkt op een architectonisch niveau.
+Om inzicht te verkrijgen in potentiële kwetsbaarheden in de projecten van Eaglescience moet er een applicatie worden ontworpen die in staat is om analyses uit te voeren op het moment dat er veranderingen worden aangebracht in deze projecten. Daarnaast moet de applicatie in staat zijn deze analyses uit te voeren op een periodieke basis.
+Op het moment van schrijven wordt er binnen Eaglescience ontwikkeld in de talen Scala en NativeScript, maar de verwachting is dat er in de toekomst een mogelijkheid bestaat dat dit uitgebried gaat worden. Daarnaast is zijn deze twee talen niet de enige twee platformen binnen de stack, zo wordt er ook gebruik gemaakt vam docker met daarbnij verschillende images die ook kwetsbaarheden kunnen bevatten. Dit ontwerp voorziet niet in de mogelijkheid om deze toekomstige platformen als ook docker te kunnen scannen. Het ontwerp moet wel zo zijn dat er een mogelijkheid bestaat om deze op een relatief makkelijke manier toe te voegen.
 
 Analyses worden uitgevoerd op modulenniveau, hier zijn in basis twee redenen voor. Ten eerste is een module binnen een Eaglescience project een afgeschermd onderdeel dat een eigen platform benut. Ten tweede kan er op module niveau veranderingen worden verwacht ten opzichte van dependency declaraties.
+
+In figuur~\ref{fig:SOUP-Components} is te zien welke componenten er nodig zijn om van informatie welke middels een Software Composition Tool(SCA) is verkregen te verwerken naar een rapport die in de portal te zien is. De verschillende componenten worden ieder in een eigen sectie uitvoerig besproken. Echter zijn dit de hoofdpunten:
+\begin{itemize}
+    \item \textbf{Jenkins} Op het moment dat er in Jenkins een build wordt gedaan is er potientieel iets veranderd in de sourcecode en daarmee ook in de dependencies die er beschreven staan in de module. Door de SCA tooling hier al in te zetten kan er direct een rapport worden gegenereert die zichtbaar is in de portal. Hierdoor is er bijna direct inzicht in welke kwetsbaarheden er bekend zijn in het project. In de pipeline moet een onderdeel worden toegevoegd waardoor de SCA tooling kan worden uitgevoerd. Een een BashScript dat een HTTP POST naar de SOUP API kan doen met daarin gegeven over de geanalyseerde module en het project. Eaglescience werkt met Tags om functionaliteiten binnen de pipeline te kunnen sturen het is wenselijk om hier een tag voor de soup analyse toe te voegen om eventueel de analyse uit te schakelen als dit wenselijk is.
+    \item \textbf{Portal} De portal is een inhouse applicatie welke gebruikt wordt voor administratieve zaken binnen het bedrijf. de wens is om hier functionaliteiten aan toe te voegen die bedrijfsbreed zijn en daarmee dus project oversteigend zijn. Voor deze applicatie dient er een module te worden toeegevoegd die fungeert als een interface waarin informatie over de bekende kwetsbaarheden te vinden is. maar ook instellingen kunnen worden
+    \item \textbf{Analysis Environment} deze omgeving moet het mogelijk maken om vanuit de SOUP API een analyse uit te voeren op modulen. waarbij er een docker container wordt gestart een analyse uitgevoerd wordt en vervolgens de container wordt vernietigd. de voornaamste reden is dat er door de opzet van npm/node en sbt/scala veel combinatie kunnen ontstaan die ervoor kunnen zorgen dat er de versies die gebruikt worden veranderen. Om deze reden moet de analyse omgevingen een nagenoeg exacte kopie zijn van de omgeving op productie.
+    \item \textbf{SOUP API} De SOUP API is het centrale deel Het is verantwoordelijk voor het verwerken van de rapporten die door de SCA tools worden opgemaakt. Het is ook verantwoordelijk voor de controle op de analyse omgevingen die het periodiek analyseren mogelijk maken. ALs laatste moet het een API zijn voor de gegevens die op de portal te zien zijn alsook de verwerker van projectsettings.
+    \item \textbf{Database} De gekozen database is nu MongoDB LATER MEER WELLICHT WORDT HET NOg MYSQL
+\end{itemize}
+
+
+% OUD
+Om bruikbare informatie te kunnen tonen aan de gebruiker moet de informatie dat door de Software Composition Analysis (SCA) Tool wordt geleverd worden bewerkt naar een datamodel waarbij alleen de informatie die relevant is om te tonen wordt opgeslagen. Daarnaast moet het systeem in staat zijn om periodiek een analyse uit te voeren op projecten die bekend zijn binnen de module. In figuur~\ref{fig:SOUP-Components} is te zien hoe onderdelen met elkaar in verbinden staan.
+In de secties hieronder wordt ieder onderdeel verder uitgwerkt op een architectonisch niveau.
+%OUD
 
 
 \begin{figure}[bth]
@@ -19,7 +33,8 @@ Analyses worden uitgevoerd op modulenniveau, hier zijn in basis twee redenen voo
 %    \caption{Componenten SOUP Analyse Systeem}
 %    \label{fig:SOUP-Components}
 %\end{figure}
-\newpage %TODO: tijdelijk
+
+
 
 
 \section{SOUPAPI}\label{sec:soupapi}
@@ -27,7 +42,6 @@ De SOUP API staat centraal in het nieuwe systeem en is verantwoordelijk voor all
 
 \subsection{Intern datamodel}\label{subsec:intern-datamodel}
 Het interne datamodel voorziet in de informatie die benodigd is voor medewerkers om beslissing te maken over het handelen met gevonden kwetsbaarheden.
-
 \begin{figure}[bth]
     \myfloatalign
     \includegraphics[width=10cm]{gfx/SOUPAPI-SOUPAPI DM}
@@ -39,7 +53,6 @@ Het interne datamodel voorziet in de informatie die benodigd is voor medewerkers
 In figuur (~\ref{fig:SOUP-SoupApiDm}) is het interne datamodel te vinden waarin de data die opgeslagen dient te worden in afgebeeld. Ook de relaties tussen de verschillende is te zien en worden hieronder verder beschreven.
 
 Een analyses wordt uitgevoerd op een module.
-
 
 Eaglescience werkt op projectbasis, waarbij één of meer modulen de applicatie vormen. Deze worden dan ook in project opgeslagen naast de naam van het project en projectSettings welke gebruikt worden door de SOUPAPI om te fungeren. Onder projectsettings staat nu een scanInterval die ingesteld kan worden in een aantal dagen dat er tussen de analyses mag zitten. ProjectSettings is bewust apart genomen omdat dit de ruimte bied om de toekomst benodigde instellingen toe tevoegen.
 
