@@ -1,2 +1,12 @@
 \chapter{Functioneel ontwerp Jenkins}\label{ch:impl-Jenkins}
 
+
+\section{Jenkins buildtstraat}\label{sec:jenkins-buildtstraat}
+Op het moment dat er een project wordt gebouwd middels de Jenkins buildstraat kan er vanuit worden gegaan dat er wijzigingen zijn in de sourcecode. Mogelijk zijn er dan ook wijzigingen in de declaraties in bijvoorbeeld versies en of nieuwe of andere dependencies de gebruikt worden. In het nieuwe systeem wordt Jenkins gebruikt om deze informatie in het systeem te verkrijgen. Om deze informatie in de SOUP API te krijgen moeten er een aantal aanpassingen gedaan worden die ervoor zorgen dat informatie omtrend kwetsbaarhden in een uniforme manier worden gewonnen en verstuurd naar de SOUP API.
+
+
+\subsection{informatie extractie methoden en verzending van de informatie}
+
+Voor iedere module in een project moet de betreffende SCA tool worden aangeroepen waatbij het Rapport wordt toegevoegd aan de Jenkins Artifacts.
+Op het moment dat de deploy gedaan is moeten deze rapporten samen worden gevoegd met de metadata tot een JSON bestand welke vervolgens middels een POST methode kan worden vertuurt naar de SOUP API welke het vervolgen middels de Parser toevoegd aan de database en scheduler als zijn een bestaand project die periodiek moet worden geanalyseerd.
+
