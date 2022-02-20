@@ -5,7 +5,8 @@ Op het moment van schrijven wordt er binnen Eaglescience ontwikkeld in de talen 
 
 Analyses worden uitgevoerd op modulenniveau, hier zijn in basis twee redenen voor. Ten eerste is een module binnen een Eaglescience project een afgeschermd onderdeel dat een eigen platform benut. Ten tweede kan er op module niveau veranderingen worden verwacht ten opzichte van dependency declaraties.
 
-In figuur~\ref{fig:SOUP-Components} is te zien welke componenten er nodig zijn om van informatie welke middels een Software Composition Tool(SCA) is verkregen te verwerken naar een rapport die in de portal te zien is. De verschillende componenten worden ieder in een eigen sectie uitvoerig besproken.%todo: nakijken na voltooien hoofdstuk
+In figuur~\ref{fig:SOUP-Components} is te zien welke componenten er nodig zijn om van informatie welke middels een Software Composition Tool(SCA) is verkregen te verwerken naar een rapport die in de portal te zien is. De verschillende componenten worden ieder in een eigen sectie uitvoerig besproken.
+%todo: nakijken na voltooien hoofdstuk
 \begin{figure}[bth]
     \myfloatalign
     \includegraphics[width=10cm]{gfx/umlet/exports/ApplicationComponents}
@@ -28,7 +29,7 @@ Op het moment dat er in Jenkins een build wordt gedaan is er potientieel iets ve
 %    \caption{Componenten SOUP Analyse Systeem}
 %    \label{fig:SOUP-Components}
 %\end{figure}
-\section{Datamodel}\label{subsec:intern-datamodel}
+\section{Datamodel}\label{subsec:datamodel}
 De data die de drie services gebuikten is opgesteld in een intern datamodel dat in figuur~\ref{fig:SOUP-SoupApiDm} is te zien In het datamodel zijn voorzieningen waarin per module een analyse op geslagen kan worden waarin vervolgens de in die module op het moment van de analyse aanwezige dependencies met de bekende kwetsbaarheden op kunnen worden geslagen.
 \begin{figure}[H]
     \myfloatalign
@@ -36,6 +37,8 @@ De data die de drie services gebuikten is opgesteld in een intern datamodel dat 
     \caption{Intern Datamodel}
     \label{fig:SOUP-SoupApiDm}
 \end{figure}
+
+VERSIES VAN NODE/NPM EN SBT/SCALA/JAVA OPSLAAN IN DB VOOR HET TERUGHALEN VAN DE JUISTE OMGEVING IVM MET ANDERE VERSIES OP ANDERE OMGEVINGEN....
 %TODO checken of 8pt leesbaar is op print
 %TODO tekst beter structureren
 

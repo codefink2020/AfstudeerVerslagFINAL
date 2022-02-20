@@ -93,6 +93,7 @@ een voorbeeld van de jsonbody voor prepare is te zien in ~\ref{lst:prepareJSONBo
         "projectName":"GroeiGids",
         "moduleName":"portal",
         "JenkinsScan": true,
+        "JenkinsScan": true,
         "BuildHash": "fb5f5cb47bbd0cbf2f4771c55242fedbf41c5efc",
         "buildDate": "22-01-2022",
         "JenkinsBuildnr: "23"
@@ -109,7 +110,7 @@ Deze service ligt achter de uploadcontroller en heeft de volgende functies:
 \end{itemize}
 
 Omdat er op dit moment in het ontwerp de mogelijkheid bestaat om middels twee processen een rapport aan te bieden zijn er in deze service twee functies die deze processen bedienen.
-Het PeriodicAnalysisEngine proces bied een rapport aan welke geanalyseerd moet worden, daarintegen bied het jenkins process naast het rapport ook de dependencydeclaraties aan. Om een analyse te kunnen opslaan moet deze eerst worden aangemaakt volgende het sequence diagram in figuur~\ref{fig:analysisPrepare}
+Het PeriodicAnalysisEngine proces bied een rapport aan welke geanalyseerd moet worden, daarintegen bied het jenkins process naast het rapport ook de dependencydeclaraties aan. Om een analyse te kunnen opslaan moet deze eerst worden aangemaakt volgende het sequence diagram in figuur~\ref{fig:ProcesPayload}
 \begin{figure}[bth]
     \myfloatalign
     \includegraphics[width=14cm]{gfx/umlet/exports/SeqProcessPayload}
@@ -121,9 +122,9 @@ In het ontwerp is vastgelegt dat er altijd de mogleijkheid moet bestaan dat er t
 
 \begin{figure}[bth]
     \myfloatalign
-    \includegraphics[width=14cm]{gfx/umlet/exports/SeqSelectReportParser}
-    \caption{Sequence diagram select ReportParser}
-    \label{fig:selectReportParser}
+    \includegraphics[width=14cm]{gfx/umlet/exports/SeqProcessPayload}
+    \caption{Sequence diagram Proces Payload}
+    \label{fig:ProcesPayload}
 \end{figure}
 
 \subsection{OWASP Parser}\label{subsec:owasp-parser}
@@ -181,7 +182,6 @@ De Controller is verantwoordelijk voor de taken die te maken hebben met het peri
 In grote lijnen wordt er een dockercontainer opgezet per module waarin alle benodigde bestanden (dependency declaraties en dergelijke) worden geplaats. Vervolgens een analyse wordt uitgevoerf waaruit de resultaten naar de ReportParser kan worden gestuurt voor analyse. De exacte werking wpordt verderop in het document technisch uitgewerkt.
 
 
-\section{ReportParser}`
 
 
 \subsection{Verwerking gegevens vanuit de builds}\label{subsec:verwerking-gegevens-vanuit-de-sca}
