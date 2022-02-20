@@ -19,7 +19,7 @@ Op deze manier is er een generieke manier waarop de database aan wordt gesproken
 De datacontroller fungeert als een REST controller welke in staat steld om van buiten af toegang te krijgen tot informatie en waar gewenst aan te passen de volgende end-points worden gedefineerd waardoor de achterliggende services de business logica verzorgen en de gewenste data retourneren
 
 \begin{itemize}
-    \item Project Retourneert een Project Object .
+    \item Project Retourneert een Project Object RETOURWAARDEN AANGEVEN
         \begin{itemize}
             \item \textbf{GET: /data/project/} haalt alle projecten op zonder relaties
             \item \textbf{GET: /data/project/:id}
@@ -62,13 +62,16 @@ Er wordt een generic repo aangemaakt die het mogelijk maakt om voor verschillend
 De dataservice is verantwoordelijk voor het beschikbaar stellen en het onderhoud van de data in de database. Dit wodt bewerkstelligd door repositories aan te maken voor ieder model in het datamodel beschreven in het vorige hoofdstuk (zie figuur~\ref{fig:SOUP-SoupApiDm}) de repositories zijn verantwoordelijk voor de directe communicatie met de database.
 
 \section{ReportParserEngine}\label{sec:reportparserengine}
-De ReportParserEngine is verantwoordelijk voor het omzetten van een rapport dat gegenereerd wordt door een Software Composition Analysis Tool naar het interne datamodel. Het feit dat er veel tools zijn die allemaal de mogelijkheid hebben om projecten te analyseren op kwetsbaarheden en hier een rapport over uit kunnen brengen geeft al aan dat de ReportParserEngine is staat moet zijn om met verschillende rapporten van verschillende tools om moet kunnen gaan. Om dit te mogelijk te maken  is er gekozen voor een modulaire opzet waarbij er verschillende parsers geschreven kunnen worden die de rapporten kunnen omzetten. Deze Modulaire opzet is te zien in figuur~\ref{fig:ReportParserComponents} waarbij de $"$[FUTURE]Parser$"$ een placeholder is voor elke parser die in de toekomst moet worden tegevoegd om meerdere tools te ondersteunen. De verschillende onderdelen zullen hieronder verder worden uitgewerkt.
+De ReportParserEngine is verantwoordelijk voor het omzetten van een rapport dat gegenereerd wordt door een Software Composition Analysis Tool naar het interne datamodel. Het feit dat er veel tools zijn die allemaal de mogelijkheid hebben om projecten te analyseren op kwetsbaarheden en hier een rapport over uit kunnen brengen geeft al aan dat de ReportParserEngine is staat moet zijn om met verschillende rapporten van verschillende tools om moet kunnen gaan. Om dit te mogelijk te maken  is er gekozen voor een modulaire opzet waarbij er verschillende parsers geschreven kunnen worden die de rapporten kunnen omzetten. Deze Modulaire opzet is te zien in figuur~\ref{fig:ReportParserComponents} waarbij de $"$[FUTURE]Parser$"$ een placeholder is voor elke parser die in de toekomst moet worden tegevoegd om meerdere tools te ondersteunen.
 \begin{figure}[bth]
     \myfloatalign
     \includegraphics[width=12cm]{gfx/umlet/exports/ReportParserComponents}
     \caption{ReportParserEngine Components}
     \label{fig:ReportParserComponents}
 \end{figure}
+De
+
+
 Het gehele process van het parsen van een rapport begint bij het uploaden van een rapport. Er zijn twee endpoints gediefineerd die ieder verantwoordelijk zijn voor een deel van het proces
 In figuur~\ref{fig:SequenceClientUploadReport}
 
@@ -82,11 +85,13 @@ De controller fungeerd als gateway waar rapporten naar kunnen worden geupload. H
 \end{figure}
 
 \begin{itemize}
-    \item \textbf{POST /upload/prepare}: De body bevat een jsonobject met daarin projectmeta data. Op het moment dat er een analyse aangemaakt is wordt er een analysetoken toegekend die gebruikt kan worden voor het verdere process.
-    \item \textbf{POST /upload/?token=$"$analysisToken$"$\&proces=$"$proces$"$\&tool=$"$tool$"$} in de body zit het raport van de tool. Waarbij de parameter het proces aangeeft of Jenkins dan al niet Periodic Analysis Engine het rapport aanbied en de tool
+    \item \textbf{POST /upload/jenkins}: in de body worden de volgende bestanden verstuuurt: modulemeta.json , reports.json, dependencydeclaraites. ModuleMeta bevat informatie over de huidide staat van de module/
+
+    De body bevat een jsonobject met daarin projectmeta data. Op het moment dat er een analyse aangemaakt is wordt er een analysetoken toegekend die gebruikt kan worden voor het verdere process.
+    \item \textbf{POST /upload/pae} in de body zit het raport van de tool. Waarbij de parameter het proces aangeeft of Jenkins dan al niet Periodic Analysis Engine het rapport aanbied en de tool
 \end{itemize}
 
-\subsubsection{jsonbody prepare}
+\subsubsection{ModuleMeta.json}
 een voorbeeld van de jsonbody voor prepare is te zien in ~\ref{lst:prepareJSONBody}
 \begin{lstlisting}[caption={Datamodel vanuit Jenkins},label=lst:prepareJSONBody]
     {
@@ -96,10 +101,14 @@ een voorbeeld van de jsonbody voor prepare is te zien in ~\ref{lst:prepareJSONBo
         "JenkinsScan": true,
         "BuildHash": "fb5f5cb47bbd0cbf2f4771c55242fedbf41c5efc",
         "buildDate": "22-01-2022",
-        "JenkinsBuildnr: "23"
+        "JenkinsBuildnr: "23",
+        "NodeVersion": 14.5,
+        "NPMVersion": 5.6.3
+        "SBTVersion": , // alleen voor illustratie er wordt alleen versie informatie meegegeven over de platform van de module zelf.
+        "ScalaVersion": ,
+        "JavaVersion":,
   }
 \end{lstlisting}
-
 
 \subsection{ReportService}\label{subsec:reportservice}
 Deze service ligt achter de uploadcontroller en heeft de volgende functies:
