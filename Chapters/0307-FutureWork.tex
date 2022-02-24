@@ -1,6 +1,6 @@
 % Chapter X
 
-\chapter{Chapter Title}\label{ch:name} % For referencing the chapter elsewhere, use \autoref{ch:name}
+\chapter{Future work}\label{ch:name} % For referencing the chapter elsewhere, use \autoref{ch:name}
 
 %----------------------------------------------------------------------------------------
 
@@ -11,22 +11,23 @@ Voor iedere tool die ooit wordt toegevoegd moet een parser worden aangemaakt die
 
 %------------------------------------------------
 
-\subsection{Optimalisatie}
+\section{Optimalisatie}
 
-SCA tooling
+\subsection{opslaan van dependency declaraties}
+Op dit moment worden er declaraties van dependencies middels bestanden uit de repository opgeslagen in een filesysteem. Een optimalisatie zou kunnen zijn om de bestanden niet letterlijk in de database of zoals nu het geval is in een filesystem op te slaan. Maar de dependencies die in de bestanden staan gedeclareerd op te slaan in een database. zodat er een declaratie opgebouwd kan worden van deze declaraties. Deze optimalisatie heeft als voordeel dat alleen nog maar een backup gemaakt hoeft te worden van de database. Het opslaan van bestanden in de database is niet optimaal. Een andere reden om het op deze manier te doen is dat er veel effiecienter gewerkt kan worden met wat er al opgeslagen is. Single Point of truth.
+
+
+
+libraryDependencies geeft lijst van alle deps in Sbt weer >> wellicht te gebruiken om een json met deps te maken
+
 
 periodieke scan opbouwen vanuit de dependency declarties uit de tabel zelf/.
 
-Content
+Lijst van deps opslaan en niet de files
 
-%------------------------------------------------
+variabelen uit SBT halen en deze in JSON versturen.
 
-\subsection{Subsection Title}
+Aggregratie gebruiken voor het aanmaken triggeren en versturen van een alert op het moment dat een waarde boven een threshold ligt.
 
-Content
+Controle maken op de output van de OWASP analyse waabij op het moment er een threshold wordt overschreden er een alert afgaat en er manueel een Go moet worden gegeven om de build door te zetten.
 
-%----------------------------------------------------------------------------------------
-
-\section{Section Title}
-
-Content
