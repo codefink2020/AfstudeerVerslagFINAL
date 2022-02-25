@@ -2,8 +2,9 @@
 De SOUP API is de centrale module voor het systeem dat verantwoordelijk is voor het periodiek scannen van de projecten, het parsen van de rapporten die uit de analyses komt en het beschikbaar maken van de data die in de datbase is opgeslagen. In dit hoofdstuk wordt functioneel ingegaan op de werking van deze module en de drie sub modulen die ieders een deel van deze taken op zich neemt.
 
 
-
 \section{API}\label{sec:api}
+Centraal in de SOUP-API staat de API welke verantwoordelijkheid heeft om de data die door de beide Engines ,beschreven in het hoofdstuk Architectuur, worden verwerkt in goed banen te leiden. Om die reden zijn er twee controllers aangewezen die ieders
+
 Om de data die in het datamodel (zie figuur~\ref{fig:SOUP-SoupApiDm} in het vorige hoofdstuk) gedefineerd is te bedienen is er gekozen om een generieke repository aan te maken die voor iedere service de basis bewerkingen verschaft. De business logica wordt gefineerd in de verschillende services die op zijn beurt weer aangeroepen worden door de overkoepelende datascontroller die voor de portal een mogelijkheid geeft om data in te zien en eventueel te bewerken.
 \begin{figure}[bth]
     \myfloatalign

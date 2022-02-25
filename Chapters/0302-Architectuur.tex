@@ -19,7 +19,7 @@ Het interne datamodel is opgebouwd op basis van de data die wordt verkregen van 
     \myfloatalign
     \includegraphics[width=12cm]{gfx/SOUPAPI-SOUPAPI DM}
     \caption{Intern Datamodel}
-    \label{fig:SOUP-SoupApiDm}
+    \label{fig:SOUP-SoupApiDm [CHECKEN]}
 \end{figure}
 
 Hieronder wordt iedere entiteit beschreven met daarin het attribuut, het datatype en de reden voor het opslaan van deze data, waarbij geldt dat voor iedere entititeit de volgende attributen standaard zijn \_id, \_createdAt en \_updatedAt opgeslagen.
@@ -136,9 +136,9 @@ Om op een later stadium een periodieke analyse te kunnen doen worden de dependen
 \end{tabular}
 
 \subsection{Portal Datamodel}\label{subsec:portal-datamodel}
-Om de mogelijkheid te hebben om een samenvatting te verkrijgen over kwetsbaarheden per project, per module moet er in de portal een aantal etiteiten worden toegevoegd. Het ontwerp dat hier getoont is is dan ook een toevoeging op het bestaande model en zal dan ook niet in het geheel getoont worden maar alleen de aangegrenzende entiteiten en de aanpassingen hierop.
+Om over de mogelijkheid te beschikken om een samenvatting te verkrijgen over kwetsbaarheden per project en per module moet er in de portal een aantal entiteiten worden toegevoegd. Het ontwerp dat hier getoont is een toevoeging op het bestaande model en wordt niet in zijn geheel getoont, maar enkel de aangegrenzende entiteiten en de aanpassingen hierop.
 
-Voor de functionaliteit van de SOUP module binnen de portal moeten er twee entiteiten worden toegevoegd namelijk $'$Module$'$ voor het weergeven van module data in projecten en $'$VulnerabilitySummary$'$ waarin de de waarde worden opgeslagen die weergegeven worden in de portal. De keuze om deze gegevens toe te voegen in het datamodel van de Portal is performance. Vaak is het alleen van belang om de samenvatting te kunnen lezen en op het moment dat er teveel kwetsbaarheden gevonden worden kan er naar de details in de SOUPAPI worden gekeken. Om deze reden is het niet nodig om alle beschikbare info over te sturen gezien het in het geval van npm vaak in de honderden dependencies kan leiden.
+Voor de functionaliteit van de SOUP module binnen de portal moeten er twee entiteiten worden toegevoegd namelijk $'$Module$'$ voor het weergeven van module data in projecten en $'$VulnerabilitySummary$'$ waarin de de waarden worden opgeslagen die weergegeven worden in de portal. De keuze om deze gegevens toe te voegen in het datamodel van de Portal is performance. Vaak is het alleen van belang om de samenvatting te kunnen lezen en op het moment dat er teveel kwetsbaarheden gevonden worden kan er naar de details in de SOUPAPI worden gekeken. Om deze reden is het niet nodig om alle beschikbare info over te sturen gezien het in het geval van NPM vaak tot honderden dependencies kan leiden.
 
 
 \begin{figure}[bth]
@@ -149,7 +149,7 @@ Voor de functionaliteit van de SOUP module binnen de portal moeten er twee entit
 \end{figure}
 
 \subsubsection{Project}\label{subsubsec:portalProject}
-Dit is een bestaande entiteit binnen het huidige portal project. Hierin worden de gegevens opgeslagen die te maken hebben met de projecten die binnen Eaglescience bestaan. Dit zijn zowel Draft(nieuwe), active, en archived projecten.
+Dit is een bestaande entiteit binnen het huidige portal project. Hierin worden de gegevens opgeslagen die te maken hebben met de projecten die binnen Eaglescience bestaan. Dit zijn zowel Draft (nieuwe), active, en archived projecten.
 
 \begin{tabular}{lll}
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
@@ -157,63 +157,61 @@ Dit is een bestaande entiteit binnen het huidige portal project. Hierin worden d
     status & ProjectStatus & [enum] status van het project\\
     customers & String & projectklant\\
     path & Option[String] & projectPath\\
-    description & Option[String] & Bschrijving van het project\\
+    description & Option[String] & beschrijving van het project\\
     creationDate & Date & aanmaakdatum van het project \\
-    users & List[ProjectUser] & EagleScience medewerkers op het project \\ %TODO AAngepast
+    users & List[ProjectUser] & Eaglescience medewerkers op het project \\
     workType & Option[WorkTypeType] & welk werk is er belegt in het project   \\
-    ldapGroupDns & Option[List[String]] & Welke group heeft het project in LDAP  \\
+    ldapGroupDns & Option[List[String]] & welke group heeft het project in LDAP  \\
     modules & Option[List[String]] & referentie naar de aanwezige modules  \\
 \end{tabular}
 
 \subsubsection{Module}\label{subsubsec:portalModule}
-De module entiteit slaat de gegevens op voor een specifieke module. met een referentie naar een lijst van samenvatingen.
+De module entiteit slaat de gegevens op voor een specifieke module, met een referentie naar een lijst van samenvattingen.
 
 \begin{tabular}{lll}
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
     moduleId & ModuleId > Long & uniek id \\
-    name & String & Referentie naar Project\\
+    name & String & referentie naar Project\\
     platform & String & gebruikte platform \\
     platformversion & String & versie van Node  \\
-    framework & version & String & versie van NPM  \\
-    frameworkVersion & String & versie van Version  \\
-    declairedDepAmnt & Int & Aantal opgegeven dependencies\\
-    totaalDepAmnt & Int & Totaal aantal dependencies.\\
-    vulSummaries & Option[List[VulSumId]]& referentie naar Samenvatting\\
+    framework & String &  gebruikte framework  \\
+    frameworkVersion & String & versie van framework  \\
+    declairedDepAmnt & Int & aantal opgegeven dependencies\\
+    totaalDepAmnt & Int & totaal aantal dependencies\\
+    vulSummaries & Option[List[VulSumId]]& referentie naar samenvatting\\
 \end{tabular}
 
-\subsubsection{VulnerabilitySummary}\label{subsubsec:portalVulSum}
-Iedere moment dat er een analyse is uitgevoerd wordt er hier een samenvating aan toegevoegd
+\subsubsection{Vulnerability Summary}\label{subsubsec:portalVulSum}
+Ieder moment dat er een analyse is uitgevoerd wordt er hier een samenvating aan toegevoegd, zodat er een up to date samenvatting beschikbaar is voor de portal evenals de geschiedenis hiervan.
 
 \begin{tabular}{lll}
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
     vulSummaryId & VulSumId > Long & uniek Id\\
     timeStamp & DataTime & moment van opslaan van de samenvating\\
     details & String & referentie naar SOUPAPI model analyse\\
-    severAmount & Int & aantal severe kwetsbaarheden\\
+    severeAmount & Int & aantal Severe kwetsbaarheden\\
     highAmount & Int & aantal High kwetsbaarheden\\
     mediumAmount & Int & aantal Medium kwetsbaarheden\\
     lowAmount & Int & aantal Low kwetsbaarheden\\
 \end{tabular}
 
 \section{Algemene Architectuur}\label{sec:algemene-architectuur}
-%TODO checken of 8pt leesbaar is op print
 %TODO tekst beter structureren
 
-Voor het analyseren, beheren en weergeven van een SOUP-analyse heeft de applicatie een aantal componenten nodig die elk een eigen verantwoordelijkheid hebben in de taken die de applicatie uit moet voeren. Om de verantwoordelijkheden te splitsen is de applicatie opgesplitst in verschillende modulen. Voor sommige onderdelen geldt zelfs dat weer een onderdeel in van een andere applicatie binnen de Eaglescience Dev-stack. Voor een volledige compatibiliteit wordt de applicatie in Scala geschreven waarbij het PlayFramework wordt gebruikt. Voor Frontend delen en dan met name wordt er gebruik gemaakt van de huidige portal wat dicteert dat Angular gebruikt gaat worden voor de ontwikkeling hiervan.
-
-
+Voor het analyseren, beheren en weergeven van een SOUP-analyse heeft de applicatie een aantal componenten nodig die elk een eigen verantwoordelijkheid hebben in de taken die de applicatie uit moet voeren. Om deze verantwoordelijkheden te splitsen is de applicatie opgesplitst in verschillende modulen. Voor sommige onderdelen geldt zelfs dat het zelf een onderdeel is van een andere applicatie binnen de Eaglescience Dev-stack. Voor een volledige compatibiliteit wordt de applicatie in Scala geschreven waarbij het PlayFramework wordt gebruikt. Voor Frontend delen en dan met name in de portal wordt er Angular gebruikt, omdat dit hier al gebruikt wordt. Zoals te zien is in figuur~\ref{fig:SOUP-Components} zijn er verschillende componenten die samen werken om een analyse weer te geven voor de gebruiker.
 \begin{figure}[bth]
     \myfloatalign
     \includegraphics[width=10cm]{gfx/umlet/exports/ApplicationComponents}
     \caption{Componenten SOUP Analyse Systeem}
     \label{fig:SOUP-Components}
 \end{figure}
-Zoals te zien is in figuur~\ref{fig:SOUP-Components} zijn er verschillende componenten die samen werken om een analyse weer te geven voor de gebruiker. \textbf{Jenkins} is verantwoordelijk voor het up-to-date houden van de laatste wijzigingen in de sourde-code en het initiele rapport. Welke aangeboden wordt aan de \textbf{SOUP-API}. Waarin de  \textbf{ReportParserEngine} verantwoordelijk is voor het omzetten van de binnegekomen rapporten naar het interne datamodel en het opslaan van de dependency declaraties. De \textbf{PeriodicAnalysisEngine} is verantwoordelijk voor het doen van periodieke analyses met de dependency declaraties. Centraal in de SOUP-API staat de \textbf{API} welke verantwoordelijk is voor de dataverwerking van de data die door de beide engines gegenereerd wordt of benodigd is. De \textbf{Portal} is verantwoordelijk voor de user interface met de gebruiker en de SOUP-API. Voor het periodiek kunnen analyseren van de modules binnen projecten is er een \textbf{AnalysisEnvironment} welke zorg draagt voor het veilig kunnen analyseren van modules op basis van de laatst opgeslagen dependencyDeclaraties. Als \textbf{Database} is MongoDB gekozen omdat er wisselingen in content kan zitten in de uitslagen en om deze reden en flexibelere manier van opslaan vereist is.
 
-In de komende secties zal er dieper ingegaan worden op de verschillende componten waardoor er een completer beeld onstaat. Functionele ontwerpen zullen worden aangeboden in de hierop volgende hoofdstukken.
+\textbf{Jenkins} is verantwoordelijk voor het up-to-date houden van de laatste wijzigingen in de sourde-code en het initiele rapport, welke aangeboden wordt aan de \textbf{SOUP-API}. Hierin is de  \textbf{ReportParserEngine} verantwoordelijk voor het omzetten van de binnegekomen rapporten naar het interne datamodel. De \textbf{PeriodicAnalysisEngine} is verantwoordelijk voor het doen van periodieke analyses met de dependency declaraties. Centraal in de SOUP-API staat de \textbf{API} welke verantwoordelijk is voor de dataverwerking van de data die door de beide engines gegenereerd of benodigd is. Daarnaast is het verantwoordelijk voor het opslaan van de dependency declaraties. De \textbf{Portal} is verantwoordelijk voor de user interface met de gebruiker en de SOUP-API. Voor periodieke analyse van de modules binnen projecten is er een \textbf{AnalysisEnvironment} welke zorg draagt voor de veilige analyse van modules op basis van de laatst opgeslagen dependencyDeclaraties. Als \textbf{Database} is MongoDB gekozen omdat er wisselingen in content kan zitten van de uitslagen en dit een flexibelere manier van opslaan vereist is.
+
+In de komende secties zal er dieper ingegaan worden op de verschillende componten waardoor er een completer beeld hierover onstaat. Functionele ontwerpen zullen worden aangeboden in de hierop volgende hoofdstukken.
 
 \section{SOUP API}\label{sec:soup-api}
-De SOUP-API is een opzichzelf staand centraal deel van de applicatie dat verantwoordelijk is voor de verwerking van gegevens uit de SCA tooling en de portal. Als ook het regelen van de periodieke analyses om informatie up-to-date te houden van al eerder geanalyseerde projecten waar al een tijd geen wijzigingen op zijn geweest. Deze verantwoordelijkheden worden door de volgende componenten beheert
+De SOUP-API is een opzichzelf staand centraal deel van de applicatie welke verantwoordelijk is voor de verwerking van gegevens uit de SCA tooling en de portal. Hiernaast regelt het ook de periodieke analyses om informatie up-to-date te houden van al eerder geanalyseerde projecten waar al een tijd geen wijzigingen op zijn geweest. Deze verantwoordelijkheden worden door de volgende componenten beheert:
 
 \subsection{ReportParseEngine}\label{subsec:reportparseengine}
 De ReportParseEngine zorgt ervoor dat de binnenkomende datastroom vanuit de SCA tooling wordt verwerkt tot gegevens die in de SOAP-API gebruikt kan worden om inzichten in kwetsbaarheden te verkrijgen.
@@ -225,14 +223,14 @@ De ReportParseEngine zorgt ervoor dat de binnenkomende datastroom vanuit de SCA 
     \label{fig:SOUPAPIReportParserComps}
 \end{figure}
 
-De datastroom die binnenkomt bestaat uit een aantal zaken. Ten eerste is er het rapport dat uit de SCA tooling komt dat omgezet moet worden naar het intene datamodel. Daarnaast komen er vanuit het Jenkins process een aantal dependency declaraties mee die het mogelijk maken om in een later stadium de modules opnieuw te analyseren op kwetsbaarheden. Als laatst zal er metadata worden verstuurt die de API gebruikt om de analyses op de juiste plek op te slaan. Om de verantwoordelijkheden goed te verdelen zijn er een aantal services voorzien.
+De datastroom die binnen komt bestaat uit een aantal zaken. Ten eerste is er het rapport dat uit de SCA tooling komt dat omgezet moet worden naar het intene datamodel. Ten tweede zal er metadata worden verstuurt die de API gebruikt om de analyses op de juiste plek op te slaan. Om de verantwoordelijkheden goed te verdelen zijn er een aantal services voorzien:
 
-De \textbf{ParserService} is het centrale aanspreek punt van de ReportParserEngine en heeft als taak dat de juiste functionaliteit wordt aangesproken op het moment dat bepaalde vormen van instroom data wordt aangeboden. De ReportParserEngine moet de mogelijkheid hebben om in de toekomst met meer SCA tools op te kunnen gaan. De verwachting is dat niet iedere tool de zelfde opmaak van het rapport heeft en er om die redenen meerdere parsers moeten worden ontwikkeld in figuur ~\ref{fig:ReportParserComponents} staat deze aangegeven als $"$FutureParser$"$.
+De \textbf{ParserService} is het centrale aanspreek punt van de ReportParseEngine en heeft als taak dat de juiste functionaliteit wordt aangesproken op het moment dat bepaalde vormen van instroom data worden aangeboden. De ReportParseEngine moet de mogelijkheid hebben om in de toekomst met meer SCA tools om te kunnen gaan. De verwachting is dat niet iedere tool dezelfde opmaak van het rapport heeft en er om die redenen meerdere parsers moeten worden ontwikkeld in figuur~\ref{fig:SOUPAPIReportParserComps} staat deze aangegeven als $"$FutureParser$"$.
 
-De \textbf{OWASP Parser} maakt het mogelijk om het rapport dat gegegeven wordt door in het hiervoor beschreven onderzoek geselecteerde SCA tool om te zetten naar data in de database. Naast het plaatsen van de data in de interne database genereert het ook een samenvating die in database van de portal wordt geplaatst.
+De \textbf{OWASP Parser} maakt het mogelijk om het rapport dat gegenereerd wordt door de OWASP tool \footnote{tooling die is voortgekomen uit het hiervoor beschreven onderzoek} om te zetten naar data in de database. Naast het plaatsen van de data in de interne database genereert het ook een samenvatting die in database van de portal wordt geplaatst.
 
 \subsection{Periodic Analysis Engine}\label{subsec:periodicanalysisengine}
-De Periodic Analysis Engine is een module dat verantwoordelijk is voor het periodiek analyseren van modulen. Een schematische weergave is te zien in figuur~\ref{fig:SOUPAPIPeriodicAnalysisEngineComps}. Deze modulen worden in een lijst genaamd de \textbf{scanQ} welke door de \textbf{scanQservice} wordt beheerd. Deze service is verantwoordelijk voor alle mutaties op de lijst als ook het ophalen van data welke bekend is voor de module om op die manier de Analyses Environment de juiste gegevens te versturen om aan analyses container op te kunnen zetten. De algehele controle wordt uitgevoerd door de \textbf{AnalysisController} welke verantwoordelijk is voor het starten van de gewenste analyse.
+De Periodic Analysis Engine is een module die verantwoordelijk is voor het periodiek analyseren van modulen. Een schematische weergave is te zien in figuur~\ref{fig:SOUPAPIPeriodicAnalysisEngineComps}. Deze modulen worden in een lijst genaamd de \textbf{scanQ} opgeslagen welke door de \textbf{scanQservice} wordt beheerd. Deze service is verantwoordelijk voor alle mutaties op de lijst als ook voor het ophalen van data welke bekend is voor de module. Op die manier krijgt de Analyses Environment de juiste gegevens om een container op te kunnen zetten. De algehele controle wordt uitgevoerd door de \textbf{AnalysisController} welke verantwoordelijk is voor het starten van de gewenste analyse.
 
 \begin{figure}[bth]
     \myfloatalign
@@ -243,38 +241,37 @@ De Periodic Analysis Engine is een module dat verantwoordelijk is voor het perio
 
 \newpage %TODO: Tijdelijk voor placering van de afbeeldingen later testen of zonder ook goed uitziet.
 \subsection{API}\label{subsec:api2}
-De voornaamste verantwoordelijkheid van de API is de zorg dat de data die in de SOUP-API wordt gemuteerd in de interne database opgeslagen wordt. Zie figuur ~\ref{fig:SOUPAPI-API comps}. Als ook de data in de database beschikbaar te stellen voor services en modulen die hier afhankelijk voor zijn. De API is opgebouwd volgens een Controller, Service Repository architectuur waarbij de Controller verantwoordelijk is voor het beschikbaar stellen van services op verschillende REST-endpoints. De Service verantwoordelijk is voor de business logic en mutatie van de data. Welke vervolgende door de Repository wordt weggeschreven naar de database.
+De voornaamste verantwoordelijkheid van de API is ervoor zorgdragen dat de data die in de SOUP-API wordt gemuteerd in de interne database wordt opgeslagen, en daarnaast deze data beschikbaar te stellen voor services en modulen die hier afhankelijk van zijn. Zie figuur ~\ref{fig:SOUPAPI-API comps}. De API is opgebouwd volgens een Controller, Service, Repository architectuur waarbij de Controller verantwoordelijk is voor het beschikbaar stellen van services op verschillende REST-endpoints. De Service zelf is verantwoordelijk voor de business logica en mutatie van de data, welke vervolgens door de Repository wordt weggeschreven naar de database.
 \begin{figure}[bth]
     \myfloatalign
-    \includegraphics[width=10cm]{gfx/umlet/exports/API-ComponentsDiagram}
-    \caption{Componenten API binndne de SOUPAPI}
+    \includegraphics[width=12cm]{gfx/umlet/exports/API-ComponentsDiagram}
+    \caption{Componenten API binnen de SOUP-API}
     \label{fig:SOUPAPI-API comps}
 \end{figure}
 
-Naast services en een datacontrolle die verantwoordelijk is voor de mutatie van alle data. Is er ook een UploadCOntroller die samen met een reportService verantwoordelijk is voor het aansturen van de ReportParsingEngine. De reportService verwerkt ook de dependencyFiles die vanuit Jenkins wordt verstuurt.
+Naast services en een datacontroller die verantwoordelijk is voor de mutatie van alle data, is er ook een UploadController die samen met een reportService verantwoordelijk is voor het aansturen van de ReportParseEngine. De reportService verwerkt ook de dependencyFiles die vanuit Jenkins worden verstuurt.
 
 \section{Software Compsition Analysis in Jenkins}\label{sec:jenkins}
-De bestaande jenkins omgeving is de primaire bron voor nieuwe informatie uit projecten. Het aangewezen moment in de ontwikkeling is het moment dat er een acceptatie of productie build gedaan wordt, dit omdat op dit moment de dependencies relatief vast staan ten opzichte eerdere fasen in de ontwikkeling. Een andere reden is dat de development/ personal builds veel frequenter voorkomen en door de hieronder besproken toevoegingen de performance van deze builds achteruit kan gaan. In figuur ~\ref{fig:JenkinsSequece}
+De bestaande Jenkins omgeving is de primaire bron voor nieuwe informatie uit projecten. Het aangewezen moment in de ontwikkelingsCyclus voor het uitvoeren van een analyses is wanneer er een acceptatie of productie build wordt uitgevoerd. De eerste reden hiervoor is omdat op dit moment de dependencies relatief vast staan ten opzichte van eerdere fasen in de ontwikkeling. De tweede reden is dat de development/ personal builds veel frequenter voorkomen en dat de performance van deze builds door de hieronder besproken toevoegingen achteruit kan gaan. In figuur ~\ref{fig:JenkinsSequece} is deze sequentie weergegeven.
 
 
 \begin{figure}[bth]
     \myfloatalign
-    \includegraphics[width=10cm]{gfx/umlet/exports/jenkinsBuildSequence}
+    \includegraphics[width=15cm]{gfx/umlet/exports/jenkinsBuildSequence}
     \caption{Jenkins Buildsequence: alleen onderdelen relavant voor SOUP-API worden getoont}
     \label{fig:JenkinsSequece}
 \end{figure}
 
-De pipeline binnen jenkins kent voor de SOUP API twee belangrijke momenten. In de \textbf{build/test fase} waarin de module wordt gebouwd en vervolgens getest zullen er twee toevoegingen gedaan moeten worden. Als eerst moet er meta data worden gepubliceerd op het filesysteem zodat er in een later stadium bekend is welke module, jenkins buildnummer en welke commit geanalyseerd wordt. Dit waarborgt de traceability tussen jenkins, gitlab en de SOUPAPI. Later moet in die zelfde stap de SCA tool worden uitgevoerd om de module te analyseren op kwetsbaarheden. Het result van deze analyse wordt vervolgens gepubliceerd op de filesystem.
+De pipeline binnen Jenkins kent voor de SOUP-API twee belangrijke momenten. In de \textbf{build/test fase} waarin de module wordt gebouwd en vervolgens getest zullen er twee toevoegingen gedaan moeten worden. Als eerst moet er meta data worden gepubliceerd op het filesysteem zodat er in een later stadium bekend is welke module, jenkins buildnummer en githash geanalyseerd wordt. Dit waarborgt de traceability tussen Jenkins, gitlab en de SOUPAPI. Later moet in die zelfde stap de SCA tool worden uitgevoerd om de module te analyseren op kwetsbaarheden. Het resultaat van deze analyse wordt vervolgens gepubliceerd op het filesysteem.
 
-Op het moment dat de \textbf{deploy} fase gelukt is. Kan er en upload plaatsvinden naar de SOUP API met daarin: "report.json, meta.json" en dependency declaraties als (build.sbt/dependencies.scala of de package-lock.json)
-Als de upload gelukt dan zal jenkins de build vrij geven als geslaagd mocht er onverhoopt iets niet lukken in de upload zal dit te zien zijn in de logs van Jenkins.
+Op het moment dat de \textbf{deploy} fase gelukt is kan er een upload plaatsvinden naar de SOUP API met daarin: "report.json, meta.json" en dependency declaraties als (build.sbt/dependencies.scala of de package-lock.json)
+Als de upload lukt dan zal Jenkins de build vrijgeven als geslaagd. Mocht er onverhoopt iets niet lukken in de upload zal dit te zien zijn in de logs van Jenkins.
 
-\section{Portal}\label{sec:arch-portal} De portal is een inhouse applicatie welke gebruikt wordt voor administratieve zaken binnen het bedrijf. de wens is om hier functionaliteiten aan toe te voegen die bedrijfsbreed zijn en daarmee dus project oversteigend zijn. Voor deze applicatie dient er een module te worden toeegevoegd die fungeert als een interface waarin informatie over de bekende kwetsbaarheden te vinden is. maar ook instellingen kunnen worden. Er bestaat nu een module dat projects heet waarin verschillende details van het project in opgeslagen worden. samenvatingen van informatie over kwetsbaarheden kunnen hieraan worden toegevoegd.
-Daarnaast zal er een nieuwe module moeten worden ontwikkeld waarin de details van de analyses zijn te vinden. Deze module moet samen werken met de SOUP-API API om de gewenste gegevens te kunnen weergeven. Ook de samenwerking tussen de portalmodulen Projects en SOUP api er zijn om vanuit een geselecteerd project de details in te kunnen zien.
-
+\section{Portal}\label{sec:arch-portal} De portal is een inhouse applicatie welke gebruikt wordt voor administratieve zaken binnen het bedrijf. De wens is om hier functionaliteiten aan toe te voegen die bedrijfsbreed zijn en daarmee dus project oversteigend. Voor deze applicatie dient er een module te worden toeegevoegd die fungeert als een interface waarin informatie over de bekende kwetsbaarheden te vinden is, maar ook instellingen omtrend de SOUP-API kunnen worden aangepast. Er bestaat nu een module dat projects heet waarin verschillende details van het project in opgeslagen worden. Samenvatingen van informatie over kwetsbaarheden kunnen hieraan worden toegevoegd.
+Daarnaast zal er een nieuwe module moeten worden ontwikkeld waarin de details van de analyses kunnen worden gevonden. Deze module moet samenwerken met de SOUP-API API om de gewenste gegevens te kunnen weergeven.
 
 \section{Analysis Environment}\label{sec:analysis-environment}
-Deze omgeving moet het mogelijk maken om vanuit de SOUP API een analyse uit te voeren op modulen. waarbij er een docker container wordt gestart een analyse uitgevoerd wordt en vervolgens de container wordt vernietigd. de voornaamste reden is dat er door de opzet van npm/node en sbt/scala veel combinatie kunnen ontstaan die ervoor kunnen zorgen dat er de versies die gebruikt worden veranderen. Om deze reden moet de analyse omgevingen een nagenoeg exacte kopie zijn van de omgeving op productie. Naast de grote variatiet in omgevingen is er ook de mogelijkheid dat er ergens in een declaratie van dependencies code staat dat uitgevoerd kan worden middels install scripts. om ervoor te zorgen dat deze geen blijvend effect hebben op het systeem wordt er gekozen voor een docker systeem wat iedere keer opnieuw kan worden geinitiealiseerd.
+Deze omgeving moet het mogelijk maken om vanuit de SOUP-API een analyse uit te voeren op modulen, waarbij er eerst een docker container wordt gestart, hier vervolgens een analyse in wordt uitgevoerd en gepubliceers waarna de container wordt vernietigd. De voornaamste reden voor het uitvoeren van analyses op deze manier is dat er hierdoor de analyse container exact dezelfde runtime versies heeft als die op de productie. Naast de grote variatie in omgevingen is er ook de mogelijkheid dat er ergens in een declaratie van dependencies code staat die uitgevoerd kan worden middels install scripts. Om ervoor te zorgen dat deze geen blijvend effect hebben op het systeem wordt er gekozen voor een docker systeem wat iedere keer opnieuw kan worden geinitialiseerd.
 
 \section{Deployment}\label{sec:deployment}
 
@@ -286,5 +283,5 @@ Deze omgeving moet het mogelijk maken om vanuit de SOUP API een analyse uit te v
     \label{fig:deployment}
 \end{figure}
 
-De portal draait lokaal binnen Eaglscience in een kubernetes omgeving. De frontend is geschreven in Angular 13. waarbij er tegen een backend wordt gecommuniceerd welke in Scala 2.13 is geschreven met PlayFramework. De SOUP-API is een opzich zelfstaand component binnen de gehele applicatie en zal ook worden geschreven in Scala met playFramework. De SOUP-API zal worden ondergebracht in een dockercontainer welk beschikbaar is voor de portal, jenkins en de database. De database is een mongoDB database en zal ook moeten worden voorzien. Het maakt voor de werking niet veel uit of dit een lokale Database of een instantie in de cloud is.
+De portal draait lokaal binnen Eaglscience in een docker omgeving. De frontend is geschreven in Angular 13, waarbij er tegen een backend wordt gecommuniceerd welke in Scala 2.13 is geschreven met PlayFramework. De SOUP-API is een opzichzelfstaand component binnen de gehele applicatie en zal ook worden geschreven in Scala met PlayFramework. De SOUP-API zal worden ondergebracht in een dockercontainer welk beschikbaar is voor de portal, Jenkins en de database. De database is een mongoDB database en zal ook moeten worden ingericht. Het maakt voor de werking niet veel uit of dit een lokale database of een instantie in de cloud is.
 
