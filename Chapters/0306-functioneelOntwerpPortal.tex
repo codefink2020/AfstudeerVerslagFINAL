@@ -1,7 +1,19 @@
 \chapter{Functioneel ontwerp: Portal}\label{ch:impl-Portal}
 De SOUP API is de centrale module voor het systeem dat verantwoordelijk is voor het periodiek scannen van de projecten en het parsen van de rapporten die uit de analyses komt. Deze module is ook opgedeeld in twee verschillende submodulen die ieders hieronder verder wordt uitgewerkt.
 
-\section{Controller}\label{sec:controller}
+
+\section{Frontend}
+In de frontend moeten er onderdelen worden toegevoegd aan de huidige project module waarin een samenvating is te zien over de gevonden kwetsbaarheden. Om de details van de analysen te kunnen zien moet er een aparte module komen waarin deze details te zien zijn. In de SOUP module moet de mogelijkheid komen om per project per module inzicht te verkrijgen in de gevonden kwetsbaarheden.
+
+
+\section{backend}
+Ook hier moet in de project module een aanpassing worden gemaakt in de vorm van een aantal endpoint die de door de portal opgevraagde data kan verzenden en of wijzigen. Voor SOUP module zelf is er gekozen om direct met de datacontroller van de SOUP-API API te praten.
+
+\section{Portal Database}
+hier moeten een aantal aanpassingen op worden gedaan die in het architectuur hoofdstuk zijn besproken in sectie ~\ref{subsec:portal-datamodel}.
+
+
+'
 
 
 \section{Portal}\label{sec:portal}

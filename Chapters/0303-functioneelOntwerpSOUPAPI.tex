@@ -17,7 +17,7 @@ Om de data die in het datamodel (zie figuur~\ref{fig:SOUP-SoupApiDm [CHECKEN]} i
 
 
 \subsection{Controllers}\label{subsec:controllers}
-Voor iedere entiteit dat belegt is in zowel het interne datamodel (figuur~\ref{fig:SOUP-SoupApiDm [CHECKEN]}) als het datamodel voor de portal (figuur~\ref{fig:SOUP-portalDm}) worden algemene REST endpoints aangemaakt die bewerkingen op data beschikbaar maken waar dit gewenst en mogelijk is.
+Voor iedere entiteit dat belegt is in het interne datamodel (figuur~\ref{fig:SOUP-SoupApiDm [CHECKEN]} worden algemene REST endpoints aangemaakt die bewerkingen op data beschikbaar maken waar dit gewenst en mogelijk is.
 \subsubsection{DataController}
 Controller voor het beheer van de data in de database. De REST endpoints maken het mogelijk om data te bewerken. In de secties hieronder kan [Entiteit] worden gelezen als alle Entiteiten in het interne datamodel, met als uitzondering Dependencies en Vulnerabilities. Dit gezien deze laatste twee gegenereert worden door de raportage en bewerking van buitenaf niet gewenst is in verband met de integriteit van deze data.
 \subsubsection*{Create}
@@ -30,15 +30,16 @@ Als er een read actie wordt aangeroepen kan alleen de entiteit op zichzelf worde
 
 \textbf{GET: /data/[Entiteit]/?detail=[boolean]} haalt alle mogelijke records op van de betreffende entiteit. Door detail op true te zetten komen ook alle sub entiteiten mee met de return body.
 
-\textbf{GET: /data/[Entiteit]/?detail="[boolean]"&attr="[attribuut]"&value="[value]} haalt een enkele entiteit op van een enkele record op basis van het meegegeven attribuut en de value van dat attribuut. Als er bijvoorbeeld een enkel project moet worden opgehaald op basis van de naam is de volgende HTTP POST Call op "/data/project/?detail=true&attr="name"&value="groeigids$"$ de manier om het project groeigids op te halen.
+\textbf{GET: /data/[Entiteit]/?detail="[boolean]"\&attr="[attribuut]\&value="[value]} haalt een enkele entiteit op van een enkele record op basis van het meegegeven attribuut en de value van dat attribuut. Als er bijvoorbeeld een enkel project moet worden opgehaald op basis van de naam is de volgende HTTP POST Call op "/data/project/?detail=true&attr="name"&value="groeigids$"$ de manier om het project groeigids op te halen.
 
 \subsubsection*{Update}
-\textbf{PUT: /data/[Entiteit]/?attr="[Attribuut]&value="[value]"} update een door de attribuut en value geselecteerde record met de meegegeven body.
+\textbf{PUT: /data/[Entiteit]/?attr="[Attribuut]\&value="[value]"} update een door de attribuut en value geselecteerde record met de meegegeven body.
 \subsubsection*{Delete}
-\textbf{DELETE: /data/[Entitiet]/?attr="[Attribuut]&value="[value]"} verwijderd een record dat gevonden wordt middels het meegegeven attribuut en de bijbehorende value.
+\textbf{DELETE: /data/[Entitiet]/?attr="[Attribuut]\&value="[value]"} verwijderd een record dat gevonden wordt middels het meegegeven attribuut en de bijbehorende value.
+
 
 \subsubsection{UploadController}
-De controller fungeerd als gateway waar rapporten naar toe kunnen worden geupload. Er kunnen vanuit twee processen binnen de SOUP applicatie rapporten worden geupload. Voor beide is een eigen endpoint voorzien:
+De uploadController fungeerd als gateway waar rapporten naar toe kunnen worden geupload. Er kunnen vanuit twee processen binnen de SOUP applicatie rapporten worden geupload. Voor beide is een eigen endpoint voorzien:
 
 \textbf{POST: /upload/jenkins} geeft een endpoint met de mogelijkheid om meerdere bestanden te uploaden. Als eerste is er het SCA rapport met daarin de resultaten van de eerste analyse. Bij de analyse middels Jenkins worden ook de dependency files meegezonden om op die manier het systeem up-to-date te houden. Als laatst wordt er een JSON bestand meegestuurt met daarin de meta gegevens over het project.
 
@@ -57,6 +58,7 @@ De controller fungeerd als gateway waar rapporten naar toe kunnen worden geuploa
     \caption{Sequence UploadController Periodic Analysis Engine endpoint}
     \label{fig:SequenceUploadReportpaet}
 \end{figure}
+
 In beide gevallen worden er bestanden naar de uploadcontroller verstuurt. De bestanden zijn onderdeel van de body en worden voorzien van een key. Hieronder is te zien welke bestanden de controller kan verwachten en met welke key deze geidentificeert kan worden. Alleen dependencybestanden worden verstuurt naar de \texttt{/upload/jenkins/} endpoint.
 
 \begin{tabular}{lll}
@@ -66,9 +68,9 @@ In beide gevallen worden er bestanden naar de uploadcontroller verstuurt. De bes
     sbt-deps & scala source & dependencydeclarite uit SBT project \\
     sbt-build & build.sbt  & build file van SBT project\\
     npm-deps & JSON & package-lock.json \\
+    dockerFile & dockerFile & base image dockerfile
 \end{tabular} \\
-
-Direct bij de controller worden de binnenkomende bestanden verwerkt. De dependency bestanden worden middels een service opgeslagen in de fileSystem en de metaData wordt omgezet in een object van de case class MetaData zodat de attributen makkelijk te bereiken zijn. Het rapport wordt omgezet naar JSON zodat deze door de ReportParseEngine kan worden verwerkt.
+Zoals te zien is in figuur ~\ref{fig:SequenceUploadReportJenkins} en \ref{fig:SequenceUploadReportpaet} wordt er direct in de controller de bestanden omgezet naar data die binnen de SOUPAPI gebruikt kan worden. De dependency en docker bestanden worden middels de DependencyFileService opgeslagen in de fileSystem en de database, de metaData wordt omgezet in een object van de case class MetaData zodat de attributen makkelijk te bereiken zijn. Het rapport wordt omgezet naar JSON zodat deze door de ReportParseEngine kan worden verwerkt. Als alle bestanden zijn verwerkt wordt er een analyse aangemaakt welke door de ReportParseEngine kan worden gebruikt voor het opslaan van het rapport.
 
 \subsection{Services}\label{subsec:Services}
 Voor de business logica is er een services laag die de verschillende processen in de SOUP-API belegt. In principe zijn er twee hoofd typen processen: De verwerking van rapportage over kwetsbaarheden en de services die de bewerkingen op data regelen.
@@ -88,21 +90,6 @@ Net als bij de services is voor iedere Entiteit in het datamodel een eigen repos
     update(id: String, e: Entity) & Future[Boolean]\\
     delete(id: String) & Future[Boolean] \\
 \end{tabular} \\
-
-Naast de bovengenoemde functies zullen er voor een enkele repository nog extra functies moeten worden aangemaakt die hieronder genoemd zijn:
-
-\begin{tabular}{lll}
-    \textbf{Entiteit} & \textbf{function} & \textbf{Returns}\\
-    entiteit & create(e: Entity) & Future[Boolean] \\
-    entiteit & createMany(deps: Seq[Entity])& Future[Boolean]\\
-    entiteit & findOneById(id: String) & Future[Option[Entity]]\\
-    entiteit & findOneByName(name: String) & Future[Option[Entity]]\\
-    entiteit & findAll() & Future[Seq[Entity]] \\
-    entiteit & update(id: String, e: Entity) & Future[Boolean]\\
-    entiteit & delete(id: String) & Future[Boolean] \\
-\end{tabular} \\
-
-
 
 %https://stackoverflow.com/questions/70513344/scala-generic-repository-class-for-reactive-mongo-repositoryalpakka-needed-c
 
@@ -132,6 +119,7 @@ object MetaData {
 }
 
 \end{lstlisting}
+\newpage
 Wat vervolgens in de volgende JSON resulteert:
 \begin{lstlisting}[caption={metadata JSon object behorende bij de case class}, label={lst:metadatajson}]
 {
@@ -145,47 +133,67 @@ Wat vervolgens in de volgende JSON resulteert:
   "jenkinsBuildNr": "42"
 }
 \end{lstlisting}
-
 \subsection{Algehele CRUD functionaliteit}\label{subsec:algehele-crud-functionaliteit}
-sequence diagrammen voor:
-\subsubsection*{Create}Schema maken
-\subsubsection*{FindOne}Schema maken
-\subsubsection*{FindAll}Schema maken
+In deze hele sectie is het de entiteit project als voorbeeld genomen om de verschillende bewerkingen in het systeem weer te geven
+\subsubsection*{Create}
+In figuur ~\ref{fig:seqdiagcreateProj} is te zien hoe een project aangemaakt wordt in de database door vanuit de datacontroller een Project Object naar de ProjectService te sturen welke het vervolgens naar de repository verstuurt de de communicatie met de database verzorgt. De repository geeft Future[WriteResult]\footnote{Een Future kan gezien worden als een async promise uit JavaScript} terug. Een WriteResult is een object welke uit de ReactiveMongo Bibliotheek wordt terug gegeven in dit object is metadata over de actie op de database. De service zal nagaan of de actie gelukt is en op het moment dat dit zo is een Option[Project]\footnote{Een Option kan een instantie van een object bevatten of een None. Waarmee in een latere moment de keuze kan worden gemaakt wat er mee te doen. dit geeft de mogelijkheid om alle foutafhandeling op een zelfde niveau te regelen wat de structuut van de applicatie ten goede brengt.} terug geven. De Controller kan op basis van de option aangeven of de actie voltooid en gelukt is of dat er ergens iets fout is gegaan.
+\begin{figure}[h]
+    \myfloatalign
+    \includegraphics[width=10cm]{gfx/umlet/exports/CRUD-CreateProject}
+    \caption{Sequence Diagram Create Project }
+    \label{fig:seqdiagcreateProj}
+\end{figure}
+
+
+
+\subsubsection*{Find(One/All)}
+In figuur ~\ref{fig:seqdiagFindProj} is te zien hoe een project gevonden kan worden middels een in de parameter meegegeven attribuut en value voor dit attribuut. ( zie sectie ~\ref{subsec:controllers}) de projectService roept op basis van het meegegeven attribuut de juiste functie aan in de projectRepository. Het resultaat is een Future[Option[Project]] welke door de service wordt afgehandeld en deze als een Option[Project] naar de controller wordt gestuurd.
+\begin{figure}[h]
+    \myfloatalign
+    \includegraphics[width=10cm]{gfx/umlet/exports/CRUD-FindProject}
+    \caption{Sequence Diagram FindOne Project }
+    \label{fig:seqdiagFindProj}
+\end{figure}
 \subsubsection*{Update}Schema maken
-\subsubsection*{Delete}Schema maken
+In figuur ~\ref{fig:seqdiagUpdateProj} is te zien hoe een project kan worden geupdate. Het maakt in weze gebruik van hetzelfde mechanisma als de findOne functionaliteit als hierboven. Echter wordt er een project object meegezonden met daarin de nieuwe gegevens
+\begin{figure}[h]
+    \myfloatalign
+    \includegraphics[width=10cm]{gfx/umlet/exports/CRUD-UpdateProject}
+    \caption{Sequence Diagram Update Project }
+    \label{fig:seqdiagUpdateProj}
+\end{figure}
+\subsubsection*{Delete}
+In figuur ~\ref{fig:seqdiagDeleteProj} is te zien hoe een project wordt verwidjerd. Door wederom het zelfde mechanisme van attribuut en value te gebruiken zoals beschreven in de find sectie hierboven kan een te verwidjeren object geselcteerd worden en vervolgens verwijderd
+\begin{figure}[h]
+    \myfloatalign
+    \includegraphics[width=10cm]{gfx/umlet/exports/CRUD-DeleteProject}
+    \caption{Sequence Diagram Delete Project }
+    \label{fig:seqdiagDeleteProj}
+\end{figure}
 
 \subsection{Toevoegen van entiteit A aan entiteit B}\label{subsec:toevoegen-van-entiteit-a-aan-entiteit-b}
-Toevoegen van module aan project
+Als voorbeeld wordt in deze sectie het toevoegen van een module aan een project getoont. Het geeft weer hoe de relaties tussen verschillende entiteiten worden gedaan. In figuur~\ref{fig:seqdiagModToProj} is te zien dat er een call
+gedaan wordt vanuit de ReportService waarbij de Id's van zowel het project als de module wordt meegegeven. Als eerst wordt er een project opgehaald door middel van het ID. De module wordt toegevoegd aan dit project ( nadat er gekeken is of het project deze module nog niet heeft) en vervolgende wordt de repository aangeroepen om het project te updaten.
+\begin{figure}[h]
+    \myfloatalign
+    \includegraphics[width=10cm]{gfx/umlet/exports/Relation-ModuleToProject}
+    \caption{Sequence Diagram Add Module to Project }
+    \label{fig:seqdiagModToProj}
+\end{figure}
 
-
-
-\section{Report Parse Engine}
-De ReportParseEngine is verantwoordelijk voor het omzetten van een rapport dat gegenereerd wordt door een Software Composition Analysis Tool naar het interne datamodel. Het feit dat er veel tools zijn die allemaal de mogelijkheid bieden om projecten te analyseren op kwetsbaarheden en hier een rapport over uit te brengen geeft al aan dat de ReportParseEngine in staat moet zijn om met verschillende rapporten van verschillende tools om te moeten kunnen gaan. Om dit mogelijk te maken is er gekozen voor een modulaire opzet waarbij er verschillende parsers geschreven kunnen worden die de rapporten kunnen omzetten. Deze Modulaire opzet is te zien in figuur~\ref{fig:ReportParserComponents} waarbij de $"$[FUTURE]Parser$"$ een placeholder is voor elke parser die in de toekomst moet worden toegevoegd om meerdere tools te kunnen ondersteunen.
+\newpage
+\section{Report Parse Engine}\label{sec:report-parse-engine}
+De ReportParseEngine is verantwoordelijk voor het omzetten van een rapport dat gegenereerd wordt door een Software Composition Analysis Tool naar het interne datamodel. Het feit dat er veel tools zijn die allemaal de mogelijkheid bieden om projecten te analyseren op kwetsbaarheden en hier een rapport over uit te brengen geeft al aan dat de ReportParseEngine in staat moet zijn om met verschillende rapporten van verschillende tools om te moeten kunnen gaan. Om dit mogelijk te maken is er gekozen voor een modulaire opzet waarbij er verschillende parsers geschreven kunnen worden die de rapporten kunnen omzetten. Deze Modulaire opzet is te zien in figuur~\ref{fig:ReportParseComponents} waarbij de $"$[FUTURE]Parser$"$ een placeholder is voor elke parser die in de toekomst moet worden toegevoegd om meerdere tools te kunnen ondersteunen.
 \begin{figure}[bth]
     \myfloatalign
     \includegraphics[width=12cm]{gfx/umlet/exports/ReportParserComponents}
-    \caption{ReportParserEngine Components}
-    \label{fig:ReportParserComponents}
+    \caption{ReportParseEngine Components}
+    \label{fig:ReportParseComponents}
 \end{figure}
 
 
-\subsection{ReportService}\label{subsec:reportservice}
-
-
-In deze ReportService zijn een aantal functies geimplementeerd die ervoor zorg dragen dat een binnengekomen rapport in JSON wordt weggeschreven in de database.
-\begin{itemize}
-    \item aanmaken van analyses % TODO FIGUUR NOG MAKEN
-    \item selecteren van de juiste ReportParser op basis van binnengekomen parameter "tool" zie figuur(~\ref{fig:analysisPrepare})
-\end{itemize}
-
-\begin{figure}[bth]
-    \myfloatalign
-    \includegraphics[width=14cm]{gfx/umlet/exports/SeqProcessPayload}
-    \caption{Sequence diagram prepare Analysis}
-    \label{fig:analysisPrepare}
-\end{figure}
-
-In het ontwerp is vastgelegt dat er altijd de mogelijkheid moet bestaan dat er tools toegevoegd kunnen worden aan de SOAP-API. Door dit mechanisme is dit mogelijk. Daarnasat moet er op het moment dat Jenkins de payload aanbied ook de dependencydeclaraties worden opgeslagen in de analyse.
+\subsection{ParserService}\label{subsec:reportservice}
+De ParserService ontvangt van de uploadController beschreven hierboven naast het rapport in JSON, de metaData ook een analyseId. Dat laatste wordt gebruikt om de dependency/vulnerability informatie uit het rapport toe te voegen aan de analyse. in de metaData staat welke tool er gebruikt is voor het opzetten van het rapport en kan daarmee gebruikt worden om de juiste parser te selecteren voor het omzetten van het rapport.
 
 \begin{figure}[bth]
     \myfloatalign
@@ -196,53 +204,79 @@ In het ontwerp is vastgelegt dat er altijd de mogelijkheid moet bestaan dat er t
 
 \subsection{OWASP Parser}\label{subsec:owasp-parser}
 De OWASP parser is verantwoordelijk voor het omzetten van binnengekomen OWASP data in JSON naar data in de database waarbij de onderlinge relaties blijven bestaan.
-Omdat in een eerdere stap er al een analyse is aangemaakt dienen alleen nog de dependencies en de bijbehorende vulnerabilities te worden toegevoegd.
+Omdat in een eerdere stap er al een analyse is aangemaakt dienen alleen nog de dependencies en de bijbehorende vulnerabilities te worden toegevoegd. De methode hiervoor is te zien in figuur ~\ref{fig:seqReportParse}
 De parser dient dan ook te moeten weten welke analyse er is aangemaakt Deze wordt middels een ID meegegeven alsook het OWASP rapport. De Parser zet de gevonden dependencies en kwetsbaarheden om naar het de intern geldende entiteiten en voegt deze middels de dataServices toe aan de database.
 
-\begin{figure}[H]
+\begin{figure}[bth]
     \myfloatalign
-    \includegraphics[width=15cm]{gfx/SOUPAPI-ReportParseFlow}
-    \caption{Owasp Report Flow AANPASSEN _Project, module, analyse en depfiles eruit slopen}
-    \label{fig:OwaspReportFlow}
+    \includegraphics[width=10cm]{gfx/umlet/exports/Seq-ParseReport}
+    \caption{Sequence Diagram verwerken dependencies en vulnerabilites}
+    \label{fig:seqReportParse}
 \end{figure}
 
 
 \subsection{$"$[Future]Parser$"$}\label{subsec:$"$[future]parser$"$}
 De $"$[Future]Parser$"$ zal in basis gelijk zijn als de parser voor de OWASP tool die hierboven worden beschreven. Echter zal de daadwerklijke omzetting veranderen. Om deze reden moet er voor iedere tool een eigen datamodel worden gedifineerd waarmee er objecten kunnen worden gemaakt van deze Data. Waarbij er vervolgens middels deze objecten naar het interne datamodel worden gewerkt.
 
-\section{Periodiek Analysis Engine}\label{sec:periodiek-analysis-engine}
-
-RARA PolitiePet
+\clearpage
 
 
+%TODO: Nog even goed over nadenken.....
+\section{Periodic Analysis Engine}\label{sec:periodiek-analysis-engine}
+De Periodic Analysis is verantwoordelijk voor het uitvoeren van analyses op de voor de SOUP-API bekende projecten/modulen. Hier voor maakt het gebruik van een omgeving die in sectie ~\ref{sec:analysis-environment} wordt beschreven. Om deze omgeving aan te sturen zijn er een aantal componenten nodig die in figuur~\ref{fig:paeComps} te zien zijn.
+\begin{figure}[bth]
+    \myfloatalign
+    \includegraphics[width=10cm]{gfx/umlet/exports/PeriodicAnalyisEngineComponents}
+    \caption{Componenten in de periodic Analysis Engine}
+    \label{fig:paeComps}
+\end{figure}
 
-\subsection{ScanQ}
-De ScanQ is een lijst waarin alle analyses in geplanned staan. Bij deze lijst zijn een aantal functies de lijst beheren.
+Door een CRON Job in te stellen op een gedefineerde tijd met ene POST request "Start" kan de engine in werking worden gezet waarbij het de volgende stappen doorloopt:
+\begin{enumerate}
+    \item ScanQ controleren of er analyses zijn die er voor en op de dag van de trigger gedaan moeten worden en hier een lijst van maken.
+    \item De lijst wordt per stuk afgewerkt door de analysisController
+    \item Op het moment dat de analyse klaar is wordt deze volgens de ingesteld interval opnieuw in de scanQ gezet.
+\end{enumerate}
 
-De datastructuur van de lijst is als volgt:
+DE Engine kan worden uitgezet door nog een trigger te versturen met een post request "Stop". De analyses die nog niet aan de beurt zijn geweest om welke reden dan ook zullen opnieuw in de scanQ komen en op het volgende moment dat er een trigger "start" afgaat meegenomen worden.
+
+
+\subsection{AnalysisController}\label{subsec:analysiscontroller}
+De Analysis controller is verantwoordelijk voor de samenwerking met de analysis environment waar de analyses daadwerkelijk plaats gaan vinden. Om aan de juiste data te komen communiceert deze met de AnalysisService die in data voorziet middels communicatie met de API en de ScanQ. De ScanQ is een Lijst waar in de analyses van modulen die afgehalnd moeten worden. Als laatst is er een timer die de analyses triggert op het ingestelde moment.
+
+\begin{figure}[bth]
+    \myfloatalign
+    \includegraphics[width=10cm]{gfx/umlet/exports/PAE-CreateContainer}
+    \caption{Componenten in de periodic Analysis Engine}
+    \label{fig:paeSeq}
+\end{figure}
+In figuur ~\ref{fig:paeSeq} is te zien hoe een container wordt opgebouwd door middel van het aanmaken van een buildFile specifiek voor de module De buildfile is een build-file die in de JenkinsPipeline wordt gebruikt om een container aan te maken. om er zeker van te zijn worden de in de appendNPM/SBT stap de versies gecontroleerd en waar nodig aan gepast naar de nieuwere versies. Aan de buildfile worden nog commando's toegevoegd om de juiste dependency files toe tevoegen en het commando om de SCA Tool te runnen. Met als laatste stap de upload van het rapport en meta data naar de SOUPAPI zodat deze wordt genalyseerd. Op het moment dat deze upload succesvol is wordt de container vernietigd en de gebruikte bestanden verwijderd.
+%
+%\begin{figure}[bth]
+%    \myfloatalign
+%    \includegraphics[width=15cm]{gfx/SOUPAPI-Periodic Analysis}
+%    \caption{Periodieke analyse flow}
+%    \label{fig:PeriodicAnalysis}
+%\end{figure}
+
+\subsection{AnalysisService}\label{subsec:analysisservice}
+Deze service heeft een ondersteunende rol die het mogelijk maakt voor de controller om gegevens uit de API te kunnen halen die het nodig heeft om  zijn taken uit te kunnen voeren. Ook al lijkt deze service overbodig de reden dat er een extra service tussen zit is dat op het moment er in de api iets aangepast wordt er maar een enkele aanpassing nodig is in de service en niet op meerdere andere plekkem
+
+\subsection{ScanQ}\label{subsec:scanq}
+De ScanQ is een tabel in de database die de onderstaande gegevens bevat
 \begin{itemize}
     \item projectnaam: Naam van het project
+    \item Seq[moduleNaam]: Lijst van de modulen in het project
+    \item nodeVersie:  Versie van Node.js
+    \item npm versie: Versie van NPM
+    \item sbt versie: Versie van SBT
+    \item scala versie: Versie van Scala
+    \item Java versie: Versie van Java waar scala van afhankelijk is.
     \item lastAnalyses: timestamp van de laatste analyse
     \item nestAnalyses: timestamp voor de volgende analyse
 \end{itemize}
-De Controller is verantwoordelijk voor de taken die te maken hebben met het periodiek scannen van projecten Het heeft faciliteiten zoals een scanQ waarin de projecten staan die gescanned moeten worden. Een analyser die op het moment dat een project aan de beurt is om geanalyseerd te worden een aantal subtaken sequentieel uitvert per module binnen een project.
-In grote lijnen wordt er een dockercontainer opgezet per module waarin alle benodigde bestanden (dependency declaraties en dergelijke) worden geplaats. Vervolgens een analyse wordt uitgevoerf waaruit de resultaten naar de ReportParser kan worden gestuurt voor analyse. De exacte werking wpordt verderop in het document technisch uitgewerkt.
 
 
-\subsection{AnalysesController}\label{subsec:controller}
-Naast de analyses die van de rapporten die uit het jenkins process komen is er ook behoefte om periodiek te analyseren op oudere niet actieve projecten. Om dit te kunnen faciliteren omnvat de Analyses controller een aantal componenten die ieders verantwoordelijk zijn voor een eigen taak:
-
-\begin{figure}[H]
-    \myfloatalign
-    \includegraphics[width=10cm]{gfx/SOUPAPI-Periodic Analysis}
-    \caption{Periodieke analyse flow}
-    \label{fig:PeriodicAnalysis}
-\end{figure}
-
-\subsubsection{Timer}
-De timer is verantwoordelijk voor het op tijd starten van de periodieke analyses op projecten die in de ScanQ staan. Op het moment dat er een geplannde analyse uitgevoerd moet worden zal deze aan de analyses controller worden gegeven die de verantwoordelijkheid overneemt.
-\subsubsection{ScanQ + ScanQController}
-De scanQ is een datastructuur gebasseerd op een list/seq waarin de analyses opgeslagen zijn die uitgevoerd moeten worden. De ScanQcontroller regelt de mutaties op deze scanQ.
-\subsubsection{AnalysesController}
-De analyse controller dient de taken uit te voeren die in figuur(~\ref{fig:PeriodicAnalysis}) weergegeven zijn. Dit is een sequenteel proces waarbij de controller wacht op antwoord voordat het een volgend onderdeel begint.
-
+\subsection{Timer/Trigger}
+Door een CRON-job in te stellen op een bepaald tijd kan de periodic Analysis engine worden gestart, waardoor de engine de in de scanQ aanwezige analyses kan uitvoeren.
+De timer triggert op het moment dat een timestamp van de eerst volgende analyse in de scanQ wordt gezien. En geeft de opdracht door aan de controller.

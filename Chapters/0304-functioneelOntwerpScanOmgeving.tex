@@ -1,5 +1,12 @@
-\chapter{Functioneel ontwerp Scan Containers}\label{ch:impl-scan containers}
+\chapter{Functioneel ontwerp Periodic Analyse Environment}\label{ch:impl-scan containers}
+De Periodic Analyse Environment is een docker omgeving waar containers kunnen worden gestart om een analyse te doen op de modulen in deze containers. Op het moment dat de analyse gedaan is wordt de conatiner vernietigd. De omgeving wordt gedeeld door de andere dockercontainers die op het systeem draaien waaronder de SOUP-API zelf.
 
 
-op het moment dat de container gereerd is om te analyseren POST prep(Project, module)
-ALS OWASP klaar is POST report (token, report.json)
+\section{Redenen voor het draaien van docker containers voor het periodiek analyseren van modulen}
+Er zijn een tweetal redenen te verzinnen om in een dockercontainer een analyse te doen.
+
+De eerste is dat een door de grote hoeveelheid verschillen in de omgevingen waar de projecten draaien het onmogelijk is om deze op een enkel systeem te voorzien. Het voordeel van een dockercontainer is dat die flexibel zijn in te richten naar de wensen van een module. Een andere bijkomstigheid is dat er op dit moment ook praktisch alle project in docker containers draaien.
+
+Een ander voordeel is dat er meer controle is over de welke poorten een applicatie kan gebruiken om communicatie op te zetten binnen een netwerk Er kan een netwerk worden aangemaakt die dedicated is voor de analyse omgeving om op deze manier een mogelijkheid hebben om ongewenste dataverkeer te blokkeren.
+
+

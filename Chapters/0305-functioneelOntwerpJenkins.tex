@@ -2,11 +2,42 @@
 
 
 \section{Jenkins buildstraat}\label{sec:jenkins-buildtstraat}
-Op het moment dat er een project wordt gebouwd middels de Jenkins buildstraat kan er vanuit worden gegaan dat er wijzigingen zijn in de sourcecode. Mogelijk zijn er dan ook wijzigingen in de declaraties in bijvoorbeeld versies en of nieuwe of andere dependencies de gebruikt worden. In het nieuwe systeem wordt Jenkins gebruikt om deze informatie in het systeem te verkrijgen. Om deze informatie in de SOUP API te krijgen moeten er een aantal aanpassingen gedaan worden die ervoor zorgen dat informatie omtrend kwetsbaarhden in een uniforme manier worden gewonnen en verstuurd naar de SOUP API.
+In Jenkins wordt de eerste analyse gedaan op een module waar de source code en daarmee potentieel ook de dependency declaraties veranderd zijn.
+Om dit mogelijk te maken moet er in de pipeline een aantal aanpassingen worden gedaan die hieronder worden beschreven.
 
 
-\subsection{informatie extractie methoden en verzending van de informatie}
+\section{informatie vergaring}\label{sec:informatie-vergaring}
+Om voor de SOUP-API duidelijk te maken om welke build de analyse gedaan worden en voor welke module in een project. Moeten er een aantal zaken worden opgeslagen in een metdata.json bestand die na het doen van de daadwerkelijke analyse in de JSON die te zien is in listing~\ref{lst:metadatajsonJenkins} moet worden vestuurt een groot aantal van de attributen zijn onderdeel van variabelen die in de pipeline aanwezig zijn.
+Een door een bash script te ontwikkelen kunnen we op een relatief simpele manier gegevens uit jenkins in een json plaatsen.
 
-Voor iedere module in een project moet de betreffende SCA tool worden aangeroepen waatbij het Rapport wordt toegevoegd aan de Jenkins Artifacts.
-Op het moment dat de deploy gedaan is moeten deze rapporten samen worden gevoegd met de metadata tot een JSON bestand welke vervolgens middels een POST methode kan worden vertuurt naar de SOUP API welke het vervolgen middels de Parser toevoegd aan de database en scheduler als zijn een bestaand project die periodiek moet worden geanalyseerd.
+\begin{lstlisting}[caption={metadata JSon object behorende bij de case class}, label={lst:metadatajsonJenkins}]
+{
+  "projectName": "testProject",
+  "moduleName": "backend",
+  "platform": "sbt",
+  "runtimeVersion": "2.13.6",
+  "buildToolVersion": "1.5.0",
+  "tool": "owasp",
+  "gitHash": "6cf71dd74241e6292db69368f1d4f6d990b3f03s",
+  "jenkinsBuildNr": "42"
+}
+\end{lstlisting}
 
+\section{Analyse}
+De in het hoofdstuk \ref{ch:onderzoek-tool-methode} gevonden methode is de manier waarop het gedaan moet worden. De resultaten moeten in een JSON worden opgeslagen. zodat deze later kunnen worden verstuurt middel een CURL commando.
+Stap voor stap uitleg over de instellingen en implementatie van de tools
+\subsection{NPM builds}
+
+
+\subsection{SBT Builds}
+Voor het checken van de dependencies in een SBT build is er een plugin beschikbaar genaamd $"$sbt-dependency-check$"$, deze is al in het onderzoek naar een methode voor het zoeken naar kwetsbaarheden naarboven gekomen.
+
+Voordat deze plug0in gebruikt kan worden moet \texttt{addSbtPlugin("net.vonbuchholtz" \% "sbt-dependency-check" \% "3.4.0")} het worden gedefineerd in \texttt{project/plugin.sbt}
+
+
+https://github.com/albuch/sbt-dependency-check
+
+\section{Versturen van de gegevens}
+Op het moment dat er een deploy gedaan wordt moeten de gegevens worden verzonden naar de SOUP API middels een CURL command waarin de benodigde bestanden(metadata.json, report.json, en de dependencyFiles) worden verstuurt.
+
+CURL uitkouwen......

@@ -1,5 +1,5 @@
 % Todo Betere titel vinden
-\chapter{Onderzoek: gebruik externe bibliotheken, het gevaar en hoe veiliger te maken}\label{ch:externeBibliothekengebruikGevaren}
+\chapter{Onderzoek: Het gevaar van het gebruik van externe bibliotheken}\label{ch:externeBibliothekengebruikGevaren}
 Voordat er een methode voor het analyseren van externe bibliotheken op kwetsbaarheden kan worden ontwikkeld is theoretische kennis over het gebruik van externe bibliotheken, het gevaar hiervan en op welke manier er veilig mee gewerkt kan worden noodzakelijk. De onderzoeksvraag voor dit onderzoek luidt dan ook: $"$Wat is het effect van het gebruik van externe bibliotheken bij de ontwikkeling van software, welke gevaren brengt het gebruik hiervan met zich mee en wat kan er gedaan worden om deze gevaren te minimaliseren?$"$. Deze onderzoeksvraag is op te delen in de volgende deelvragen die ieders in een eigen sectie zullen worden behandeld.
 
 \begin{itemize}
@@ -26,7 +26,7 @@ Omdat de manier waarop deze componenten zijn ontwikkeld niet altijd duidelijk is
 
 Zeker in het geval van open-source is de manier van ontwikkelen niet altijd volledig gedocumenteerd en kan een groot deel van deze software onder de noemer SOUP worden geplaatst. Het gebruik van SOUP hoeft niet per definitie gevaarlijk te zijn, echter moet er wel worden opgelet hoe het gebruikt wordt, zoals hieronder verder zal worden besproken. In verband met de eerder besproken scope van het onderzoek zal er hierna enkel worden ingegaan op externe bibliotheken en frameworks.
 
-\section{Waarom en hoe veelvuldig worden externe bibliotheken gebruikt in het ontwikkelen van software?}\label{sec:waarom-hoe}
+\section{Waarom en hoe vaak worden externe bibliotheken gebruikt in ontwikkeling?}\label{sec:waarom-hoe}
 Softwareontwikkeling staat altijd onder druk van deadlines en collega's en/of klanten die wachten op een feature. Daarom zijn er een aantal principes ontstaan die in de programmeerwereld als mantra worden aangenomen. Het eerste principe is KISS (Keep it simple, Stupid!): Probeer de componenten die je ontwikkeld zo simpel mogelijk te houden ondanks de complexiteit van de software. Het tweede principe is YAGNI (You ain't gonna need it) Ontwikkel de huidige requirements en probeer niet in de toekomst te kijken en hier al features voor te schrijven. Het derde en bovendien belangrijkste principe is DRY (Don't repeat yourself): Herhaling kost tijd die anders nuttiger kan worden besteed. Door functies op meerdere plekken te herhalen kunnen problemen worden ondervonden in de onderhoudbaarheid van de applicatie, omdat dezelfde methodes op meerdere plekken terug te vinden zijn. Datastructuren, functies, etc. die op verschillende plaatsen gedefinieerd zijn indicatoren tot een zekerheid van bugs. Dit omdat er de kans bestaat dat een ontwikkelaar vergeet een functie te updaten op een plek waar deze onverwacht ook gedefinieerd wordt~\citep{Papadopoulo:2021}.
 
 Om de mantra's die hierboven beschreven zijn te kunnen volgen bestaan er bibliotheken. Ze zorgen ervoor dat functies en datastructuren op één enkele plek worden gedefinieerd waardoor er ontwikkeltijd bespaard wordt wanneer een functie aangepast moet worden. Door gebruik van bibliotheken hoeft dit maar op een enkele plaats te gebeuren. Ook wordt er op deze manier gegarandeerd dat er maar een enkele versie bestaat van die functie of datastructuur.
@@ -50,7 +50,7 @@ Een ander nadeel van het gebruik van een externe bibliotheek is dat je niet zelf
 Onderzoek van SonaType\footnote{SonaType is een bedrijf dat tools maakt voor software veiligheid} uitgevoerd in 2021 gaf aan dat er een jaar op jaar stijging was van 650\% in het aantal aanvallen gepleegd middels kwetsbaarheden in open-source bibliotheken~\citep{Sonatype:2021}.
 Hiernaast bleek dat een groot deel van de applicaties niet wordt bijgewerkt, of vaak niet op de juiste manier, zodat er altijd een kwetsbaarheid zal blijven bestaan.
 
-\section{Hoe kunnen applicaties weerbaarder worden gemaakt tegen kwetsbaarheden die gepaard gaan met het gebruik van externe bibliotheken?}\label{sec:hoe-kan-er-voorkomen-worden-dat-er-kwetsbaarheden-ontstaan-in-een-applicatie-die-gebruik-maakt-van-externe-bibliotheken?}
+\section{Hoe kunnen applicaties weerbaarder worden gemaakt tegen kwetsbaarheden ?}\label{sec:hoe-kan-er-voorkomen-worden-dat-er-kwetsbaarheden-ontstaan-in-een-applicatie-die-gebruik-maakt-van-externe-bibliotheken?}
 
 Hoewel er veel bedrijven en instanties zich verantwoordelijk voelen om het mogelijk te maken om veiligere software te ontwikkelen, al dan niet vanuit een winstoogmerk. Bestaat er de Open Web Application Security Project (OWASP) puur en alleen om dit te doen op een vrijwillige basis. De OWASP is een stichting wat zich voornamelijk bezig houdt met het verbeteren van software veiligheid met in het bijzonder web applicaties. Zij doen dit door awareness te kweken over het veilig ontwikkelen van software.
 

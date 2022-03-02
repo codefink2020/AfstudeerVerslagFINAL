@@ -69,9 +69,8 @@
 
 %\cleardoublepage\include{FrontBackMatter/Dedication} % Dedication page
 
-\cleardoublepage\include{FrontBackMatter/foreword} % Uncomment and create a Foreword.tex to include a foreword
 
-\cleardoublepage\include{FrontBackMatter/Abstract} % Abstract page
+
 
 %\cleardoublepage\include{FrontBackMatter/Publications} % Publications from the thesis page
 
@@ -82,6 +81,8 @@
 \cleardoublepage\include{FrontBackMatter/Contents} % Contents, list of figures/tables/listings and acronyms
 
 \cleardoublepage
+\cleardoublepage\include{FrontBackMatter/Abstract} % Abstract page
+\cleardoublepage\include{FrontBackMatter/foreword} % Uncomment and create a Foreword.tex to include a foreword
 
 \pagenumbering{arabic} % Arabic page numbering for thesis content (1, 2, 3, etc)
 %\setcounter{page}{90} % Uncomment to manually start the page counter at an arbitrary value (for example if you wish to count the pre-content pages in the page count)
@@ -102,14 +103,18 @@
 \include{Chapters/0202-ExterneBbibliothekenenGevaar}
 \include{Chapters/0203-OnderzoekSOUPAnalyse}
 
-\part{Implementatie}\label{prt:implementatie}
+\part{Ontwerp}\label{prt:ontwerp}
 \include{Chapters/0301-inleiding}
 \include{Chapters/0302-Architectuur}
 \include{Chapters/0303-functioneelOntwerpSOUPAPI}
-\include{Chapters/0304-functioneelOntwerpScanOmgeving}
+%\include{Chapters/0304-functioneelOntwerpScanOmgeving} %Niet nodig omdat er niet echt iets funtioneels in wordt verteld
 \include{Chapters/0305-functioneelOntwerpJenkins}
 \include{Chapters/0306-functioneelOntwerpPortal}
 \include{Chapters/0307-FutureWork}
+
+\part{Conclusie}
+\include{Chapters/0401-Conclusie}
+
 
 
 \cleardoublepage % Empty page before the start of the next part
@@ -121,7 +126,8 @@
 \appendix
 
 \part{Appendix} % New part of the thesis for the appendix
-
+\include{Chapters/A01-Afkortingen}
+\include{FrontBackMatter/Bibliography}
 %\include{Chapters/Chapter0A} % Appendix A
 %\include{Chapters/Chapter0B} % Appendix B - empty template
 
@@ -129,7 +135,7 @@
 %	POST-CONTENT THESIS PAGES
 %----------------------------------------------------------------------------------------
 
-\cleardoublepage\include{FrontBackMatter/Bibliography} % Bibliography
+%\cleardoublepage\include{FrontBackMatter/Bibliography} % Bibliography
 
 %\cleardoublepage\include{FrontBackMatter/Declaration} % Declaration
 

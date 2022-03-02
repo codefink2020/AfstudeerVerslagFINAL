@@ -17,7 +17,7 @@ Het interne datamodel is opgebouwd op basis van de data die wordt verkregen van 
 
 \begin{figure}[H]
     \myfloatalign
-    \includegraphics[width=12cm]{gfx/SOUPAPI-SOUPAPI DM}
+    \includegraphics[width=15cm]{gfx/SOUPAPI-SOUPAPI DM}
     \caption{Intern Datamodel}
     \label{fig:SOUP-SoupApiDm [CHECKEN]}
 \end{figure}
@@ -143,11 +143,11 @@ Voor de functionaliteit van de SOUP module binnen de portal moeten er twee entit
 
 \begin{figure}[bth]
     \myfloatalign
-    \includegraphics[width=10cm]{gfx/SOUPAPI-PortalDM}
+    \includegraphics[width=15cm]{gfx/SOUPAPI-PortalDM}
     \caption{Toevoegingen op het bestaande portal Datamodel}
     \label{fig:SOUP-portalDm}
 \end{figure}
-
+\clearpage
 \subsubsection{Project}\label{subsubsec:portalProject}
 Dit is een bestaande entiteit binnen het huidige portal project. Hierin worden de gegevens opgeslagen die te maken hebben met de projecten die binnen Eaglescience bestaan. Dit zijn zowel Draft (nieuwe), active, en archived projecten.
 
@@ -199,17 +199,17 @@ Ieder moment dat er een analyse is uitgevoerd wordt er hier een samenvating aan 
 %TODO tekst beter structureren
 
 Voor het analyseren, beheren en weergeven van een SOUP-analyse heeft de applicatie een aantal componenten nodig die elk een eigen verantwoordelijkheid hebben in de taken die de applicatie uit moet voeren. Om deze verantwoordelijkheden te splitsen is de applicatie opgesplitst in verschillende modulen. Voor sommige onderdelen geldt zelfs dat het zelf een onderdeel is van een andere applicatie binnen de Eaglescience Dev-stack. Voor een volledige compatibiliteit wordt de applicatie in Scala geschreven waarbij het PlayFramework wordt gebruikt. Voor Frontend delen en dan met name in de portal wordt er Angular gebruikt, omdat dit hier al gebruikt wordt. Zoals te zien is in figuur~\ref{fig:SOUP-Components} zijn er verschillende componenten die samen werken om een analyse weer te geven voor de gebruiker.
+
+\textbf{Jenkins} is verantwoordelijk voor het up-to-date houden van de laatste wijzigingen in de sourde-code en het initiele rapport, welke aangeboden wordt aan de \textbf{SOUP-API}. Hierin is de  \textbf{ReportParserEngine} verantwoordelijk voor het omzetten van de binnegekomen rapporten naar het interne datamodel. De \textbf{PeriodicAnalysisEngine} is verantwoordelijk voor het doen van periodieke analyses met de dependency declaraties. Centraal in de SOUP-API staat de \textbf{API} welke verantwoordelijk is voor de dataverwerking van de data die door de beide engines gegenereerd of benodigd is. Daarnaast is het verantwoordelijk voor het opslaan van de dependency declaraties. De \textbf{Portal} is verantwoordelijk voor de user interface met de gebruiker en de SOUP-API. Voor periodieke analyse van de modules binnen projecten is er een \textbf{AnalysisEnvironment} welke zorg draagt voor de veilige analyse van modules op basis van de laatst opgeslagen dependencyDeclaraties. Als \textbf{Database} is MongoDB gekozen omdat er wisselingen in content kan zitten van de uitslagen en dit een flexibelere manier van opslaan vereist is.
+In de komende secties zal er dieper ingegaan worden op de verschillende componten waardoor er een completer beeld hierover onstaat. Functionele ontwerpen zullen worden aangeboden in de hierop volgende hoofdstukken.
+
 \begin{figure}[bth]
     \myfloatalign
-    \includegraphics[width=10cm]{gfx/umlet/exports/ApplicationComponents}
+    \includegraphics[width=17cm]{gfx/umlet/exports/ApplicationComponents}
     \caption{Componenten SOUP Analyse Systeem}
     \label{fig:SOUP-Components}
 \end{figure}
-
-\textbf{Jenkins} is verantwoordelijk voor het up-to-date houden van de laatste wijzigingen in de sourde-code en het initiele rapport, welke aangeboden wordt aan de \textbf{SOUP-API}. Hierin is de  \textbf{ReportParserEngine} verantwoordelijk voor het omzetten van de binnegekomen rapporten naar het interne datamodel. De \textbf{PeriodicAnalysisEngine} is verantwoordelijk voor het doen van periodieke analyses met de dependency declaraties. Centraal in de SOUP-API staat de \textbf{API} welke verantwoordelijk is voor de dataverwerking van de data die door de beide engines gegenereerd of benodigd is. Daarnaast is het verantwoordelijk voor het opslaan van de dependency declaraties. De \textbf{Portal} is verantwoordelijk voor de user interface met de gebruiker en de SOUP-API. Voor periodieke analyse van de modules binnen projecten is er een \textbf{AnalysisEnvironment} welke zorg draagt voor de veilige analyse van modules op basis van de laatst opgeslagen dependencyDeclaraties. Als \textbf{Database} is MongoDB gekozen omdat er wisselingen in content kan zitten van de uitslagen en dit een flexibelere manier van opslaan vereist is.
-
-In de komende secties zal er dieper ingegaan worden op de verschillende componten waardoor er een completer beeld hierover onstaat. Functionele ontwerpen zullen worden aangeboden in de hierop volgende hoofdstukken.
-
+\clearpage
 \section{SOUP API}\label{sec:soup-api}
 De SOUP-API is een opzichzelf staand centraal deel van de applicatie welke verantwoordelijk is voor de verwerking van gegevens uit de SCA tooling en de portal. Hiernaast regelt het ook de periodieke analyses om informatie up-to-date te houden van al eerder geanalyseerde projecten waar al een tijd geen wijzigingen op zijn geweest. Deze verantwoordelijkheden worden door de volgende componenten beheert:
 
@@ -218,7 +218,7 @@ De ReportParseEngine zorgt ervoor dat de binnenkomende datastroom vanuit de SCA 
 
 \begin{figure}[bth]
     \myfloatalign
-    \includegraphics[width=10cm]{gfx/umlet/exports/ReportParserComponents}
+    \includegraphics[width=8cm]{gfx/umlet/exports/ReportParserComponents}
     \caption{Componenten SOUP-API ReportParser}
     \label{fig:SOUPAPIReportParserComps}
 \end{figure}
@@ -234,7 +234,7 @@ De Periodic Analysis Engine is een module die verantwoordelijk is voor het perio
 
 \begin{figure}[bth]
     \myfloatalign
-    \includegraphics[width=10cm]{gfx/umlet/exports/PeriodicAnalyisEngineComponents}
+    \includegraphics[width=8cm]{gfx/umlet/exports/PeriodicAnalyisEngineComponents}
     \caption{Componenten SOUP-API Periodic Analysis Engine}
     \label{fig:SOUPAPIPeriodicAnalysisEngineComps}
 \end{figure}
@@ -244,7 +244,7 @@ De Periodic Analysis Engine is een module die verantwoordelijk is voor het perio
 De voornaamste verantwoordelijkheid van de API is ervoor zorgdragen dat de data die in de SOUP-API wordt gemuteerd in de interne database wordt opgeslagen, en daarnaast deze data beschikbaar te stellen voor services en modulen die hier afhankelijk van zijn. Zie figuur ~\ref{fig:SOUPAPI-API comps}. De API is opgebouwd volgens een Controller, Service, Repository architectuur waarbij de Controller verantwoordelijk is voor het beschikbaar stellen van services op verschillende REST-endpoints. De Service zelf is verantwoordelijk voor de business logica en mutatie van de data, welke vervolgens door de Repository wordt weggeschreven naar de database.
 \begin{figure}[bth]
     \myfloatalign
-    \includegraphics[width=12cm]{gfx/umlet/exports/API-ComponentsDiagram}
+    \includegraphics[width=15cm]{gfx/umlet/exports/API-ComponentsDiagram}
     \caption{Componenten API binnen de SOUP-API}
     \label{fig:SOUPAPI-API comps}
 \end{figure}
@@ -284,4 +284,8 @@ Deze omgeving moet het mogelijk maken om vanuit de SOUP-API een analyse uit te v
 \end{figure}
 
 De portal draait lokaal binnen Eaglscience in een docker omgeving. De frontend is geschreven in Angular 13, waarbij er tegen een backend wordt gecommuniceerd welke in Scala 2.13 is geschreven met PlayFramework. De SOUP-API is een opzichzelfstaand component binnen de gehele applicatie en zal ook worden geschreven in Scala met PlayFramework. De SOUP-API zal worden ondergebracht in een dockercontainer welk beschikbaar is voor de portal, Jenkins en de database. De database is een mongoDB database en zal ook moeten worden ingericht. Het maakt voor de werking niet veel uit of dit een lokale database of een instantie in de cloud is.
+
+\subsection{Gebruikte platformen en systemen NIEUW}
+De SOUP-API wordt gescheven in Scala met als webframework PlayFramework, een framework dat het ontwikkelen van webapplicaties ondersteunt. Om met MongoDB te kunnen communiceren is de bibliotheek ReactiveMongo gekozen om ervoor te zorgen dat de reactive aard van Play niet wordt onderbroken door Database bewerkingen. De SOUP-API gaat in een eigen docker container draaien om op die manier makkelijk te kunnen deployen. De portal is al geschreven in angular 13 en de module die toegevoegd zal worden zal hierin meegaan.
+De Analyse omgeving waar de periodieke analyses op kwetsbaarheden plaats gaat vinden zal ook  een docker omgeving zijn. De voornaamste reden is dat door de vluchtige aard van containers de omgevingen makkelijk kunnen worden opgezet, de analyse gedaan kan worden en vervolgens weer kan worden vernietigd.
 
