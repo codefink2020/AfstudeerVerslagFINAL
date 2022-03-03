@@ -223,27 +223,42 @@ De $"$[Future]Parser$"$ zal in basis gelijk zijn als de parser voor de OWASP too
 
 %TODO: Nog even goed over nadenken.....
 \section{Periodic Analysis Engine}\label{sec:periodiek-analysis-engine}
-De Periodic Analysis is verantwoordelijk voor het uitvoeren van analyses op de voor de SOUP-API bekende projecten/modulen. Hier voor maakt het gebruik van een omgeving die in sectie ~\ref{sec:analysis-environment} wordt beschreven. Om deze omgeving aan te sturen zijn er een aantal componenten nodig die in figuur~\ref{fig:paeComps} te zien zijn.
+De Periodic Analysis is verantwoordelijk voor het uitvoeren van analyses op de voor de SOUP-API bekende projecten/modulen. Hier voor maakt het gebruik van een omgeving die in sectie ~\ref{sec:analysis-environment} wordt beschreven. Om deze omgeving aan te sturen zijn er een aantal componenten nodig die in figuur~\ref{fig:paeComps} te zien zijn. Een tweetal CronJobs welke op gezete tijden een POST request maakt naar de Analysis Engine triggeren of wel een start of een stop commando. Deze commando's worden door de controller uitgevoerd. De controller is ook verantwoordelijk voor het verdere uitvoeren van de taken. die elk hieronder beschreven zullen worden. De beschreven service voorziet de controller van de benodigde data vanuit de API en de ScanQ. Dat laatste is een database tabel dat los staat van alle andere tabellen en houd de analyses bij die er gedaan moetene worden.
 \begin{figure}[bth]
     \myfloatalign
     \includegraphics[width=10cm]{gfx/umlet/exports/PeriodicAnalyisEngineComponents}
     \caption{Componenten in de periodic Analysis Engine}
     \label{fig:paeComps}
 \end{figure}
+\begin{figure}[bth]
+    \myfloatalign
+    \includegraphics[width=10cm]{gfx/umlet/exports/PAE-jobssequence}
+    \caption{Componenten in de periodic Analysis Engine}
+    \label{fig:jobSeq}
+\end{figure}
 
-Door een CRON Job in te stellen op een gedefineerde tijd met ene POST request "Start" kan de engine in werking worden gezet waarbij het de volgende stappen doorloopt:
+In figuur~\ref{fig:jobSeq} is te zien hoe de controller de job afhandeld na het ontvangen van een start commando.
 \begin{enumerate}
-    \item ScanQ controleren of er analyses zijn die er voor en op de dag van de trigger gedaan moeten worden en hier een lijst van maken.
-    \item De lijst wordt per stuk afgewerkt door de analysisController
-    \item Op het moment dat de analyse klaar is wordt deze volgens de ingesteld interval opnieuw in de scanQ gezet.
+    \item Een \textbf{CRON Job} triggered de controller door middel van een Start commando.
+    \item Vervolgens wordt er in de \textbf{ScanQ} gekeken of er analyses zijn die zouden moeten gebeuren deze worden in een worklist gezet voor deze sessie.
+    \item De \textbf{Analysis Controller} werkt de worklist af. Door de analyses te starten.
+    \item Op het moment dat de analyse klaar is en opgeslagen in de database zal deze uit de worklist gehaald worden en een nieuwe datum op basis van de gekozen periode opnieuw in de \textbf{ScanQ} zetten door middel van de popJob functie.
+    \item Dit proces blijft doorgaan tot er een \textbf{CRON Job} wordt verstuurt wat het proces stopt. De workList wordt leeg gemaakt waardoor de laatste analyse waar nog aan gewerkt wordt afgemaakt.
 \end{enumerate}
 
-DE Engine kan worden uitgezet door nog een trigger te versturen met een post request "Stop". De analyses die nog niet aan de beurt zijn geweest om welke reden dan ook zullen opnieuw in de scanQ komen en op het volgende moment dat er een trigger "start" afgaat meegenomen worden.
+Het stop commando haalt de worklist leeg zodat de loop eindigd en zo het proces stopt.
 
+\subsection{CRON Jobs}\label{subsec:cron-jobs}
+Er zijn een tweetal CRON Jobs nodig die er voor zorgen dat de analyser engine wordt gestart en gestopt:
+
+\texttt{00 20 * * 5 curl -X POST http:/[souapi]/analyser/?command="start" >/dev/null 2>\&1} zorgt voor het starten van de engine op zaterdag om 20:00 door een post te doen naar de SOUP-API met het commando start.
+
+\texttt{59 23 * * 5 curl -X POST http:/[souapi]/analyser/?command="stop" >/dev/null 2>\&1} zorgt voor het stoppen van de engine op zaterdag om 23:59 door een POST te doen naar de SOUP-API met het commando stop
+
+Er kunnen nartuurlijk meer dagen worden toegevoegd waarin er in de avond wordt geanalyseerd. In basis zijn de commando's het zelfde. echter veranderd de dag van de week.
 
 \subsection{AnalysisController}\label{subsec:analysiscontroller}
-De Analysis controller is verantwoordelijk voor de samenwerking met de analysis environment waar de analyses daadwerkelijk plaats gaan vinden. Om aan de juiste data te komen communiceert deze met de AnalysisService die in data voorziet middels communicatie met de API en de ScanQ. De ScanQ is een Lijst waar in de analyses van modulen die afgehalnd moeten worden. Als laatst is er een timer die de analyses triggert op het ingestelde moment.
-
+Naast het starten van de analyses is de controller ook verantwoordelijk voor het aanmaken van de analyseContainers en daarin het uitvoeren van de Analyse.
 \begin{figure}[bth]
     \myfloatalign
     \includegraphics[width=10cm]{gfx/umlet/exports/PAE-CreateContainer}
@@ -262,21 +277,12 @@ In figuur ~\ref{fig:paeSeq} is te zien hoe een container wordt opgebouwd door mi
 \subsection{AnalysisService}\label{subsec:analysisservice}
 Deze service heeft een ondersteunende rol die het mogelijk maakt voor de controller om gegevens uit de API te kunnen halen die het nodig heeft om  zijn taken uit te kunnen voeren. Ook al lijkt deze service overbodig de reden dat er een extra service tussen zit is dat op het moment er in de api iets aangepast wordt er maar een enkele aanpassing nodig is in de service en niet op meerdere andere plekkem
 
-\subsection{ScanQ}\label{subsec:scanq}
-De ScanQ is een tabel in de database die de onderstaande gegevens bevat
-\begin{itemize}
-    \item projectnaam: Naam van het project
-    \item Seq[moduleNaam]: Lijst van de modulen in het project
-    \item nodeVersie:  Versie van Node.js
-    \item npm versie: Versie van NPM
-    \item sbt versie: Versie van SBT
-    \item scala versie: Versie van Scala
-    \item Java versie: Versie van Java waar scala van afhankelijk is.
-    \item lastAnalyses: timestamp van de laatste analyse
-    \item nestAnalyses: timestamp voor de volgende analyse
-\end{itemize}
-
-
-\subsection{Timer/Trigger}
-Door een CRON-job in te stellen op een bepaald tijd kan de periodic Analysis engine worden gestart, waardoor de engine de in de scanQ aanwezige analyses kan uitvoeren.
-De timer triggert op het moment dat een timestamp van de eerst volgende analyse in de scanQ wordt gezien. En geeft de opdracht door aan de controller.
+\subsection{ScanQ en worklijst}\label{subsec:scanq}
+In de database wordt een los tabel opgenomen met de in figuur~\ref{fig:scanQERD} weergeven attribuuten. Waarbij de lastAnalysis en nextAnalysis belangrijk zijn voor het schedulen van de jobs in de worklist.
+De workList zelf is een interne lijst van de controller welke de voor die sessie resterende jobs bevat. Op het moment dat de controller klaar is met de analyses wordt de datum van lastAnalysis gezet op de datum van de analyse en de nextAnalysis op de datum van de volgede analyse welke ingesteld kan worden middels de projectsettings in de API database.
+\begin{figure}[bth]
+    \myfloatalign
+    \includegraphics[width=5cm]{gfx/SOUPAPI-scanQERD}
+    \caption{Table voor opslaan van Job in ScanQ}
+    \label{fig:scanQERD}
+\end{figure}

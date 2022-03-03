@@ -1,10 +1,14 @@
-\chapter{Functioneel ontwerp Jenkins}\label{ch:impl-Jenkins}
+\chapter{Functioneel ontwerp analyse}\label{ch:impl-Jenkins}
 
 
 \section{Jenkins buildstraat}\label{sec:jenkins-buildtstraat}
 In Jenkins wordt de eerste analyse gedaan op een module waar de source code en daarmee potentieel ook de dependency declaraties veranderd zijn.
 Om dit mogelijk te maken moet er in de pipeline een aantal aanpassingen worden gedaan die hieronder worden beschreven.
 
+\section{Peridic Analysis Engine}\label{sec:pae-builstraat}
+voor de periodic Analysis engine moeten de aanroepen van de plugins/ script, en de upload stappen worden toegevoegd.
+
+Hieronder is te lezen hoe deze stapppen worden uitgewerkt.
 
 \section{informatie vergaring}\label{sec:informatie-vergaring}
 Om voor de SOUP-API duidelijk te maken om welke build de analyse gedaan worden en voor welke module in een project. Moeten er een aantal zaken worden opgeslagen in een metdata.json bestand die na het doen van de daadwerkelijke analyse in de JSON die te zien is in listing~\ref{lst:metadatajsonJenkins} moet worden vestuurt een groot aantal van de attributen zijn onderdeel van variabelen die in de pipeline aanwezig zijn.
@@ -23,21 +27,24 @@ Een door een bash script te ontwikkelen kunnen we op een relatief simpele manier
 }
 \end{lstlisting}
 
-\section{Analyse}
-De in het hoofdstuk \ref{ch:onderzoek-tool-methode} gevonden methode is de manier waarop het gedaan moet worden. De resultaten moeten in een JSON worden opgeslagen. zodat deze later kunnen worden verstuurt middel een CURL commando.
+\section{Analyse}\label{sec:analyse}
+De in het hoofdstuk~\ref{ch:onderzoek-tool-methode} gevonden methode is de manier waarop het gedaan moet worden. De resultaten moeten in een JSON worden opgeslagen. zodat deze later kunnen worden verstuurt middel een CURL commando. Om het analyseren van een project mogelijk te maken moeten onderstaande stappen worden uitgevoerd om het mogelijk te maken om te kunnen scannen. Dit heeft twee voordelen. Ten eerste is er een uniforme manier waarop de tools zich gedragen. Een ander voordeel is dat de tooling ook voor de ontwikkelaars beschikbaar is om eventueel zelf al op een ander moment een analyse te doen naast de automatische en de periodieke analyse.
+
 Stap voor stap uitleg over de instellingen en implementatie van de tools
-\subsection{NPM builds}
+\subsection{NPM builds}\label{subsec:npm-builds}
+Voor het checken van de dependencies in NPM is package beschikbaar die middels \textt{npm install -D owasp-dependency-check} aan de dependencies worden toegevoegd. Vervolgens moet er in de package.json het volgdende script worden toegevoegd. \textt{"owasp": "owasp-dependency-check --project \"YOUR PROJECT NAME\" -F JSON"}
+Door in de docker file \textt{npm run owasp} aan te roepen zal de analyse worden gestart.
 
+\subsection{SBT Builds}\label{subsec:sbt-builds}
+Voor het checken van de dependencies in een SBT build is de volgende plugin beschikbaar genaamd $"$sbt-dependency-check$"$, deze is al in het onderzoek naar een methode voor het zoeken naar kwetsbaarheden naarboven gekomen. Om deze methode te kunnen gebruiken moet de volgende declaratie" \texttt{addSbtPlugin("net.vonbuchholtz" \% "sbt-dependency-check" \% "3.4.0")}" worden toegevoegd aan \texttt{project/plugin.sbt}
 
-\subsection{SBT Builds}
-Voor het checken van de dependencies in een SBT build is er een plugin beschikbaar genaamd $"$sbt-dependency-check$"$, deze is al in het onderzoek naar een methode voor het zoeken naar kwetsbaarheden naarboven gekomen.
+Vervolgens moet \texttt{dependencyCheckFormat := "JSON"} worden toegevoegd in de \textt{build.sbt} welke ervoor zorgen dat de ouput in JSON is. De JSON Komt standaard in de \texttt{target/scala2.13}} folder terecht en heeft altijd de naam \textt{dependency-check-report.json} voor SBT
 
-Voordat deze plug0in gebruikt kan worden moet \texttt{addSbtPlugin("net.vonbuchholtz" \% "sbt-dependency-check" \% "3.4.0")} het worden gedefineerd in \texttt{project/plugin.sbt}
+Vervolgens kan middels het commando \texttt{sbt dependencyCheck} de analyseo worden gestart. deze moet dan ook worden toegevoegd aan dockerFile. Zodat deze wordt uitgevoerd op het moment dat een container wordt gestart.
 
-
-https://github.com/albuch/sbt-dependency-check
+% https://github.com/albuch/sbt-dependency-check
 
 \section{Versturen van de gegevens}
-Op het moment dat er een deploy gedaan wordt moeten de gegevens worden verzonden naar de SOUP API middels een CURL command waarin de benodigde bestanden(metadata.json, report.json, en de dependencyFiles) worden verstuurt.
+Op het moment dat er een deploy gedaan wordt moeten de gegevens worden verzonden naar de SOUP API middels een CURL command waarin de benodigde bestanden(metadata.json, report.json, en de dependencyFiles) worden verstuurt. Een curl zou er op de volgende manier uit kunnen zien: \texttt{curl -F report@"report.json" -F meta-date@"metadata.json" http:..[SOUPAPI/upload/[PROCES]]} Waarbij de SOUAPI de url waar de soupapi draait en PROCES jenkins is voor de Jenkins pipeline en pae voor de periodic analysis engine.
 
-CURL uitkouwen......
+
