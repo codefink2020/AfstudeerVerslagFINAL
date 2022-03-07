@@ -66,7 +66,7 @@ Een analyse herbergt alle bekende informatie over een module op het moment van d
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
     timeStamp & DateTime & naam van de module\\
     analyserTool & String & naam van de analyser tool\\
-    analyserEngine & String & versie van de SCA tool die gebruikt is\\
+    analyserVersion & String & versie van de SCA tool die gebruikt is\\
     jenkinsBuildNr & Int & JenkinsBuildnr tracebility naar Jenkins\\
     gitHash & String & Githash van een analyseerde module Tracability naar Gitlab\\
     dependencies & Seq[String] & reverentie naar alle dependendencies in de module\\
@@ -104,7 +104,7 @@ Vulnerability geeft de informatie weer over een kwetsbaarheid waaronder het id e
     availabilityImpact & String &  impact op availability  \\
     impactScore & DOuble & score van de impact door NVD  \\
     exploitabilityScore & Double & Score van exploitability door NVD  \\
-    CWE & Seq[String]] & referentie naar de CWE \\
+    CWE & Seq[String] & referentie naar de CWE \\
 \end{tabular}
 
 \subsubsection{CWE}\label{subsubsec:cwe}
