@@ -11,7 +11,7 @@ Als de architectuur wordt gebasseerd op het datamodel kan er vervolgens worden g
 Om de gebruiker in staat te stellen om een gedegen keuze te maken om over te gaan op het updaten van de applicatie is een zo actueel mogelijk beeld nodig van de huidige situatie omtrent kwetsbaarheden in een project. Om deze informatie kunnen bieden is er gekozen om dit te bieden op twee niveau's en dus door middel van twee datamodellen.
 Het eerste datamodel is onderdeel van de SOUP-API en wordt hieronder verder refereert als het interne datamodel. Daarnaast is er een model dat binnen de Portal gebruikt wordt voor het opslaan van samengevatte gegevens verder benoemd als het Portalmodel.
 
-%TODO: Kijken of er een ranking high ,medium etc aanwezig is. enhoe deze is opgebouwd.
+
 \subsection{Interne datamodel}\label{subsec:interne-datamodel}
 Het interne datamodel is opgebouwd op basis van de data die wordt verkregen van de in het onderzoek gevonden OWASP tools. Hieruit kan worden gedestileerd welke gegevens daadwerkelijk nodig zijn voor de functionaliteit die wordt verwacht binnen Eaglescience. Het in figuur~\ref{fig:SOUP-SoupApiDm} getoonde model laat deze destillatie zien. Centraal in het datamodel staat de analyse. De analyse is aan modules gekoppeld omdat de rapportages uit de SCA tooling gebasseerd zijn op modules en niet op projecten. Het project is een verzameling modules dat in zijn geheel een applicatie vormt. De analyse zelf is opgebouwd uit de dependency files, welke opgeslagen worden om in de toekomst periodieke analyses uit te kunnen voeren tot er een nieuwe analyse is. Ook worden alle dependencies opgeslagen waarin gevonden vulnarabilities en bewijs worden opgeslagen.
 
@@ -31,7 +31,6 @@ Hieronder wordt iedere entiteit beschreven met daarin het attribuut, het datatyp
     \_updatedAt & DateTime & timestampt wijzigen van record\\
 
 \end{tabular}
-%TODO dit is leidend datamodel bijwerken.
 \subsubsection{Project}\label{subsubsec:project}
 In deze entititeit worden de basisgegevens van de projecten opgeslagen als ook de relaties met de voor ieder project aanwezige modulen.
 
@@ -127,7 +126,7 @@ Om op een later stadium een periodieke analyse te kunnen doen worden de dependen
     fileName & String & filename van het bestand \\
     partnerFile & Seq[String] & Reverentie naar andere benodigde bestanden.\\
     platform & String & gebruikte platform \\
-    filePath & String & path naar het opgeslagen bestand \\ %TODO AAngepast
+    filePath & String & path naar het opgeslagen bestand \\
     nodeversion & String & versie van Node  \\
     npmversion & String & versie van NPM  \\
     sbtversion & String & versie van Version  \\
@@ -196,8 +195,6 @@ Ieder moment dat er een analyse is uitgevoerd wordt er hier een samenvating aan 
 \end{tabular}
 
 \section{Algemene Architectuur}\label{sec:algemene-architectuur}
-%TODO tekst beter structureren
-
 Voor het analyseren, beheren en weergeven van een SOUP-analyse heeft de applicatie een aantal componenten nodig die elk een eigen verantwoordelijkheid hebben in de taken die de applicatie uit moet voeren. Om deze verantwoordelijkheden te splitsen is de applicatie opgesplitst in verschillende modulen. Voor sommige onderdelen geldt zelfs dat het zelf een onderdeel is van een andere applicatie binnen de Eaglescience Dev-stack. Voor een volledige compatibiliteit wordt de applicatie in Scala geschreven waarbij het PlayFramework wordt gebruikt. Voor Frontend delen en dan met name in de portal wordt er Angular gebruikt, omdat dit hier al gebruikt wordt. Zoals te zien is in figuur~\ref{fig:SOUP-Components} zijn er verschillende componenten die samen werken om een analyse weer te geven voor de gebruiker.
 
 \textbf{Jenkins} is verantwoordelijk voor het up-to-date houden van de laatste wijzigingen in de sourde-code en het initiele rapport, welke aangeboden wordt aan de \textbf{SOUP-API}. Hierin is de  \textbf{ReportParserEngine} verantwoordelijk voor het omzetten van de binnegekomen rapporten naar het interne datamodel. De \textbf{PeriodicAnalysisEngine} is verantwoordelijk voor het doen van periodieke analyses met de dependency declaraties. Centraal in de SOUP-API staat de \textbf{API} welke verantwoordelijk is voor de dataverwerking van de data die door de beide engines gegenereerd of benodigd is. Daarnaast is het verantwoordelijk voor het opslaan van de dependency declaraties. De \textbf{Portal} is verantwoordelijk voor de user interface met de gebruiker en de SOUP-API. Voor periodieke analyse van de modules binnen projecten is er een \textbf{AnalysisEnvironment} welke zorg draagt voor de veilige analyse van modules op basis van de laatst opgeslagen dependencyDeclaraties. Als \textbf{Database} is MongoDB gekozen omdat er wisselingen in content kan zitten van de uitslagen en dit een flexibelere manier van opslaan vereist is.

@@ -56,7 +56,7 @@ _startAnalysis_</panel_attributes>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-getLatestFiles(moduleId)</panel_attributes>
+getLatestFiles(job.moduleId)</panel_attributes>
     <additional_attributes>10.0;20.0;250.0;20.0</additional_attributes>
   </element>
   <element>
@@ -212,12 +212,11 @@ SBT</panel_attributes>
       <x>10</x>
       <y>60</y>
       <w>270</w>
-      <h>60</h>
+      <h>50</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
 
-StartAnalysis(ModuleId:String,
-platform:String)</panel_attributes>
+StartAnalysis(job)</panel_attributes>
     <additional_attributes>10.0;20.0;250.0;20.0</additional_attributes>
   </element>
   <element>
@@ -240,7 +239,7 @@ platform:String)</panel_attributes>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-getPlatformVersions(moduleId)</panel_attributes>
+getPlatformVersions(job.moduleId)</panel_attributes>
     <additional_attributes>10.0;20.0;250.0;20.0</additional_attributes>
   </element>
   <element>

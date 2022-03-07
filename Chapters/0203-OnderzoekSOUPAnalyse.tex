@@ -103,7 +103,7 @@ In de opdracht staat vermeld dat de te ontwikkelen module eenvoudig in gebruik d
 \end{itemize}
 Om deze vragen te beantwoorden moet er eerst geschikte tooling gevonden worden die, bij voorkeur, met zowel SBT als NPM-projecten overweg kan. Vervolgens dient er gekeken te worden naar hoe de geselecteerde tooling een resultaat bouwen, hoe deze eruit ziet en in welke tijd het resultaat gegeven kan worden.
 
-\subsection{Tooling: Welke tooling is beschikbaar om SOUP-analyses uit te voeren op zowel SBT (Scala) als NPM (Node.js)-projecten?}\label{subsec:ESTooling}
+\subsection{Beschikbare tooling voor SOUP-analyses in SBT als NPM -projecten?}\label{subsec:ESTooling}
 Er zijn een aantal bedrijven en instanties die tooling aanbieden om analyses te doen. Een google search op $"$Scala dependency scan$"$ levert op de eerste resultaten pagina direct Snyk.io, SonarSource en OWASP op.
 
 Snyk is een tool die geschikt is om Scala en TypeScript code, en dus bibliotheken te analyseren. Snyk kan worden ingezet op zowel SBT als NPM-projecten. Het biedt voor de analyse van code meerdere opties. Eén van die opties is middels een CLI Tool welke rapporteert naar een Dashboard gehost door Snyk zelf. Een andere optie die Snyk aanbiedt is te scannen middels een plugin via InteliJ, welke door Eaglescience gebruikt wordt. Als laatste optie biedt Snyk een plugin voor Jenkins die te integreren is in de buildstraat van Eaglescience. De voordelen van Snyk zijn dat er een volledig pakket wordt geboden, waarbij ook nog andere veiligheidsaspecten kunnen worden gecontroleerd (zoals het scannen van zelf geschreven code). Echter, om de volledige functionaliteit van Snyk te kunnen benutten is er een licentie nodig. Het nadeel hiervan is dat dit op periodieke basis geld kost. Een ander nadeel is dat de resultaten in een eigen omgeving, welke extern gehost wordt, kan worden ingezien. Hierdoor valt deze tooling echter buiten de vooraf gestelde criteria.
@@ -179,16 +179,8 @@ Om te onderzoeken of een dependency check ook uitgevoerd kan worden zonder dat e
 
 \textbf{Resultaat:} De rapporten die uitgegeven worden door zowel de eerste als de tweede test op het SBT-project zijn gelijk. De scantijden zijn ongeveer hetzelfde, wat aangeeft dat deze methode van scannen een goed alternatief is voor het scannen van projecten, en ook gebruikt kan worden voor het periodiek scannen van een project. Van belang zijn de volgende bestanden: plugins.sbt, build.sbt en dependencies.scala omdat hier de dependency check plugin wordt gedefinieerd, als ook plugins benodigd voor het project. In build.sbt en dependencies.scala worden dependencies gedeclareerd.
 
-%TODO naar resulaten sectie kijken
 
 \subsubsection{Test 2b: NPM alleen de dependency informatie gebruiken}
-%Node.js docker container opzetten..
-%package.json / package-lock.json copiere
-%npm ci
-%owasp script draaien
-%cp resulst naar buiten
-%destroy Container
-
 Om te testen of de dependency check zonder informatie over het gebruik van de dependencies kan functioneren wordt er op eenzelfde manier getest als bij test 2a, maar dan voor NPM-projecten.
 
 \textbf{Doel:} Onderzoeken wat er nodig is om een dependency check uit te voeren zonder source-code. Het vermoeden bestaat dat package.json en package-lock.json voldoende informatie bevatten om dit volgens verwachting uit te voeren. Daarnaast moet er gekeken worden of de packages geïnstalleerd dienen te worden.
@@ -243,7 +235,7 @@ Om periodiek te kunnen scannen, worden de project en de build metadata samen met
 
 \subsection{Resultaat}\label{subsec:resultaat}
 Door in de buildstraat te scannen wordt er een rapport ten tijde van de build gegenereerd. Ondanks dat dit de duur van de deploy kan verlengen wordt er hierdoor gegarandeerd dat er een rapport beschikbaar is over de uitgerolde externe bibliotheken. Door in dezelfde stap ook alle in het project aanwezige declaraties beschikbaar te stellen voor de SOUP API kan er op basis van die declaraties periodiek een analyse worden uitgevoerd. Door zowel de resultaten van de dependency check als de dependency declaraties waar deze check op is uitgevoerd veilig te stellen weet je zeker dat de periodieke scans dezelfde basis hebben als de tijdens de deploy uitgevoerde scan. De methode voor het periodiek scannen geeft de mogelijkheid om te scannen tijdens voor de server rustige momenten. Hierdoor is er minder impact van de SOUP-analyse op de performance tijdens kantooruren.
-%TODO Hier goede plek?
+
 Hoewel deze methode specifiek voor SBT en NPM projecten is uitgewerkt is er de wens om op een later stadium ook andere talen en platformen(Docker) toe te voegen. Echter op het moment dat er een tool kan worden gevonden die kwetsbaarheden op kan sporen in deze talen en of platformen waarbij een output kan worden gegenereerd op een zelfde manier als de hier beschreven tools. Dan zou er alleen een extra plugin moet worden geschreven die in de SOUP API die met deze data overweg kan om op die manier toch een uniforme data structuur te kunnen hanteren.
 
 \subsection{Conclusie}\label{subsec:conclusie}
@@ -253,5 +245,3 @@ Deze methode maakt het mogelijk om inzichten te krijgen zodat de preventie stapp
 
 \section{Eindconclusie}\label{sec:Eindconclusie}
 In dit hoofdstuk zijn een aantal onderzoeken uitgevoerd. Deze hebben inzichten opgeleverd over hoe Eaglescience software ontwikkeld, waarbij aandacht is besteed aan de dev-stack, werkwijze en tooling. Deze bevindingen vormden de basis voor de zoektocht naar compatibele tooling voor SOUP analyses binnen Scala en TypeScript projecten, waarbij SBT en NPM worden gebruikt als buildtools. Doordat Eaglescience ontwikkeld in een 'niche-taal' (Scala) is de beschikbare tooling gelimiteerd. Desondanks is er voor beide door Eaglescience gebruikte hoofdtalen geschikte tooling gevonden om SOUP analyses mee uit te voeren (OWASP-dependency-check voor NPM en sbt-dependency-check voor SBT). Uit documentatie van deze tooling bleek dat er testen mee konden worden uitgevoerd om te onderzoeken hoe ze in een methode zouden kunnen worden geïmplementeerd om aan de project eisen te kunnen voldoen. De geselecteerde tooling bleken compatibel en goed te werken tijdens een reeks testen, en te voldoen aan de in de opdracht gestelde eisen. Tijdens deze testen werd inspiratie opgedaan voor een methode om gegevens uit de Jenskins buildstraat te verkrijgen en te analyseren. Door samenvoeging van de twee testmethodes is er een methode gevonden voor de analyse van externe bibliotheken binnen Eaglescience projecten. Deze methode maakt het in theorie mogelijk om zowel na deploy geautomatiseerd te draaien als op periodieke basis. Echter is de methode die is beschreven geschikt voor SBT en NPM projecten. Het doel is dat de output uit de buildstraat opgepikt moet kunnen worden door de API die vervolgens verantwoordelijk is voor het verwerken van de rauwe data in een gewenst formaat. Ieder platform dat wordt toegevoegd aan de SOUP analyse heeft dus een eigen SCA tool nodig met daarbij een passende plugin die de data van deze tool omzet naar het datamodel dat wordt gehanteerd binnen de API. De bevindingen van dit hoofdstuk zullen als basis dienen voor het ontwerp van de daadwerkelijke module voor de uitvoering van SOUP analyses.
-
-%TODO Referentie naar datamodel van deze tool in bijlage?

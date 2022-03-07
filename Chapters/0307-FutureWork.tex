@@ -2,25 +2,24 @@
 
 \chapter{Future work}\label{ch:name} % For referencing the chapter elsewhere, use \autoref{ch:name}
 Geen enkele applicatie is in het eerste ontwerp compleet. In dit hoofdstuk wordt ingegaan op zaken die in het ontwerp niet geheel optimaal zijn maar wel de werking van het concept aantonen.
-Als ook toevoegingen die tijdens het ontwerpen aan bod zijn gekomen waar op het moment van schrijven geen tijd voor was om de te implementeren.
+Daarnaast worden toevoegingen besproken die tijdens de ontwerpfase aan bod zijn gekomen en welke mogelijk in de toekomst opgenomen kunnen worden tijdens de implementatie.
 
 %----------------------------------------------------------------------------------------
 
 \section{Parsers}\label{sec:parsers}
-Zoals eerder te lezen was moet er voor ieder platform dat geanalyseerd moet worden een parser worden geschreven die de rapporten omzetten naar het interne datamodel.
-Op het verlanglijstje staat onder andere docker waar we binnen eaglescience veel gebruik van maken. In de toekomst moet er een tool worden gevonden die docker images/Files kan analyseren op kwetsbaarhden En voor deze tool dus ook een parser die het rapport omzet.
+Zoals eerder te lezen was moet er voor ieder platform dat geanalyseerd moet worden een parser worden geschreven die de rapporten omzet naar het interne datamodel. Het huidige ontwerp bevat parsers voor Scala en NPM. Echter gezien er binnen Eaglescience ook gebruik wordt gemaakt van andere platformen zoals docker zou toevoeging van een hiervoor compatibele analysetool met parser noodzakelijk zijn.
 %------------------------------------------------
 
 \section{Optimalisatie}\label{sec:optimalisatie}
 
-\subsection{opslaan van dependency declaraties}\label{subsec:opslaan-van-dependency-declaraties}
-Op dit moment worden er declaraties van dependencies middels bestanden uit de repository opgeslagen in een filesysteem waarbij een link wordt gelegt in de database. Een optimalisatie zou kunnen zijn om de bestanden niet letterlijk in de database of zoals nu het geval is in een filesystem op te slaan. Maar de dependencies die in de bestanden staan gedeclareerd op te slaan in een database als een eigen record. Op deze manier wordt de dependency maar een enkele keer opgeslagen en kunnen er als deze gevonden zijn kwetsbaarheden aan worden toegevoegt. Een ander voordeel is dat op dat moment alleen een backup gemaakt hoeft te worden van de database en niet meer van de file system. De reden dat deze manier van opslaan niet is geimpleemteerd is dat er op dit moment geen methode op handen is die een dependency file kan genereren uit een lijst met dependencies. Deze moet zelf worden ontwikkeld en kost daarom dus tijd. In SBT is er een methode bekend om een JSON object te verkrijgen met alle gedeclareerde dependencies.
+\subsection{Opslaan van dependency declaraties}\label{subsec:opslaan-van-dependency-declaraties}
+Op dit moment worden er declaraties van dependencies middels bestanden uit de repository opgeslagen in een filesysteem waarbij een link wordt gelegt in de database. Een optimalisatie zou kunnen zijn om de bestanden niet letterlijk in de database of zoals nu het geval is in een filesystem op te slaan, maar de dependencies die in de bestanden staan gedeclareerd op te slaan in een database als een eigen record. Op deze manier wordt de dependency maar een enkele keer opgeslagen en kunnen er, als deze gevonden zijn, kwetsbaarheden aan worden toegevoegd. Een ander voordeel is dat op dat moment alleen een backup gemaakt hoeft te worden van de database en niet meer van de file system. De reden dat deze manier van opslaan niet is geimplementeerd is dat er op dit moment geen methode voor handen is die een dependency file kan genereren uit een lijst met dependencies. Deze moet zelf worden ontwikkeld en kost daarom dus extra tijd. %In SBT is er een methode bekend om een JSON object te verkrijgen met alle gedeclareerde dependencies.
 
 
 \subsection{Generieke Services en Repositories}\label{subsec:generieke-services-en-repositories}
-De API is op dit moment opgebouwd uit meerdere repositories die vaak de zelfde taken uitvoeren maar dan op eigen entiteiten. Deze repositories kunnen worden samengevoegd door gebruik te maken van generieke functies binnen een enkele repository.
+De API is op dit moment opgebouwd uit meerdere repositories die vaak dezelfde taken uitvoeren maar dan op eigen entiteiten. Deze repositories zouden echter ook kunnen worden samengevoegd door gebruik te maken van generieke functies binnen een enkele repository.
 
 \section{Notificaties}\label{sec:notificaties}
-Er is nog steeds een wens om notificaties te implementeren op het moment dat er een bepaalde hoeveelheid kwetsbaarheden is gevonden in een analyse van een module. Deze notitificaties zouden zichtbaar kunnen zijn in rocket.chat en mail.
+Er is nog steeds een wens om notificaties te implementeren op het moment dat er een bepaalde hoeveelheid kwetsbaarheden wordt gevonden in een analyse van een module. Deze notitificaties zouden zichtbaar kunnen worden gemaakt in rocket.chat en mail.
 
 
