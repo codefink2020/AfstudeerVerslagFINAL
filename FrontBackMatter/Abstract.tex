@@ -2,10 +2,14 @@
 
 %\renewcommand{\abstractname}{Abstract} % Uncomment to change the name of the abstract
 
-\pdfbookmark[1]{Samenvating}{Samenvating} % Bookmark name visible in a PDF viewer
+\pdfbookmark[1]{Samenvatting}{Samenvatting} % Bookmark name visible in a PDF viewer
 
-\chapter{Samenvating}\label{ch:samenvating}
-%TODO nog schrijven als laatste
+\chapter{Samenvatting}\label{ch:samenvatting}
+
+De in dit afstudeerverslag beschreven afstudeeropdracht is uitgevoerd in opdracht van Eaglescience, een bedrijf welke software op maat ontwikkeld voor een grote verscheidenheid aan klanten. Tijdens de ontwikkeling van software maakt Eaglescience gebruik van externe bibliotheken. Door het gebruik hiervan zouden er echter potentiele gevaren kunnen worden geintroduceerd in de software. Om deze gevaren inzichtelijk te maken, zodat hierop actie kan worden ondernomen, zou Eaglescience een geautomatiseerde analyse methode willen inzetten. In dit afstudeerverslag worden de onderzoeken beschreven die zijn uitgevoerd met als doel om een applicatie te ontwerpen die geautomatiseerd en periodiek de kwetsbaarheden van externe bibliotheken, ofwel 'software of unknown provencance' (SOUP) in kaart kan brengen.
+Tijdens het onderzoek zijn de eisen aan deze applicatie vanuit de opdrachtgever in kaart gebracht, en is er onderzocht welke tooling en methodiek het beste aansluit bij de huidige werkwijze, Dev-stack en tooling van Eaglescience. Het onderzoek wees uit dat Eaglescience werkt met Scala en TypeScript, waarbij SBT en NPM als buildtools worden gebruikt. Door ontwikkeling in deze niche-taal is de beschikbare tooling voor SOUP analyses gelimiteerd. De resultaten van het onderzoek gaven aan dat de OWASP-dependency-check (voor NPM) en de sbt-dependency-check (voor SBT) het beste kunnen worden gebruikt. Na het uitvoeren van een reeks testen met deze tooling bleek deze inderdaad geschikt te zijn voor de specifieke situatie van Eaglescience en te voldoen aan de eisen van de opdrachtgever. Op basis van de informatie komende uit deze onderzoeken is een ontwerp ontwikkeld voor de applicatie, welke geautmatiseerd en op periodieke basis SOUP analyses uit zou kunnen voeren. De ontworpen applicatie voldoet aan de eisen gesteld door de opdrachtgever en zou daarom binnen de huidige Dev-stack kunnen worden geimplementeerd.
+
+
 
 
 
