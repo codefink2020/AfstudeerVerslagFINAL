@@ -7,11 +7,11 @@ Deze (deels) onherleidbare bibliotheken vallen onder de noemer "Software of Unkn
 
 \section{Opdracht vanuit Eaglescience}\label{sec:opdracht-vanuit-Eaglescience}
 
-Vanuit de CTO is de wens ontstaan om een systematisch opgebouwde methode te ontwikkelen waarbij er automatisch periodiek een SOUP-analyse gedaan wordt op bestaande en nieuwe projecten. Het beoogde resultaat is een module die wordt toegevoegd aan de al bestaande portal van Eaglescience waarbij project verantwoordelijken inzicht kunnen verkrijgen in de kwetsbaarheden die in een project aanwezig kunnen zijn door het gebruik van externe bibliotheken.
+Vanuit de CTO is de wens ontstaan om een systematisch opgebouwde methode te ontwikkelen waarbij er automatisch en periodiek een SOUP-analyse kan worden gedaan op bestaande en nieuwe projecten. Het beoogde resultaat is een module die wordt toegevoegd aan de al bestaande portal van Eaglescience waarbij project verantwoordelijken inzicht kunnen verkrijgen in de kwetsbaarheden die in een project aanwezig kunnen zijn door het gebruik van externe bibliotheken.
 
-De aanleiding van deze opdracht is een gebrek aan inzicht in reeds draaiende software. In tegenstelling tot software waaraan nog ontwikkeld wordt, gaat er bij projecten waaraan niet actief wordt ontwikkeld het inzicht in gebruikte bibliotheken en hun versies verloren. Hierdoor is het onbekend welke kwetsbaarheden er mogelijk zijn in deze projecten.
+De aanleiding van deze opdracht is een gebrek aan inzicht in reeds draaiende software. In tegenstelling tot software waaraan nog ontwikkeld wordt, gaat er bij projecten waaraan niet actief wordt ontwikkeld het inzicht in gebruikte bibliotheken en hun versies verloren. Hierdoor is het onbekend welke kwetsbaarheden er mogelijk aanwezig zijn in deze projecten.
 \subsection{Eisen aan de opdracht}\label{subsec: eisen-aan-de-opdracht}
-Vanuit Eaglescience worden er een aantal eisen gesteld waaraan het eindproduct moet voldoen. Als er aan deze eisen is voldaan is er voor Eaglescience een waardevol product ontwikkeld welke in gebruik kan worden genomen. Daarnaast zijn er een aantal opleveringseisen die gehaald dienen te worden om de kwaliteit te waarborgen. Ook is er aangegeven dat er bij voorkeur naar open source tooling dient gekeken te worden, daar er geen budget voor aanschaf van software voor handen is.
+Vanuit Eaglescience worden er een aantal eisen gesteld waaraan het eindproduct moet voldoen. Als er aan deze eisen is voldaan is er voor Eaglescience een waardevol product ontwikkeld welke in gebruik kan worden genomen. Daarnaast zijn er een aantal opleveringseisen die gehaald dienen te worden om de kwaliteit te waarborgen. Ook is er aangegeven dat er bij voorkeur naar open source tooling  gekeken dient te worden, daar er geen budget voor aanschaf van software voor handen is.
 \newpage
 
 \textbf{Functionele eisen}
@@ -38,7 +38,7 @@ Vanuit Eaglescience worden er een aantal eisen gesteld waaraan het eindproduct m
 \item De module dient goed gedocumenteerd te zijn middels 'in code comments'
 \end{itemize}
 
-\subsection{Deliverables vereiste resultaten}\label{subsec:deliverables-vereiste-resultaten}
+\subsection{Vereiste resultaten}\label{subsec:deliverables-vereiste-resultaten}
 Vanuit de CTO worden er naast de functionele eisen ook eisen gesteld aan de oplevering:
 \begin{itemize}
 \item Geïntegreerde en aantoonbaar werkende module
@@ -62,7 +62,7 @@ Naast dat de nieuwe module inzicht moet geven in de kwetsbaarheden van bibliothe
 Om de hierboven beschreven opdracht zo goed als mogelijk uit te voeren dient er eerst een onderzoek gedaan te worden naar begrippen binnen het domein SOUP, de ontwikkelomgeving van Eaglescience en daarnaast naar mogelijkheden om bibliotheken te screenen en te testen op kwetsbaarheden. Na de onderzoeksfase moet er een module ontwikkeld worden die deze mogelijkheid implementeert met inachtneming van de hierboven genoemde eisen.
 
 \subsection{Fase 1: Onderzoek} \label{subsec:fase-1:-onderzoek}
-Als eerste dient er onderzoek gedaan te worden naar de huidige situatie binnen Eaglescience waarbij er gekeken wordt naar de huidige dev-stack, de tooling, de werkwijze, als ook de huidige manier van uitrollen van applicaties. Daarna dient er een begrippen / literatuur onderzoek gedaan te worden binnen het domein SOUP om een goede kennis te vergaren over het domein om een basis te kunnen leggen voor een te implementeren module. Daarnaast dient er onderzoek gedaan te worden om te zien of er bibliotheken en resources zijn waar informatie over SOUP-bibliotheken te vinden is, en aan welke eisen deze bibliotheken moeten voldoen om kwetsbaar te worden. Hier lettende op de eisen vanuit Eaglescience en de mogelijkheden die deze analyse bibliotheken bieden. Deze fase wordt beschreven in het deel~\ref{prt:Onderzoek} van dit document.
+Als eerste dient er onderzoek gedaan te worden naar de huidige situatie binnen Eaglescience waarbij er gekeken wordt naar de huidige dev-stack, de tooling, de werkwijze, als ook de huidige manier van uitrollen van applicaties. Daarna dient er een begrippen / literatuur onderzoek gedaan te worden binnen het domein SOUP om een goede kennis te vergaren over het domein welke als basix zal dienen voor de te implementeren module. Daarnaast dient er onderzoek gedaan te worden om te zien of er bibliotheken en resources zijn waar informatie over SOUP-bibliotheken te vinden is, en aan welke eisen deze bibliotheken moeten voldoen om kwetsbaar te worden bevonden. Deze fase wordt beschreven in het deel~\ref{prt:Onderzoek} van dit document.
 
 \subsection{Fase 2: Oplevering SOUP analyse module}\label{subsec:fase-2:-oplevering-soup-analyse-module}
-De uit het onderzoek behaalde resultaten aangaande beschikbare resources om een SOUP-analyse uit te voeren vormen een leidraad voor de implementatie van de module. Deze module moet voldoen aan de eisen die gesteld zijn. Het ontwerp wordt beschreven in deel~\ref{prt:ontwerp}
+De met het onderzoek behaalde resultaten aangaande beschikbare resources om een SOUP-analyse uit te voeren vormen de leidraad voor de implementatie van de module. Deze module moet voldoen aan de eisen die gesteld zijn. Het ontwerp wordt beschreven in deel~\ref{prt:ontwerp}
