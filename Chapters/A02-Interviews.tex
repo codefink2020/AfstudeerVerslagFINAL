@@ -58,87 +58,44 @@ De repondenten waren het bijna unaniem eens dat het automatisch uitvoeren van SO
 \section{Interviews}\label{sec:interviews}
 
 \subsection{Ontwikkelaar}\label{subsec:ontwikkelaar}
-Dit gesprek heeft als \textbf{doel} om te achterhalen welke taken er op dit moment worden uitgevoerd op het gebied van SOUP-analyses en hoeveel tijd hierin wordt geinvesteerd. Daarnaast is er gevraagd welke verbeteringen er vanuit zijn rol zijn. Dit gesprek heeft plaatsgevonden op 20-20-2020 met [NAAM].\smallskip
+Dit gesprek heeft als doel om te achterhalen welke taken er op dit moment worden uitgevoerd op het gebied van SOUP-analyses en hoeveel tijd hierin wordt geinvesteerd. Daarnaast is er gevraagd welke verbeteringen er vanuit zijn/haar rol zijn. Dit gesprek heeft plaatsgevonden op 21-10-2021 met Bas Bro.\smallskip
 
 \textbf{Introductie }
-Aangegeven dat het gesprek vertrouwelijk is, en dat de tekst hierover ge-edit mag worden door de geinterviewde, als ook welke functie er bekleed wordt door de geinterviewde. De volgende vragen zijn tijdens het interview gesteld:
+Aangegeven dat het gesprek vertrouwelijk is, en dat de tekst hierover ge-edit mag worden door de geinterviewde.
+Daarnaast is er gesproken over zijn functie binnen Eaglescience.
+De volgende vragen zijn tijdens het interview gesteld:
 \\
 \textbf{Welke stappen worden er op dit moment genomen om er zo zeker mogelijk van te zijn dat er geen kwetsbaarheden zitten in de code? }
+Voordat een bibliotheek/framework wordt gebruikt wordt de documentatie doorgenomen en in de repositories nagegaan hoe actief en hoe vaak er gebruik van gemaakt wordt. Hoe actiever en vaker een bibliotyheek gebruikt wordt hoe groter de kans dat er bugs en dergelijke worden ontdekt. Wat weer de kans kleiner maakt op kwetsbaarheden. Op het moment dat een bibliotheek gebruikt wordt tijdens de ontwikkeling binnen onze projecten wordt er geprobeerd om de versies zo up-to-date mogelijk te houden. Het updaten naar een major wordt tijdens ontwikkeling niet veel gedaan, maar meestal meegenomen in onderhoudssprints.
+
+Op een aantal momenten wordt er handmatig een analyse uitgevoerd waarbij iedere bibliotheek en framework wordt gecontroleerd op kwetsbaarhden in verschillende databases. We maken nu al gebruik van NPM audit voor de angular projecten. Maar SBT is vaak handwerk. Bij gevonden kwetsbaarhden wordt alles met de hand bijgewerkt.
 \\
 
-\textbf{Heb je het idee dat de tijd die nodig is om deze stappen te zetten opweegt tegen het behaalde resultaat?}
-\\
-
-\textbf{Is het resultaat van het werk zichtbaar voor iedereen?}
-\\
-
-\textbf{Wat zou volgens jou een ideale situatie zijn mocht je een module mogen ontwikkelen om de SOUP-analyse automartisch te doen?  }
-\\
-
-\textbf{Heb je aanvullingen of opmerkingen op basis van de eerder naar je toegestuurde requirements?}
+\textbf{Heb je het idee dat de tijd die nodig is om deze stappen te zetten opweegt tegen het behaalde resultaat? } De manier waarop er nu SOUP analyses worden uitgevoerd is tijdrovend. Waarbij er nog bovenop komt dat er bij gevonden kwetsbaarheden de software ook geupdate moet worden. Het is veel werk en vaak is het resultaat niet direct te merken door een klant of door collega's wat het klusje niet heel populair maakt. Als de module er voor kan zorgen dat in ieder geval het zoeken naar bekende kwetsbaarheden uit kan voeren zal dat al schelen in de tijd wat weer in et updaten van de applicatie kan worden gestoken of in verdere ontwikeling.
 \\
 
 
 
-%
-%
-%In deze appendix zijn de verslagen te vinden van de verschillende interviews die gehouden zijn met de verschillende betrokkenen. Bij alle gesprekken die gevoerd zijn is aangegeven dat alles wat er tijdens de gesprekken besproken wordt desgewenst anoniem verwerkt wordt en dat het verslag na te lezen is voordat er iemand anders naar gekeken heeft.
-%\section{Interviews met betrokkenen van de nieuwe module voor SOUP analyse}\label{sec:intake-gesprek-oprachtgever}
-%Deze interviews zijn gehouden met geselecteerde personen die vanuit hun functie direct betrokken zijn met SOUP analyses. Het \textbf{doel} van deze interviews in het deels het achterhalen van de huidige manier van het doen van een SOUP-analyse. En deels hun visie op mogelijke verbeteringen die de nieuwe methode zou kunnen bieden.
-%
-%\subsection{Ontwikkelaar}\label{subsec:ontwikkelaar}
-%Dit gesprek heeft als \textbf{doel} om te achterhalen welke taken er op dit moment worden uitgevoerd op het gebied van SOUP-analyses. Als ook de tijd die het kost. Daarnaast is er gevraagd welke verbeteringen er vanuit zijn rol zijn. Dit gesprek heeft plaatsgevonden op 20-20-2020 met [NAAM].\smallskip
-%
-%\textbf{Introductie }
-%Aangegeven dat het gesprek vertrouwelijk is in de zin dat het geeddit mag worden door de geinterviewde, als ook welke functie er bekleed wordt door de geinterviewde.
-%\\
-%\textbf{Welke stappen worden er op dit moment genomen om er zo zeker mogelijk van te zijn dat we geen kwetsbaarheden hebben in onze code? }
-%\\
-%\textbf{Heb je het idee dat de tijd die nodig is om deze stappen te zetten opweegt tegen het resultaat?}
-%\\
-%\textbf{Is het resultaat van het werk zichtbaar voor iedereen?}
-%\\
-%\textbf{Wat zou volgens jou een ideale situatie zijn mocht je een module mogen ontwikkelen om de SOUP-analyse automartisch te doen?  }
-%\\
-%\textbf{Op basis van de getoonde requirements tot nu toe zijn er aanvullingen die direct tot je komen?}
-%\\
-%\subsection{Project manager}\label{subsec:project-manager}
-%Dit gesprek heeft als \textbf{doel} de informatie behoeften van een projectmanager in kaart te brengen. Dit gesprek heeft plaatsgevonden op 20-20-2020 met [NAAM]
-%\\
-%\textbf{Introductie }
-%Aangegeven dat het gesprek vertrouwelijk is in de zin dat het geeddit mag worden door de geinterviewde, als ook welke functie er bekleed wordt door de geinterviewde.
-%\\
-%\textbf{Hoe verkrijg je op dit moment de informatie om beslissingen te nemen om kwetsbaarheden op te lossen? }
-%\textbf{Zou het volgens jou verschil uitmaken dat er automatisch een analyse wordt uitgevoerd ten opzichte van de kwaliteit van de software?}
-%\\
-%\textbf{Zou dit dan ook ten goede komen met betrekking tot budgetten en dergelijke. Met andere woorden zouden ontwikkelaars meer tijd hebben om te ontwikkelen?}
-%\\
-%\textbf{Op welke manieren zou je de informatie willen zien in de portal, is het handig om te weten wanneer een scan is uitgevoerd?}
-%\\
-%\textbf{Op basis van de getoonde requirements tot nu toe zijn er aanvullingen die direct tot je komen?}
-%
-%\subsection{Managment teamlid}\label{subsec:managment-teamlid}
-%Dit gesprek heeft als \textbf{doel} om te achterhalen welke voordelen het managment team ziet in de nieuwe methode en module. Dit gesprek heeft plaats gevonden op 20-20-2020 met [NAAM]
-%\\
-%\textbf{Introductie }
-%Aangegeven dat het gesprek vertrouwelijk is in de zin dat het geeddit mag worden door de geinterviewde, als ook welke functie er bekleed wordt door de geinterviewde.
-%\\
-%\textbf{Naast efficiëntie welke andere voordelen zie je met de implementatie van de nieuwe module?}
-%\\
-%\textbf{Op welke manieren zou je de informatie willen zien in de portal, is het handig om te weten wanneer een scan is uitgevoerd?
-%\\
-%\textbf{Op basis van de getoonde requirements tot nu to zijn er aanvullingen die direct tot je komen?}
-%\\
-%
-%
-%
-%\section{Interviews met collega's over de dev-stack die gebruikt wordt binnen EagleScience}\label{sec:dev-stackInterviews}
-%
-%Het \textbf{doel} van deze gesprekken is inzicht krijgen in de reden waarom we bepaalde tools en ontwikkeltalen gebruiken binnen EagleScience. Bij alle gesprekken die gevoerd zijn is er aangegeven dat het verslag nagekeken mag worden. Er geanonimiseerd mag worden. Ook heb ik aangegeven waar nodig dat ik het gesprek opneem en alleen gebruik als input voor het onderzoek en de implementatie. Daarnaast heb ik er voor gekozen om semigestructureerde gesprekken te voeren waarin vooraf een doel heb verkondigd. De reden voor de beslissing is dat door de manier waarop EagleScience voor haar klanten werkt er niet veel tijd overblijft voor niet inplanbare uren.
-%
-%\subsection{Gesprek over Scala met Bas Broere}\label{subsec:gesprek-over-scala-met-bas-broere}
-%Het \textbf{doel} van dit gesprek is om er achter te komen hoe en waarom we Scala gebruiken. Een aantal
-%\textbf{Introductie: }\\
-%Inleiding gegeven over het doel van het gesprek en dat het verslag nakeken mag worden en dat desgewenst delen kunnen worden geanonimiseert
-%\subsection{}\label{subsec:dev-stackVragen}
-%
+\textbf{Wat zou volgens jou een ideale situatie zijn mocht je een module mogen ontwikkelen om de SOUP-analyse automatisch te doen? }Het meest ideaal zou zijn dat er naast een analyse ook een mogelijkheid is om informatie te verkijgen over de eventueel gevonden kwetsbaarheden zodat er makkelijk kan worden beslist of de kwetsbaarheid invloed heeft op de applicatie die wordt ontwikkeld. Naast deze informatie zal een samenvating van alleen kwetsbaarhden met een bepaalde impactgraat (lees: Severe, High, medium, low) ook al schelen op het moment dat er snel moet worden aangetoond of een applicatie veilig is.
+\\
+
+\textbf{Heb je aanvullingen of opmerkingen op basis van de eerder naar je toegestuurde requirements? } Op de samenvating, en het geven van extra informatie heb ik geen aanvullingen en opmerkingen.
+\\
+
+\subsection{Project manager}\label{subsec:project-manager}
+Dit gesprek heeft als \textbf{doel} de informatie behoeften van een projectmanager in kaart te brengen. Dit gesprek heeft plaatsgevonden op 21-10-2021 met Jeroen
+\\
+\textbf{Introductie }
+Aangegeven dat het gesprek vertrouwelijk is en dat het ge\-eddit mag worden door de geinterviewde, als ook welke functie er bekleed wordt door de geinterviewde.
+\\
+\textbf{Hoe verkrijg je op dit moment de informatie om beslissingen te nemen om kwetsbaarheden op te lossen? }
+De ontwikkelaars houden eens is de zoveel tijd een soup-analyse op de gebruikte bibliotheken op basis van deze analyse wordt gekeken welke impact een kwetsbaarheid kan hebben als deze gevonden is. Waarop vervolgens wordt ingeschat welke prioriteit en effort het is om te fixen.
+\\
+\textbf{Zou het volgens jou verschil uitmaken dat er automatisch een analyse wordt uitgevoerd ten opzichte van de kwaliteit van de software? }Zoals gezegd worden eens in de zoveel tijd een analyse gehouden. Ik denk dat een geautomatiseerde manier van kwetsbaarheden opsporen een kans bied om de analyses vaker uit te voeren. Met daarbij de mogelijkheid dat de software veiliger wordt. Al moeten de updates wel uitgevoerd blijven worden door de ontwikkelaars. Maar het feit dat er mogelijk 1 keer per week een analyse uitgevoerd wordt maakt de pak kans op kwetsbaarheden groter. Uiteindelijk zal de ideale situatie zijn dat er ook wordt gegekeken naar mogelijke updates voor bibliotheken die we gebruiken om zo ook op deze manier kwetsbaarheden voor te zijn en een betere inschatting te kunnen maken hoeveel effort het kost om die up-date te doen.
+\\
+
+\textbf{Zou dit dan ook ten goede komen met betrekking tot budgetten en dergelijke. Met andere woorden zouden ontwikkelaars meer tijd hebben om te ontwikkelen?} Ik denk het wel. Al zal dat voornamelijk afhangen van de hoeveelheid kwetsbaarheden die gevonden worden.
+\\
+\textbf{Op welke manieren zou je de informatie willen zien in de portal?} Er bestaat nu een module projecten in de portal het zou ideaal zijn om hier een samenvating te kunnen plaatsen met de mogelijkheid om vervolgens in een eigen module binnen de portal meer gedetaileerde informatie te verkrijgen. Zo kan een project manager sneller een inschatting maken per project en de ontwikkelaar vervolgens de vervolg stappen inzien.
+\\
+\textbf{Op basis van de getoonde requirements tot nu toe zijn er aanvullingen die direct tot je komen?} Alleen dat het wellicht ook handig is om update informatie van gebruikte bibliotheken inzichtelijk te maken.
