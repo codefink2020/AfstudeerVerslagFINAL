@@ -13,13 +13,13 @@ Het eerste datamodel is onderdeel van de SOUP-API en wordt hieronder verder refe
 
 
 \subsection{Interne datamodel}\label{subsec:interne-datamodel}
-Het interne datamodel is opgebouwd op basis van de data die wordt verkregen van de in het onderzoek gevonden OWASP tools. Hieruit kan worden gedestileerd welke gegevens daadwerkelijk nodig zijn voor de functionaliteit die wordt verwacht binnen Eaglescience. Het in figuur~\ref{fig:SOUP-SoupApiDm} getoonde model laat deze destillatie zien. Centraal in het datamodel staat de analyse. De analyse is aan modules gekoppeld omdat de rapportages uit de SCA tooling gebasseerd zijn op modules en niet op projecten. Het project is een verzameling modules dat in zijn geheel een applicatie vormt. De analyse zelf is opgebouwd uit de dependency files, welke opgeslagen worden om in de toekomst periodieke analyses uit te kunnen voeren tot er een nieuwe analyse is. Ook worden alle dependencies opgeslagen waarin gevonden vulnarabilities en bewijs worden opgeslagen.
+Het interne datamodel is opgebouwd op basis van de data die wordt verkregen van de in het onderzoek gevonden OWASP tools. Hieruit kan worden gedestileerd welke gegevens daadwerkelijk nodig zijn voor de functionaliteit die wordt verwacht binnen Eaglescience. Het in figuur~\ref{fig:SOUP-SoupApiDm} getoonde model laat deze destillatie zien. Centraal in het datamodel staat de analyse. De analyse is aan modules gekoppeld omdat de rapportages uit de SCA tooling gebasseerd zijn op modules en niet op projecten. Het project is een verzameling modules dat in zijn geheel een applicatie vormt. De analyse zelf is opgebouwd uit de dependency files, welke opgeslagen worden om in de toekomst periodieke analyses uit te kunnen voeren tot er een nieuwe analyse is. Ook worden alle dependencies opgeslagen welke gebruikt zijn in een module met daarbij de gevonden vulnarabilities en het bewijs.
 
 \begin{figure}[H]
     \myfloatalign
     \includegraphics[width=15cm]{gfx/SOUPAPI-SOUPAPI DM}
     \caption{Intern Datamodel}
-    \label{fig:SOUP-SoupApiDm [CHECKEN]}
+    \label{fig:SOUP-SoupApiDm}
 \end{figure}
 
 Hieronder wordt iedere entiteit beschreven met daarin het attribuut, het datatype en de reden voor het opslaan van deze data, waarbij geldt dat voor iedere entititeit de volgende attributen standaard zijn \_id, \_createdAt en \_updatedAt opgeslagen.
@@ -38,7 +38,7 @@ In deze entititeit worden de basisgegevens van de projecten opgeslagen als ook d
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
     projectSettings & String & referentie naar projectsettings\\
     name & String & naam van het project\\
-    modules & Seq[String] & bij project horende modules\\
+    modules & List[String] & bij project horende modules\\
 
 \end{tabular}
 \subsubsection{Projectsettings}\label{subsubsec:projectsettings}
@@ -46,6 +46,7 @@ Deze enititeit geeft de mogelijkheid tot het opslaan van project specifieke inst
 
 \begin{tabular}{lll}
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
+    project & String & Referentie naar project\\
     scaninterval  & String & aantal dagen tussen analyses\\
 \end{tabular}
 
@@ -55,8 +56,9 @@ De module is een op zichzelf staand onderdeel van de applicatie geisoleerd door 
 \begin{tabular}{lll}
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
     name  & String & naam van de module\\
+    project & String & referentie naar project \\
     platform  & String & platform waar de module op geschreven is \\
-    analyses  & Seq[String] & reverentie naar alle analyses die gedaan zijn op de module\\
+    analyses  & List[String] & reverentie naar alle analyses die gedaan zijn op de module\\
 \end{tabular}
 
 \subsubsection{Analysis}\label{subsubsec:analysis}
@@ -64,13 +66,14 @@ Een analyse herbergt alle bekende informatie over een module op het moment van d
 
 \begin{tabular}{lll}
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
-    timeStamp & DateTime & naam van de module\\
+    timeStamp & DateTime & Datum en tijd waarop analyse heeft plaatsgevonden\\
+    module & String & Referentie naar module\\
     analyserTool & String & naam van de analyser tool\\
     analyserVersion & String & versie van de SCA tool die gebruikt is\\
     jenkinsBuildNr & Int & JenkinsBuildnr tracebility naar Jenkins\\
     gitHash & String & Githash van een analyseerde module Tracability naar Gitlab\\
-    dependencies & Seq[String] & reverentie naar alle dependendencies in de module\\
-    dependencyFiles & Seq[String] & reverentie naar alle dependencyFiles gedefinieerd in de module\\
+    dependencies & List[String] & reverentie naar alle dependendencies in de module\\
+    dependencyFiles & List[String] & reverentie naar alle dependencyFiles gedefinieerd in de module\\
 \end{tabular}
 
 
@@ -79,12 +82,13 @@ De Dependency geeft informatie over de bewuste dependency weer waarbij er een re
 
 \begin{tabular}{lll}
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
-    fileName & DateTime & naam van de module\\
+    analyse & List[String] & referentie naar analyses waar de dependency is gevonden\\
+    fileName & DateTime & Bestandsnaam van de dependency\\
     version & String & Naam van de analyser tool\\
     productName & String & Versie van de SCA tool die gebruikt is\\
     platform & Int & JenkinsBuildnr tracebility naar Jenkins\\
     description & String & Githash van  eanalyseerde module Tracability naar Gitlab\\
-    vulnerabilities & Seq[String] & Reverentie naar alle dependendencies in de module.\\
+    vulnerabilities & List[String] & Reverentie naar alle dependendencies in de module.\\
 \end{tabular}
 
 \subsubsection{Vulberability}\label{subsubsec:vulberability}
@@ -94,6 +98,7 @@ Vulnerability geeft de informatie weer over een kwetsbaarheid waaronder het id e
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
 
     cveId & String & ID van de kwetsbaarheid\\
+    depenendency & String & Referentie naar dependency\\
     source & String & de bron waar deze kwetsbaarheid is gevonden\\
     severity & String & algemene indicator van de ernst van de kwetsbaarheid \\
     attackVector & String & Op welke manier de kwetsbaarheid te benutten is\\
@@ -104,7 +109,7 @@ Vulnerability geeft de informatie weer over een kwetsbaarheid waaronder het id e
     availabilityImpact & String &  impact op availability  \\
     impactScore & DOuble & score van de impact door NVD  \\
     exploitabilityScore & Double & Score van exploitability door NVD  \\
-    CWE & Seq[String] & referentie naar de CWE \\
+    CWE & List[String] & referentie naar de CWE \\
 \end{tabular}
 
 \subsubsection{CWE}\label{subsubsec:cwe}
@@ -112,7 +117,8 @@ De CWE's bevatten een url naar eventueel meer informatie over de kwetsbaarheid
 
 \begin{tabular}{lll}
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
-    cweID & String & Het ID van CWE die op mitre te vinden is.\\
+    cweID & String & Het ID van CWE die op mitre te vinden is\\
+    vulnerability & String  & Referentie naar Vulnerabolity \\
     mitreURL & String & de url van de pagina op Mitre(gegenereerd)\\
 \end{tabular}
 
@@ -124,7 +130,7 @@ Om op een later stadium een periodieke analyse te kunnen doen worden de dependen
     project & String & Referentie naar Project\\
     module & String & Referentie naar module \\
     fileName & String & filename van het bestand \\
-    partnerFile & Seq[String] & Reverentie naar andere benodigde bestanden.\\
+    partnerFile & List[String] & Reverentie naar andere benodigde bestanden.\\
     platform & String & gebruikte platform \\
     filePath & String & path naar het opgeslagen bestand \\
     nodeversion & String & versie van Node  \\
@@ -195,7 +201,7 @@ Ieder moment dat er een analyse is uitgevoerd wordt er hier een samenvating aan 
 \end{tabular}
 
 \section{Algemene Architectuur}\label{sec:algemene-architectuur}
-Voor het analyseren, beheren en weergeven van een SOUP-analyse heeft de applicatie een aantal componenten nodig die elk een eigen verantwoordelijkheid hebben in de taken die de applicatie uit moet voeren. Om deze verantwoordelijkheden te splitsen is de applicatie opgesplitst in verschillende modulen. Voor sommige onderdelen geldt zelfs dat het zelf een onderdeel is van een andere applicatie binnen de Eaglescience Dev-stack. Voor een volledige compatibiliteit wordt de applicatie in Scala geschreven waarbij het PlayFramework wordt gebruikt. Voor Frontend delen en dan met name in de portal wordt er Angular gebruikt, omdat dit hier al gebruikt wordt. Zoals te zien is in figuur~\ref{fig:SOUP-Components} zijn er verschillende componenten die samen werken om een analyse weer te geven voor de gebruiker.
+Voor het analyseren, beheren en weergeven van een SOUP-analyse heeft de applicatie een aantal componenten nodig die elk een eigen verantwoordelijkheid hebben in de taken die de applicatie uit moet voeren. Om deze verantwoordelijkheden te splitsen is de applicatie opgesplitst in verschillende modulen. Voor sommige onderdelen geldt zelfs dat het zelf een onderdeel is van een andere applicatie binnen de Eaglescience Dev-stack. Voor een volledige compatibiliteit wordt de applicatie in Scala geschreven waarbij het PlayFramework wordt gebruikt. Voor Frontend delen in de portal wordt er Angular gebruikt, omdat dit hier al gebruikt wordt. Zoals te zien is in figuur~\ref{fig:SOUP-Components} zijn er verschillende componenten die samen werken om een analyse weer te geven voor de gebruiker.
 
 \textbf{Jenkins} is verantwoordelijk voor het up-to-date houden van de laatste wijzigingen in de sourde-code en het initiele rapport, welke aangeboden wordt aan de \textbf{SOUP-API}. Hierin is de  \textbf{ReportParserEngine} verantwoordelijk voor het omzetten van de binnegekomen rapporten naar het interne datamodel. De \textbf{PeriodicAnalysisEngine} is verantwoordelijk voor het doen van periodieke analyses met de dependency declaraties. Centraal in de SOUP-API staat de \textbf{API} welke verantwoordelijk is voor de dataverwerking van de data die door de beide engines gegenereerd of benodigd is. Daarnaast is het verantwoordelijk voor het opslaan van de dependency declaraties. De \textbf{Portal} is verantwoordelijk voor de user interface met de gebruiker en de SOUP-API. Voor periodieke analyse van de modules binnen projecten is er een \textbf{AnalysisEnvironment} welke zorg draagt voor de veilige analyse van modules op basis van de laatst opgeslagen dependencyDeclaraties. Als \textbf{Database} is MongoDB gekozen omdat er wisselingen in content kan zitten van de uitslagen en dit een flexibelere manier van opslaan vereist is.
 In de komende secties zal er dieper ingegaan worden op de verschillende componten waardoor er een completer beeld hierover onstaat. Functionele ontwerpen zullen worden aangeboden in de hierop volgende hoofdstukken.
