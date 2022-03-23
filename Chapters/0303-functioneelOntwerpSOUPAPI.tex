@@ -1,12 +1,12 @@
 
 \chapter{Functioneel ontwerp SOUP API}\label{ch:impl soup api}
-De SOUP-API is de centrale module van het systeem dat verantwoordelijk is voor het periodiek scannen van de projecten, het parsen van de rapporten die uit de analyses komt en het beschikbaar maken van de data die in de database is opgeslagen. In dit hoofdstuk wordt  ingegaan op de functionele werking van dit deel van de applicatie en zijn de drie sub-modulen die ieders een deel van deze taken op zich neemt beschreven. Eerst zal de algemene functionaliteit van de API behandeld worden en vervolgens zullen de iets grotere functies zoals het parsen van de SCA rapportage en het regelen van het periodieke analyse systeem worden behandeld.
+De SOUP-API is de centrale module van het systeem dat verantwoordelijk is voor het periodiek scannen van de projecten, het parsen van de rapporten die uit de analyses komt en het beschikbaar maken van de data die in de database is opgeslagen. In dit hoofdstuk wordt  ingegaan op de functionele werking van dit deel van de applicatie en zijn de drie sub-modulen die ieder een deel van deze taken op zich neemt beschreven. Eerst zal de algemene functionaliteit van de API behandeld worden en vervolgens zullen de iets grotere functies zoals het parsen van de Software Composition Analysis rapportage en het regelen van het periodieke analyse systeem worden behandeld.
 
 
 \section{API}\label{sec:api2}
 Centraal in de SOUP-API staat de API welke verantwoordelijk is voor de verwerking en het in goede banen leiden van de data die door de beide Engines, beschreven in het hoofdstuk Architectuur, wordt gegenereerd. De API zal de Controller, Service en Repository structuur aanhouden (figuur~\ref{fig:API components}).
 
-Om de data die in het datamodel (zie figuur~\ref{fig:SOUP-SoupApiDm} in het vorige hoofdstuk) gedefineerd is te bedienen is er gekozen voor een model, service, repository architectuur. Voor iedere entiteit in het datamodel is een case class geschreven met daarbij een companionobject wat direct de mogelijkheid biedt om deze classes om te zetten in JSON voor opslag in de database en verzenden van en naar de API. De business logica is belegt in services, waarbij er voor iedere entitiet een service is aangemaakt die mutaties op deze entiteiten mogelijk maakt, waarbij naast de standaard CRUD acties ook relaties tussen de entiteiten kunnen worden gemaakt. De repository maakt het vervolgens mogelijk om data van en naar de database te versturen.
+Om de data die in het datamodel (zie figuur~\ref{fig:SOUP-SoupApiDm} in het vorige hoofdstuk) gedefineerd is te bedienen is er gekozen voor een model, service, repository architectuur. Voor iedere entiteit in het datamodel is een case class geschreven met daarbij een companionobject wat direct de mogelijkheid biedt om deze classes om te zetten in JSON voor opslag in de database en verzenden van en naar de API. De business logica is belegd in services, waarbij er voor iedere entitiet een service is aangemaakt die mutaties op deze entiteiten mogelijk maakt, waarbij naast de standaard CRUD acties ook relaties tussen de entiteiten kunnen worden gemaakt. De repository maakt het vervolgens mogelijk om data van en naar de database te versturen.
 
 \begin{figure}[bth]
     \myfloatalign
@@ -17,20 +17,20 @@ Om de data die in het datamodel (zie figuur~\ref{fig:SOUP-SoupApiDm} in het vori
 
 
 \subsection{Controllers}\label{subsec:controllers}
-Voor iedere entiteit dat belegt is in het interne datamodel (figuur~\ref{fig:SOUP-SoupApiDm [CHECKEN]}) worden algemene REST endpoints aangemaakt die bewerkingen op data beschikbaar maken waar dit gewenst en mogelijk is.
+Voor iedere entiteit dat belegd is in het interne datamodel (figuur~\ref{fig:SOUP-SoupApiDm}) worden algemene REST endpoints aangemaakt die bewerkingen op data beschikbaar maken waar dit gewenst en mogelijk is.
 \subsubsection{DataController}
 Controller voor het beheer van de data in de database. De REST endpoints maken het mogelijk om data te bewerken. In de secties hieronder kan [Entiteit] worden gelezen als alle Entiteiten in het interne datamodel, met als uitzondering Dependencies en Vulnerabilities. Dit gezien deze laatste twee gegenereerd worden door de rapportage en bewerking van buitenaf niet gewenst is in verband met de integriteit van deze data.
 \subsubsection*{Create}
 Bij een create dient het ID van de aangemaakte entiteit te worden teruggeven aan de client.
 
-\textbf{POST: /data/[Entiteit]/} maakt een enititeit aan volgens de in de body meegegeven DTO.
+\textbf{POST: /data/[Entiteit]/} maakt een enititeit aan volgens de in de body meegegeven Data Transfer Object.
 
 \subsubsection*{Read}
 Als er een read actie wordt aangeroepen kan alleen de entiteit op zichzelf worden weergegeven of een gedetaileerde weergave hiervan inclusief gerelateerde entiteiten.
 
 \textbf{GET: /data/[Entiteit]/?detail=[boolean]} haalt alle mogelijke records op van de betreffende entiteit. Door detail op true te zetten komen ook alle sub-entiteiten mee met de return body.
 
-\textbf{GET: /data/[Entiteit]/?detail="[boolean]"\&attr="[attribuut]\&value="[value]} haalt een enkele entiteit op van een enkele record op basis van het meegegeven attribuut en de value van dat attribuut. Als er bijvoorbeeld een enkel project moet worden opgehaald op basis van de naam is de volgende HTTP POST Call op "/data/project/?detail=true&attr="name"&value="groeigids$"$ de manier om het project groeigids op te halen.
+\textbf{GET: /data/[Entiteit]/?detail="[boolean]"\&attr="[attribuut]\&value="[value]} haalt een enkele entiteit op van een enkele record op basis van het meegegeven attribuut en de value van dat attribuut. Als er bijvoorbeeld een enkel project moet worden opgehaald op basis van de naam is de volgende HTTP POST Call op "/data/project/?detail=true\&attr="name"\&value="groeigids$"$ de manier om het project groeigids op te halen.
 
 \subsubsection*{Update}
 \textbf{PUT: /data/[Entiteit]/?attr="[Attribuut]\&value="[value]"} update een door de attribuut en value geselecteerde record met de meegegeven body.
@@ -38,8 +38,8 @@ Als er een read actie wordt aangeroepen kan alleen de entiteit op zichzelf worde
 \textbf{DELETE: /data/[Entitiet]/?attr="[Attribuut]\&value="[value]"} verwijderd een record dat gevonden wordt middels het meegegeven attribuut en de bijbehorende value.
 
 
-\subsubsection{UploadController}
-De UploadController fungeerd als gateway waar rapporten naar toe kunnen worden geupload. Er kunnen vanuit twee processen binnen de SOUP applicatie rapporten worden geupload. Voor beide is een eigen endpoint voorzien:
+\subsubsection{UploadController}\label{uploadController}
+De UploadController fungeert als gateway waar rapporten naar toe kunnen worden geupload. Er kunnen vanuit twee processen binnen de SOUP applicatie rapporten worden geupload. Voor beide is een eigen endpoint voorzien:
 
 \textbf{POST: /upload/jenkins} geeft een endpoint met de mogelijkheid om meerdere bestanden te uploaden. Als eerste is er het SCA rapport met daarin de resultaten van de eerste analyse. Bij de analyse middels Jenkins worden ook de dependency files meegezonden om op die manier het systeem up-to-date te houden. Als laatst wordt er een JSON bestand meegestuurt met daarin de meta gegevens over het project.
 
@@ -50,7 +50,7 @@ De UploadController fungeerd als gateway waar rapporten naar toe kunnen worden g
     \label{fig:SequenceUploadReportJenkins}
 \end{figure}
 
-\textbf{POST: /upload/pae} dit endpoint geeft alleen de mogelijkheid om het SCA rapport en de meta data up te loaden welke vervolgens kunnen worden verwerkt door de SOUP-API. Gezien er in de Analysis Engine geen veranderingen in de dependencies zijn hoeven deze dan ook niet te worden meegezonden.
+\textbf{POST: /upload/pae} Dit endpoint voor de PeriodicAnalysisEngine geeft alleen de mogelijkheid om het Software Composition Analysis rapport en de meta data up te loaden welke vervolgens kunnen worden verwerkt door de SOUP-API. Gezien er in de Analysis Engine geen veranderingen in de dependencies zijn hoeven deze dan ook niet te worden meegezonden.
 
 \begin{figure}[bth]
     \myfloatalign
@@ -59,7 +59,7 @@ De UploadController fungeerd als gateway waar rapporten naar toe kunnen worden g
     \label{fig:SequenceUploadReportpaet}
 \end{figure}
 
-In beide gevallen worden er bestanden naar de UploadController verstuurt. De bestanden zijn onderdeel van de body en worden voorzien van een key. Hieronder is te zien welke bestanden de controller kan verwachten en met welke key deze geidentificeerd kan worden. Alleen dependency bestanden worden verstuurt naar de \texttt{/upload/jenkins/} endpoint.
+In beide gevallen worden er bestanden naar de UploadController verstuurd. De bestanden zijn onderdeel van de body en worden voorzien van een key. Hieronder is te zien welke bestanden de controller kan verwachten en met welke key deze geïdentificeerd kan worden. Alleen dependency bestanden worden verstuurt naar de \texttt{/upload/jenkins/} endpoint.
 
 \begin{tabular}{lll}
     \textbf{Key} & \textbf{Type} & \textbf{Bestand} \\
@@ -71,15 +71,15 @@ In beide gevallen worden er bestanden naar de UploadController verstuurt. De bes
     dockerFile & dockerFile & base image dockerfile
 \end{tabular} \\
 
-Zoals te zien is in figuur ~\ref{fig:SequenceUploadReportJenkins} en \ref{fig:SequenceUploadReportpaet} worden de bestanden direct omgezet in de controller naar data die binnen de SOUP-API gebruikt kan worden. De dependency en docker bestanden worden middels de DependencyFileService opgeslagen in de fileSystem en de database. De metaData wordt omgezet in een object van de case class MetaData zodat de attributen makkelijk te bereiken zijn. Het rapport wordt omgezet naar JSON zodat deze door de ReportParseEngine kan worden verwerkt. Als alle bestanden zijn verwerkt wordt er een analyse aangemaakt welke door de ReportParseEngine kan worden gebruikt voor het opslaan van het rapport.
+Zoals te zien is in figuur ~\ref{fig:SequenceUploadReportJenkins} en \ref{fig:SequenceUploadReportpaet} worden de bestanden direct omgezet in de controller naar data die binnen de SOUP-API gebruikt kan worden. De dependency en docker bestanden worden middels de DependencyFileService opgeslagen op het fileSystem en in de database. Gezien de API in een docker omgeving draait zal er een volume worden toegewezen waar deze files in opgeslagen worden op de volgende manier: $"$//Project/module/analysis/timestamp/[dependencyFiles]"$"$. De metaData wordt omgezet in een object van de case class MetaData zodat de attributen makkelijk te bereiken zijn. Het rapport wordt omgezet naar JSON zodat deze door de ReportParseEngine kan worden verwerkt. Als alle bestanden zijn verwerkt wordt er een analyse aangemaakt welke door de ReportParseEngine kan worden gebruikt voor het opslaan van het rapport.
 
 \subsection{Services}\label{subsec:Services}
-Voor de business logica is er een services laag die de verschillende processen in de SOUP-API belegt. In principe zijn er twee hoofd typen processen: De verwerking van rapportage over kwetsbaarheden en de services die de bewerkingen op data regelen.
+Voor de business logica is er een services laag die de verschillende processen in de SOUP-API belegd. In principe zijn er twee hoofd typen processen: De verwerking van rapportage over kwetsbaarheden en de services die de bewerkingen op data regelen.
 De reportservice zorgt voor de verbinding tussen de API en de ReportParseService. Daarnaast biedt het de mogelijkheid om in de toekomst het volledige rapport in te kunnen zien.
 De Data Services zijn een tussenlaag tussen de dataControllers en de Datarepositories die het mogelijk maken om entiteiten toe te voegen en relaties tussen entiteiten te leggen. Het biedt ook de mogelijkheid om records op te halen op basis van deze relaties.
 
 \subsection{Repositories}\label{subsec:repositories}
-Net als bij de services is voor iedere entiteit in het datamodel een eigen repository geschreven die de interactie met de database mogelijk maakt. In elke repository zijn de basis bewerkingen belegt. Voor iedere entiteit zijn onderstaande functies geschreven:
+Net als bij de services is voor iedere entiteit in het datamodel een eigen repository geschreven die de interactie met de database mogelijk maakt. In elke repository zijn de basis bewerkingen belegd. Voor iedere entiteit zijn onderstaande functies geschreven:
 
 \begin{tabular}{ll}
     \textbf{Function} & \textbf{Returns}\\
@@ -94,11 +94,11 @@ Net als bij de services is voor iedere entiteit in het datamodel een eigen repos
 
 %https://stackoverflow.com/questions/70513344/scala-generic-repository-class-for-reactive-mongo-repositoryalpakka-needed-c
 
-\subsubsection{DTO's}
-Omdat niet altijd het gehele object van en naar de client wordt verstuurt worden er DTO's aangemaakt. Deze kunnen worden gebruikt als afspraak tussen de backend en de client. Een voorbeeld van een DTO is de volgende:
+\subsubsection{Data Transfer Object's}
+Omdat niet altijd het gehele object van en naar de client wordt verstuurt worden er Data Transfer Object's aangemaakt. Deze kunnen worden gebruikt als afspraak tussen de backend en de client. Een voorbeeld van een Data Transfer Object is de volgende:
 
-In de Jenkins upload controller wordt er naast een rapport ook metadata verstuurt middels een JSON bestand. In de backend is de volgende case class gedefineerd met de benodigde gegevens:
-\begin{lstlisting}[caption={case class MetaData in MetaData.scala},label=lst:metdataScala]
+In de Jenkins upload controller wordt er naast een rapport ook metadata verstuurt middels een JSON bestand. In de backend is een case class gedefineerd(zie listing~\ref{lst:metdataScala}) met de benodigde gegevens:
+\begin{lstlisting}
 
 package domain.dtos
 import play.api.libs.json.{Json, OFormat}
@@ -119,10 +119,10 @@ object MetaData {
   implicit val projectFormat: OFormat[MetaData] = Json.format[MetaData]
 }
 
-\end{lstlisting}
+\end{lstlisting}[caption={case class MetaData in MetaData.scala},label=lst:metdataScala]
 \newpage
-Wat vervolgens in de volgende JSON resulteert:
-\begin{lstlisting}[caption={metadata JSON object behorende bij de case class}, label={lst:metadatajson}]
+Wat vervolgens resulteerd in een JSON getoond in figuur~\ref{lst:metadatajson}
+\begin{lstlisting}
 {
   "projectName": "testProject",
   "moduleName": "backend",
@@ -133,7 +133,7 @@ Wat vervolgens in de volgende JSON resulteert:
   "gitHash": "6cf71dd74241e6292db69368f1d4f6d990b3f03s",
   "jenkinsBuildNr": "42"
 }
-\end{lstlisting}
+\end{lstlisting}[caption={metadata JSON object behorende bij de case class}, label={lst:metadatajson}]
 \subsection{Algehele CRUD functionaliteit}\label{subsec:algehele-crud-functionaliteit}
 In deze hele sectie is het entiteit project als voorbeeld genomen om de verschillende bewerkingen in het systeem weer te geven.
 \subsubsection*{Create}
@@ -173,7 +173,7 @@ In figuur~\ref{fig:seqdiagDeleteProj} is getoond hoe een project wordt verwijder
 \end{figure}
 
 \subsection{Toevoegen van entiteit A aan entiteit B}\label{subsec:toevoegen-van-entiteit-a-aan-entiteit-b}
-Als voorbeeld wordt in deze sectie het toevoegen van een module aan een project getoont. Het geeft weer hoe de relaties tussen verschillende entiteiten worden gemaakt. In figuur~\ref{fig:seqdiagModToProj} is te zien dat er een call
+Als voorbeeld wordt in deze sectie het toevoegen van een module aan een project getoond. Het geeft weer hoe de relaties tussen verschillende entiteiten worden gemaakt. In figuur~\ref{fig:seqdiagModToProj} is te zien dat er een call
 gedaan wordt vanuit de ReportService waarbij de Id's van zowel het project als de module worden meegegeven. Als eerst wordt er een project opgehaald door middel van het Id. De module wordt toegevoegd aan dit project (nadat er gekeken is of het project deze module nog niet heeft) en vervolgens wordt de repository aangeroepen om het project te updaten.
 \begin{figure}[h]
     \myfloatalign
@@ -192,7 +192,7 @@ De ReportParseEngine is verantwoordelijk voor het omzetten van een rapport dat g
 \end{figure}
 
 \subsection{ParserService}\label{subsec:reportservice}
-De ParserService ontvangt van de uploadController (hierboven beschreven) naast het rapport in JSON en de metaData ook een analyseId. Dat laatste wordt gebruikt om de dependency/vulnerability informatie uit het rapport toe te voegen aan de analyse. In de metaData staat welke tool er gebruikt is voor het opzetten van het rapport en kan daarmee gebruikt worden om de juiste parser te selecteren voor het omzetten van het rapport (figuur~\ref{fig:ProcesPayload}).
+De ParserService ontvangt van de uploadController (beschreven in sectie~\ref{uploadController}) naast het rapport in JSON en de metaData ook een analyseId. Dat laatste wordt gebruikt om de dependency/vulnerability informatie uit het rapport toe te voegen aan de analyse. In de metaData staat welke tool er gebruikt is voor het opzetten van het rapport en kan daarmee gebruikt worden om de juiste parser te selecteren voor het omzetten van het rapport (figuur~\ref{fig:ProcesPayload}).
 
 \begin{figure}[bth]
     \myfloatalign
@@ -214,8 +214,8 @@ De parser dient dan ook te moeten weten welke analyse er is aangemaakt. Deze wor
 \end{figure}
 
 
-\subsection{$"$[Future]Parser$"$}\label{subsec:$"$[future]parser$"$}
-De $"$[Future]Parser$"$ zal in basis gelijk zijn als de parser voor de OWASP tool die hierboven zijn beschreven. Echter zal de daadwerkelijke omzetting veranderen. Om deze reden moet er voor iedere tool een eigen datamodel worden gedefinieerd waarmee er objecten kunnen worden gemaakt van deze data. Er kan vervolgens middels deze objecten naar het interne datamodel worden gewerkt.
+\subsection{$"$FutureParser$"$}\label{subsec:$"$[future]parser$"$}
+De $"$FutureParser$"$ zal in basis gelijk zijn als de parser voor de OWASP tool die hierboven zijn beschreven. Echter zal de daadwerkelijke omzetting veranderen. Om deze reden moet er voor iedere tool een eigen datamodel worden gedefinieerd waarmee er objecten kunnen worden gemaakt van deze data. Er kan vervolgens middels deze objecten naar het interne datamodel worden gewerkt.
 \clearpage
 
 
@@ -262,7 +262,7 @@ Naast het starten van de analyses is de controller ook verantwoordelijk voor het
     \caption{Componenten in de periodic Analysis Engine}
     \label{fig:paeSeq}
 \end{figure}
-In figuur~\ref{fig:paeSeq} weergegeven hoe een container wordt opgebouwd door middel van het aanmaken van een buildFile specifiek voor de module. De buildfile is een build-file die in de JenkinsPipeline wordt gebruikt om een container aan te maken. Om er zeker van te zijn dat de versies kloppen worden de in de appendNPM/SBT stap de versies gecontroleerd en waar nodig aangepast naar de nieuwere versies. Aan de buildfile worden nog commando's toegevoegd om de juiste dependency files toe te voegen en het commando om de SCA Tool te runnen, met als laatste stap de upload van het rapport en meta data naar de SOUPAPI zodat deze wordt genalyseerd. Op het moment dat deze upload succesvol is wordt de container vernietigd en de gebruikte bestanden verwijderd.
+In figuur~\ref{fig:paeSeq} weergegeven hoe een container wordt opgebouwd door middel van het aanmaken van een buildFile specifiek voor de module. De buildfile is een build-file die in de JenkinsPipeline wordt gebruikt om een container aan te maken. Om er zeker van te zijn dat de versies kloppen, worden de in de appendNPM/SBT stap de versies gecontroleerd en waar nodig aangepast naar de nieuwere versies. Aan de buildfile worden nog commando's toegevoegd om de juiste dependency files toe te voegen en het commando om de SCA Tool te runnen, met als laatste stap de upload van het rapport en meta data naar de SOUP-API zodat deze wordt genalyseerd. Op het moment dat deze upload succesvol is wordt de container vernietigd en de gebruikte bestanden verwijderd.
 %
 %\begin{figure}[bth]
 %    \myfloatalign
@@ -272,11 +272,11 @@ In figuur~\ref{fig:paeSeq} weergegeven hoe een container wordt opgebouwd door mi
 %\end{figure}
 
 \subsection{AnalysisService}\label{subsec:analysisservice}
-Deze service heeft een ondersteunende rol die het mogelijk maakt voor de controller om gegevens uit de API te kunnen halen die het nodig heeft om  zijn taken uit te kunnen voeren. Ookal lijkt deze service overbodig, de reden dat er een extra service tussen zit is dat op het moment dat er in de API iets aangepast wordt er maar een enkele aanpassing nodig is in de service en niet op meerdere andere plekken.
+Deze service heeft een ondersteunende rol die het mogelijk maakt voor de controller om gegevens uit de API te kunnen halen die het nodig heeft om  zijn taken uit te kunnen voeren. Ook al lijkt deze service overbodig, de reden dat er een extra service tussen zit is dat op het moment dat er in de API iets aangepast wordt er maar een enkele aanpassing nodig is in de service en niet op meerdere andere plekken.
 
 \subsection{ScanQ en worklist}\label{subsec:scanq}
 In de database wordt een losse tabel opgenomen met de in figuur~\ref{fig:scanQERD} weergeven attribuuten, waarbij de lastAnalysis en nextAnalysis belangrijk zijn voor het schedulen van de jobs in de worklist.
-De worklist zelf is een interne lijst van de controller welke de voor die sessie resterende jobs bevat. Op het moment dat de controller klaar is met de analyses wordt de datum van lastAnalysis gezet op de datum van de analyse en de nextAnalysis op de datum van de volgede analyse welke ingesteld kan worden middels de projectsettings in de API database.
+De worklist zelf is een interne lijst van de controller welke de voor die sessie resterende jobs bevat. Op het moment dat de controller klaar is met de analyses wordt de datum van lastAnalysis gezet op de datum van de analyse en de nextAnalysis op de datum van de volgende analyse welke ingesteld kan worden middels de projectsettings in de API database.
 \begin{figure}[bth]
     \myfloatalign
     \includegraphics[width=5cm]{gfx/SOUPAPI-scanQERD}

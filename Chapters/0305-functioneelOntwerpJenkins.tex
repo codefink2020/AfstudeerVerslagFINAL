@@ -10,7 +10,7 @@ Voor de Periodic Analysis Engine moeten de volgende stappen worden toegevoegd; a
 
 Hieronder is te lezen hoe deze stapppen worden uitgewerkt.
 
-\section{informatie vergaring}\label{sec:informatie-vergaring}
+\section{Informatie vergaring}\label{sec:informatie-vergaring}
 Om voor de SOUP-API duidelijk te maken op welke build de analyse gedaan moet worden en voor welke module in een project moeten er een aantal zaken worden opgeslagen in een metdata.json bestand die na het doen van de daadwerkelijke analyse meegestuurd wordt met het rapport. De JSON die te zien is in listing~\ref{lst:metadatajsonJenkins} moet worden verstuurt waarbij een groot aantal van de attributen onderdeel zijn van variabelen die in de pipeline aanwezig zijn.
 Door een bash script te ontwikkelen kunnen we op een relatief simpele manier gegevens uit jenkins in een JSON plaatsen.
 
@@ -34,7 +34,7 @@ De in het hoofdstuk~\ref{ch:onderzoek-tool-methode} gevonden methode is de manie
 Voor het checken van de dependencies in NPM is een package beschikbaar die middels\\ \texttt{npm install -D owasp-dependency-check} aan de dependencies worden toegevoegd. Vervolgens moet er in de \texttt{package.json} het volgende script worden toegevoegd.\\ \texttt{$"$owasp:$"$ $"$owasp-dependency-check --project $"$YOUR PROJECT NAME$"$ -F JSON}\\
 Door in de docker file \texttt{npm run owasp} aan te roepen zal de analyse worden gestart.
 
-\subsection{SBT Builds}\label{subsec:sbt-builds}
+\subsection{SBT builds}\label{subsec:sbt-builds}
 Voor het checken van de dependencies in een SBT build is de volgende plugin beschikbaar genaamd $"$sbt-dependency-check$"$. Deze is al in het onderzoek naar een methode voor het zoeken naar kwetsbaarheden naarboven gekomen. Om deze methode te kunnen gebruiken moet de volgende declaratie" \\ \texttt{addSbtPlugin("net.vonbuchholtz" \% "sbt-dependency-check" \% "3.4.0")}"\\ worden toegevoegd aan \texttt{project/plugin.sbt}
 
 Vervolgens moet \texttt{dependencyCheckFormat := "JSON"} worden toegevoegd in de \textt{build.sbt} welke ervoor zorgt dat de ouput in JSON is. De JSON komt standaard in de \texttt{target/scala2.13}} folder terecht en heeft altijd de naam \texttt{dependency-check-report.json}

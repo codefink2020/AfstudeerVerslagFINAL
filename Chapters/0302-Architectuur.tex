@@ -1,6 +1,6 @@
 \chapter{Architectuur}\label{ch:Architectuur}
 
-Om inzicht te verkrijgen in potentiële kwetsbaarheden in de projecten van Eaglescience moet er een applicatie worden ontworpen die analyses kan uitvoeren op het moment dat er veranderingen worden aangebracht in deze projecten. Daarnaast moet de applicatie in staat zijn deze analyses uit te voeren op een periodieke basis.
+Om inzicht te verkrijgen in potentiële kwetsbaarheden in de projecten van Eaglescience moet er een applicatie worden ontworpen die automatisch analyses kan uitvoeren. Daarnaast moet de applicatie in staat zijn deze analyses uit te voeren op een periodieke basis.
 Op het moment van schrijven wordt er binnen Eaglescience ontwikkeld in de talen Scala en TypeScript, maar de verwachting is dat er in de toekomst een mogelijkheid bestaat dat dit uitgebreid gaat worden. Daarnaast zijn deze twee talen niet de enige twee platformen binnen de stack, maar wordt er ook gebruik gemaakt van docker met daarbij verschillende images die ook kwetsbaarheden kunnen bevatten. Dit ontwerp voorziet niet in de mogelijkheid om deze toekomstige platformen (als Docker) te kunnen scannen, echter zal het wel de mogelijkheid bieden om deze op een relatief makkelijke manier later toe te voegen. De selectie van deze toekomstige tool moet wel de mogelijkheid bieden om te voorzien in de data beschreven in het interne datamodel.
 
 Analyses worden uitgevoerd op module niveau, hier zijn in basis twee redenen voor. Ten eerste is een module binnen een Eaglescience project een afgeschermd onderdeel dat een eigen platform benut. Ten tweede kunnen er op module niveau veranderingen worden verwacht ten opzichte van dependency declaraties.
@@ -8,17 +8,17 @@ Analyses worden uitgevoerd op module niveau, hier zijn in basis twee redenen voo
 Als de architectuur wordt gebasseerd op het datamodel kan er vervolgens worden gekeken welke componenten en technieken er nodig zijn om het datamodel functioneeel te krijgen.
 
 \section{Datamodel}\label{sec:datamodel}
-Om de gebruiker in staat te stellen om een gedegen keuze te maken om over te gaan op het updaten van de applicatie is een zo actueel mogelijk beeld nodig van de huidige situatie omtrent kwetsbaarheden in een project. Om deze informatie kunnen bieden is er gekozen om dit te bieden op twee niveau's en dus door middel van twee datamodellen.
-Het eerste datamodel is onderdeel van de SOUP-API en wordt hieronder verder refereert als het interne datamodel. Daarnaast is er een model dat binnen de Portal gebruikt wordt voor het opslaan van samengevatte gegevens verder benoemd als het Portalmodel.
+Om de gebruiker in staat te stellen een gedegen keuze te maken over het overgaaan tot het updaten van de applicatie is een zo actueel mogelijk beeld nodig van de huidige situatie omtrent kwetsbaarheden in een project. Om deze informatie kunnen bieden is er gekozen om dit te bieden op twee niveau's en dus door middel van twee datamodellen.
+Het eerste datamodel is onderdeel van de SOUP-API en wordt hieronder verder gerefereerd als het interne datamodel. Daarnaast is er een model dat binnen de Portal gebruikt wordt voor het opslaan van samengevatte gegevens verder benoemd als het Portalmodel.
 
 
-\subsection{Interne datamodel}\label{subsec:interne-datamodel}
-Het interne datamodel is opgebouwd op basis van de data die wordt verkregen van de in het onderzoek gevonden OWASP tools. Hieruit kan worden gedestileerd welke gegevens daadwerkelijk nodig zijn voor de functionaliteit die wordt verwacht binnen Eaglescience. Het in figuur~\ref{fig:SOUP-SoupApiDm} getoonde model laat deze destillatie zien. Centraal in het datamodel staat de analyse. De analyse is aan modules gekoppeld omdat de rapportages uit de SCA tooling gebasseerd zijn op modules en niet op projecten. Het project is een verzameling modules dat in zijn geheel een applicatie vormt. De analyse zelf is opgebouwd uit de dependency files, welke opgeslagen worden om in de toekomst periodieke analyses uit te kunnen voeren tot er een nieuwe analyse is. Ook worden alle dependencies opgeslagen welke gebruikt zijn in een module met daarbij de gevonden vulnarabilities en het bewijs.
+\subsection{Intern datamodel}\label{subsec:interne-datamodel}
+Het interne datamodel is opgebouwd op basis van de data die wordt verkregen van de in het onderzoek gevonden OWASP tools. Hieruit kan worden gedestileerd welke gegevens daadwerkelijk nodig zijn voor de functionaliteit die wordt verwacht binnen Eaglescience. Het in figuur~\ref{fig:SOUP-SoupApiDm} getoonde model laat deze destillatie zien. Centraal in het datamodel staat de analyse. De analyse is aan modules gekoppeld omdat de rapportages uit de Softeare Composition Analysis tooling gebasseerd zijn op modules en niet op projecten. Het project is een verzameling modules dat in zijn geheel een applicatie vormt. De analyse zelf is opgebouwd uit de dependency files, welke opgeslagen worden om in de toekomst periodieke analyses uit te kunnen voeren tot er een nieuwe analyse is. Ook worden alle dependencies opgeslagen welke gebruikt zijn in een module met daarbij de gevonden vulnarabilities en het bewijs.
 
 \begin{figure}[H]
     \myfloatalign
     \includegraphics[width=15cm]{gfx/SOUPAPI-SOUPAPI DM}
-    \caption{Intern Datamodel}
+    \caption{Intern datamodel}
     \label{fig:SOUP-SoupApiDm}
 \end{figure}
 
@@ -38,7 +38,7 @@ In deze entititeit worden de basisgegevens van de projecten opgeslagen als ook d
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
     projectSettings & String & referentie naar projectsettings\\
     name & String & naam van het project\\
-    modules & List[String] & bij project horende modules\\
+    moduleIds & List[String] & bij project horende modules\\
 
 \end{tabular}
 \subsubsection{Projectsettings}\label{subsubsec:projectsettings}
@@ -46,7 +46,7 @@ Deze enititeit geeft de mogelijkheid tot het opslaan van project specifieke inst
 
 \begin{tabular}{lll}
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
-    project & String & Referentie naar project\\
+    projectId & String & Referentie naar project\\
     scaninterval  & String & aantal dagen tussen analyses\\
 \end{tabular}
 
@@ -56,9 +56,9 @@ De module is een op zichzelf staand onderdeel van de applicatie geisoleerd door 
 \begin{tabular}{lll}
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
     name  & String & naam van de module\\
-    project & String & referentie naar project \\
+    projectId & String & referentie naar project \\
     platform  & String & platform waar de module op geschreven is \\
-    analyses  & List[String] & reverentie naar alle analyses die gedaan zijn op de module\\
+    analysesIds  & List[String] & reverentie naar alle analyses die gedaan zijn op de module\\
 \end{tabular}
 
 \subsubsection{Analysis}\label{subsubsec:analysis}
@@ -67,7 +67,9 @@ Een analyse herbergt alle bekende informatie over een module op het moment van d
 \begin{tabular}{lll}
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
     timeStamp & DateTime & Datum en tijd waarop analyse heeft plaatsgevonden\\
-    module & String & Referentie naar module\\
+    moduleId & String & Referentie naar module\\
+    tag & String & gepubliseerd onder Tag\\
+    target & String & gedeployed op Target\\
     analyserTool & String & naam van de analyser tool\\
     analyserVersion & String & versie van de SCA tool die gebruikt is\\
     jenkinsBuildNr & Int & JenkinsBuildnr tracebility naar Jenkins\\
@@ -82,13 +84,13 @@ De Dependency geeft informatie over de bewuste dependency weer waarbij er een re
 
 \begin{tabular}{lll}
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
-    analyse & List[String] & referentie naar analyses waar de dependency is gevonden\\
+    analyseId & List[String] & referentie naar analyses waar de dependency is gevonden\\
     fileName & DateTime & Bestandsnaam van de dependency\\
     version & String & Naam van de analyser tool\\
     productName & String & Versie van de SCA tool die gebruikt is\\
     platform & Int & JenkinsBuildnr tracebility naar Jenkins\\
     description & String & Githash van  eanalyseerde module Tracability naar Gitlab\\
-    vulnerabilities & List[String] & Reverentie naar alle dependendencies in de module.\\
+    vulnerabilityIds & List[String] & Reverentie naar alle dependendencies in de module.\\
 \end{tabular}
 
 \subsubsection{Vulberability}\label{subsubsec:vulberability}
@@ -96,9 +98,8 @@ Vulnerability geeft de informatie weer over een kwetsbaarheid waaronder het id e
 
 \begin{tabular}{lll}
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
-
     cveId & String & ID van de kwetsbaarheid\\
-    depenendency & String & Referentie naar dependency\\
+    depenendencyId & String & Referentie naar dependency\\
     source & String & de bron waar deze kwetsbaarheid is gevonden\\
     severity & String & algemene indicator van de ernst van de kwetsbaarheid \\
     attackVector & String & Op welke manier de kwetsbaarheid te benutten is\\
@@ -107,9 +108,9 @@ Vulnerability geeft de informatie weer over een kwetsbaarheid waaronder het id e
     confidentialImpact & String & impact op confidentiality\\
     integrityImpact & String & impact op integrity \\
     availabilityImpact & String &  impact op availability  \\
-    impactScore & DOuble & score van de impact door NVD  \\
+    impactScore & Double & score van de impact door NVD  \\
     exploitabilityScore & Double & Score van exploitability door NVD  \\
-    CWE & List[String] & referentie naar de CWE \\
+    CWEIds & List[String] & referentie naar de CWE \\
 \end{tabular}
 
 \subsubsection{CWE}\label{subsubsec:cwe}
@@ -127,10 +128,9 @@ Om op een later stadium een periodieke analyse te kunnen doen worden de dependen
 
 \begin{tabular}{lll}
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
-    project & String & Referentie naar Project\\
-    module & String & Referentie naar module \\
+    projectId & String & Referentie naar Project\\
+    moduleId & String & Referentie naar module \\
     fileName & String & filename van het bestand \\
-    partnerFile & List[String] & Reverentie naar andere benodigde bestanden.\\
     platform & String & gebruikte platform \\
     filePath & String & path naar het opgeslagen bestand \\
     nodeversion & String & versie van Node  \\
@@ -140,10 +140,10 @@ Om op een later stadium een periodieke analyse te kunnen doen worden de dependen
     javaversion & String & versie van java \\
 \end{tabular}
 
-\subsection{Portal Datamodel}\label{subsec:portal-datamodel}
-Om over de mogelijkheid te beschikken om een samenvatting te verkrijgen over kwetsbaarheden per project en per module moet er in de portal een aantal entiteiten worden toegevoegd. Het ontwerp dat hier getoont is een toevoeging op het bestaande model en wordt niet in zijn geheel getoont, maar enkel de aangegrenzende entiteiten en de aanpassingen hierop.
+\subsection{Portal datamodel}\label{subsec:portal-datamodel}
+Om over de mogelijkheid te beschikken om een samenvatting te verkrijgen over kwetsbaarheden per project en per module moet er in de portal een aantal entiteiten worden toegevoegd. Het ontwerp dat hier getoonf is een toevoeging op het bestaande model en wordt niet in zijn geheel getoont, maar enkel de aangegrenzende entiteiten en de aanpassingen hierop.
 
-Voor de functionaliteit van de SOUP module binnen de portal moeten er twee entiteiten worden toegevoegd namelijk $'$Module$'$ voor het weergeven van module data in projecten en $'$VulnerabilitySummary$'$ waarin de de waarden worden opgeslagen die weergegeven worden in de portal. De keuze om deze gegevens toe te voegen in het datamodel van de Portal is performance. Vaak is het alleen van belang om de samenvatting te kunnen lezen en op het moment dat er teveel kwetsbaarheden gevonden worden kan er naar de details in de SOUPAPI worden gekeken. Om deze reden is het niet nodig om alle beschikbare info over te sturen gezien het in het geval van NPM vaak tot honderden dependencies kan leiden.
+Voor de functionaliteit van de SOUP module binnen de portal moeten er drie entiteiten worden toegevoegd namelijk $'$Module$'$ voor het weergeven van module data in projecten en $'$VulnerabilitySummary$'$  en $"$Platform$"$ waarin de de waarden worden opgeslagen die weergegeven worden in de portal. De keuze om deze gegevens toe te voegen in het datamodel van de Portal is performance. Vaak is het alleen van belang om de samenvatting te kunnen lezen en op het moment dat er teveel kwetsbaarheden gevonden worden kan er naar de details in de SOUPAPI worden gekeken. Om deze reden is het niet nodig om alle beschikbare info op te slaan gezien het in het geval van NPM vaak tot honderden dependencies kan leiden.
 
 
 \begin{figure}[bth]
@@ -167,7 +167,7 @@ Dit is een bestaande entiteit binnen het huidige portal project. Hierin worden d
     users & List[ProjectUser] & Eaglescience medewerkers op het project \\
     workType & Option[WorkTypeType] & welk werk is er belegt in het project   \\
     ldapGroupDns & Option[List[String]] & welke group heeft het project in LDAP  \\
-    modules & Option[List[String]] & referentie naar de aanwezige modules  \\
+    moduleIds & Option[List[ModuleId]] & referentie naar de aanwezige modules  \\
 \end{tabular}
 
 \subsubsection{Module}\label{subsubsec:portalModule}
@@ -176,15 +176,25 @@ De module entiteit slaat de gegevens op voor een specifieke module, met een refe
 \begin{tabular}{lll}
     \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
     moduleId & ModuleId > Long & uniek id \\
-    name & String & referentie naar Project\\
+    project & String & referentie naar Project\\
+    platformId & PlatformId & referentie naar Platform\\
+    declairedDepAmnt & Int & aantal opgegeven dependencies\\
+    totaalDepAmnt & Int & totaal aantal dependencies\\
+    vulSummaryIds & Option[List[VulSumId]]& referentie naar samenvatting\\
+\end{tabular}
+\subsubsection{Platform}\label{subsubsec:Platform}
+Gegevens over het gebruikte platform met de mogelijkheid om deze in geschiedenis op te slaan
+
+\begin{tabular}{lll}
+    \textbf{Attribuut} & \textbf{Datatype} & \textbf{Notitie}\\
+    platformID & PlatformId > Long & uniek Id\\
+    timeStamp & DataTime & timestamp van de snapshot\\
     platform & String & gebruikte platform \\
     platformversion & String & versie van Node  \\
     framework & String &  gebruikte framework  \\
     frameworkVersion & String & versie van framework  \\
-    declairedDepAmnt & Int & aantal opgegeven dependencies\\
-    totaalDepAmnt & Int & totaal aantal dependencies\\
-    vulSummaries & Option[List[VulSumId]]& referentie naar samenvatting\\
 \end{tabular}
+
 
 \subsubsection{Vulnerability Summary}\label{subsubsec:portalVulSum}
 Ieder moment dat er een analyse is uitgevoerd wordt er hier een samenvating aan toegevoegd, zodat er een up to date samenvatting beschikbaar is voor de portal evenals de geschiedenis hiervan.
@@ -200,7 +210,7 @@ Ieder moment dat er een analyse is uitgevoerd wordt er hier een samenvating aan 
     lowAmount & Int & aantal Low kwetsbaarheden\\
 \end{tabular}
 
-\section{Algemene Architectuur}\label{sec:algemene-architectuur}
+\section{Algemene architectuur}\label{sec:algemene-architectuur}
 Voor het analyseren, beheren en weergeven van een SOUP-analyse heeft de applicatie een aantal componenten nodig die elk een eigen verantwoordelijkheid hebben in de taken die de applicatie uit moet voeren. Om deze verantwoordelijkheden te splitsen is de applicatie opgesplitst in verschillende modulen. Voor sommige onderdelen geldt zelfs dat het zelf een onderdeel is van een andere applicatie binnen de Eaglescience Dev-stack. Voor een volledige compatibiliteit wordt de applicatie in Scala geschreven waarbij het PlayFramework wordt gebruikt. Voor Frontend delen in de portal wordt er Angular gebruikt, omdat dit hier al gebruikt wordt. Zoals te zien is in figuur~\ref{fig:SOUP-Components} zijn er verschillende componenten die samen werken om een analyse weer te geven voor de gebruiker.
 
 \textbf{Jenkins} is verantwoordelijk voor het up-to-date houden van de laatste wijzigingen in de sourde-code en het initiele rapport, welke aangeboden wordt aan de \textbf{SOUP-API}. Hierin is de  \textbf{ReportParserEngine} verantwoordelijk voor het omzetten van de binnegekomen rapporten naar het interne datamodel. De \textbf{PeriodicAnalysisEngine} is verantwoordelijk voor het doen van periodieke analyses met de dependency declaraties. Centraal in de SOUP-API staat de \textbf{API} welke verantwoordelijk is voor de dataverwerking van de data die door de beide engines gegenereerd of benodigd is. Daarnaast is het verantwoordelijk voor het opslaan van de dependency declaraties. De \textbf{Portal} is verantwoordelijk voor de user interface met de gebruiker en de SOUP-API. Voor periodieke analyse van de modules binnen projecten is er een \textbf{AnalysisEnvironment} welke zorg draagt voor de veilige analyse van modules op basis van de laatst opgeslagen dependencyDeclaraties. Als \textbf{Database} is MongoDB gekozen omdat er wisselingen in content kan zitten van de uitslagen en dit een flexibelere manier van opslaan vereist is.
@@ -213,8 +223,8 @@ In de komende secties zal er dieper ingegaan worden op de verschillende componte
     \label{fig:SOUP-Components}
 \end{figure}
 \clearpage
-\section{SOUP API}\label{sec:soup-api}
-De SOUP-API is een opzichzelf staand centraal deel van de applicatie welke verantwoordelijk is voor de verwerking van gegevens uit de SCA tooling en de portal. Hiernaast regelt het ook de periodieke analyses om informatie up-to-date te houden van al eerder geanalyseerde projecten waar al een tijd geen wijzigingen op zijn geweest. Deze verantwoordelijkheden worden door de volgende componenten beheert:
+\section{SOUP-API}\label{sec:soup-api}
+De SOUP-API is een opzichzelf staand centraal deel van de applicatie welke verantwoordelijk is voor de verwerking van gegevens uit de SCA tooling en de portal. Hiernaast regelt het ook de periodieke analyses om informatie up-to-date te houden van al eerder geanalyseerde projecten waar al een tijd geen wijzigingen op zijn geweest. Deze verantwoordelijkheden worden door de volgende componenten beheert welke in de komende subsecties worden behandeld.
 
 \subsection{ReportParseEngine}\label{subsec:reportparseengine}
 De ReportParseEngine zorgt ervoor dat de binnenkomende datastroom vanuit de SCA tooling wordt verwerkt tot gegevens die in de SOAP-API gebruikt kan worden om inzichten in kwetsbaarheden te verkrijgen.
@@ -254,8 +264,8 @@ De voornaamste verantwoordelijkheid van de API is ervoor zorgdragen dat de data 
 
 Naast services en een datacontroller die verantwoordelijk is voor de mutatie van alle data, is er ook een UploadController die samen met een reportService verantwoordelijk is voor het aansturen van de ReportParseEngine. De reportService verwerkt ook de dependencyFiles die vanuit Jenkins worden verstuurt.
 
-\section{Software Compsition Analysis in Jenkins}\label{sec:jenkins}
-De bestaande Jenkins omgeving is de primaire bron voor nieuwe informatie uit projecten. Het aangewezen moment in de ontwikkelingsCyclus voor het uitvoeren van een analyses is wanneer er een acceptatie of productie build wordt uitgevoerd. De eerste reden hiervoor is omdat op dit moment de dependencies relatief vast staan ten opzichte van eerdere fasen in de ontwikkeling. De tweede reden is dat de development/ personal builds veel frequenter voorkomen en dat de performance van deze builds door de hieronder besproken toevoegingen achteruit kan gaan. In figuur ~\ref{fig:JenkinsSequece} is deze sequentie weergegeven.
+\section{Software Composition Analysis in Jenkins}\label{sec:jenkins}
+De bestaande Jenkins omgeving is de primaire bron voor nieuwe informatie uit projecten. Het aangewezen moment in de ontwikkelingscyclus voor het uitvoeren van een analyses is wanneer er een acceptatie of productie build wordt uitgevoerd. De eerste reden hiervoor is omdat op dit moment de dependencies relatief vast staan ten opzichte van eerdere fasen in de ontwikkeling. De tweede reden is dat de development/ personal builds veel frequenter voorkomen en dat de performance van deze builds door de hieronder besproken toevoegingen achteruit kan gaan. In figuur ~\ref{fig:JenkinsSequece} is deze sequentie weergegeven.
 
 
 \begin{figure}[bth]
@@ -265,12 +275,12 @@ De bestaande Jenkins omgeving is de primaire bron voor nieuwe informatie uit pro
     \label{fig:JenkinsSequece}
 \end{figure}
 
-De pipeline binnen Jenkins kent voor de SOUP-API twee belangrijke momenten. In de \textbf{build/test fase} waarin de module wordt gebouwd en vervolgens getest zullen er twee toevoegingen gedaan moeten worden. Als eerst moet er meta data worden gepubliceerd op het filesysteem zodat er in een later stadium bekend is welke module, jenkins buildnummer en githash geanalyseerd wordt. Dit waarborgt de traceability tussen Jenkins, gitlab en de SOUPAPI. Later moet in die zelfde stap de SCA tool worden uitgevoerd om de module te analyseren op kwetsbaarheden. Het resultaat van deze analyse wordt vervolgens gepubliceerd op het filesysteem.
+De pipeline binnen Jenkins kent voor de SOUP-API twee belangrijke momenten. In de \textbf{build/test fase} waarin de module wordt gebouwd en vervolgens getest zullen er twee toevoegingen gedaan moeten worden. Als eerste moet er meta data worden gepubliceerd op het filesysteem zodat er in een later stadium bekend is welke module, jenkins buildnummer en githash geanalyseerd wordt. Dit waarborgt de traceability tussen Jenkins, gitlab en de SOUPAPI. Later moet in die zelfde stap de SCA tool worden uitgevoerd om de module te analyseren op kwetsbaarheden. Het resultaat van deze analyse wordt vervolgens gepubliceerd op het filesysteem.
 
-Op het moment dat de \textbf{deploy} fase gelukt is kan er een upload plaatsvinden naar de SOUP API met daarin: "report.json, meta.json" en dependency declaraties als (build.sbt/dependencies.scala of de package-lock.json)
+Op het moment dat de \textbf{deploy} fase gelukt is kan er een upload plaatsvinden naar de SOUP API met daarin: $"$report.json, meta.json$"$ en dependency declaraties als (build.sbt/dependencies.scala of de package-lock.json)
 Als de upload lukt dan zal Jenkins de build vrijgeven als geslaagd. Mocht er onverhoopt iets niet lukken in de upload zal dit te zien zijn in de logs van Jenkins.
 
-\section{Portal}\label{sec:arch-portal} De portal is een inhouse applicatie welke gebruikt wordt voor administratieve zaken binnen het bedrijf. De wens is om hier functionaliteiten aan toe te voegen die bedrijfsbreed zijn en daarmee dus project oversteigend. Voor deze applicatie dient er een module te worden toeegevoegd die fungeert als een interface waarin informatie over de bekende kwetsbaarheden te vinden is, maar ook instellingen omtrend de SOUP-API kunnen worden aangepast. Er bestaat nu een module dat projects heet waarin verschillende details van het project in opgeslagen worden. Samenvatingen van informatie over kwetsbaarheden kunnen hieraan worden toegevoegd.
+\section{Portal}\label{sec:arch-portal} De portal is een inhouse applicatie welke gebruikt wordt voor administratieve zaken binnen het bedrijf. De wens is om hier functionaliteiten aan toe te voegen die bedrijfsbreed zijn en daarmee dus project overstijgend. Voor deze applicatie dient er een module te worden toegevoegd die fungeert als een interface waarin informatie over de bekende kwetsbaarheden te vinden is, maar ook instellingen omtrend de SOUP-API kunnen worden aangepast. Er bestaat nu een module die projects heet waarin verschillende details van het project in opgeslagen worden. Samenvatingen van informatie over kwetsbaarheden kunnen hieraan worden toegevoegd.
 Daarnaast zal er een nieuwe module moeten worden ontwikkeld waarin de details van de analyses kunnen worden gevonden. Deze module moet samenwerken met de SOUP-API API om de gewenste gegevens te kunnen weergeven.
 
 \section{Analysis Environment}\label{sec:analysis-environment}
@@ -288,7 +298,7 @@ Deze omgeving moet het mogelijk maken om vanuit de SOUP-API een analyse uit te v
 
 De portal draait lokaal binnen Eaglscience in een docker omgeving. De frontend is geschreven in Angular 13, waarbij er tegen een backend wordt gecommuniceerd welke in Scala 2.13 is geschreven met PlayFramework. De SOUP-API is een opzichzelfstaand component binnen de gehele applicatie en zal ook worden geschreven in Scala met PlayFramework. De SOUP-API zal worden ondergebracht in een dockercontainer welk beschikbaar is voor de portal, Jenkins en de database. De database is een mongoDB database en zal ook moeten worden ingericht. Het maakt voor de werking niet veel uit of dit een lokale database of een instantie in de cloud is.
 
-\subsection{Gebruikte platformen en systemen NIEUW}
+\subsection{Gebruikte platformen en systemen}
 De SOUP-API wordt gescheven in Scala met als webframework PlayFramework, een framework dat het ontwikkelen van webapplicaties ondersteunt. Om met MongoDB te kunnen communiceren is de bibliotheek ReactiveMongo gekozen om ervoor te zorgen dat de reactive aard van Play niet wordt onderbroken door Database bewerkingen. De SOUP-API gaat in een eigen docker container draaien om op die manier makkelijk te kunnen deployen. De portal is al geschreven in angular 13 en de module die toegevoegd zal worden zal hierin meegaan.
 De Analyse omgeving waar de periodieke analyses op kwetsbaarheden plaats gaat vinden zal ook  een docker omgeving zijn. De voornaamste reden is dat door de vluchtige aard van containers de omgevingen makkelijk kunnen worden opgezet, de analyse gedaan kan worden en vervolgens weer kan worden vernietigd.
 
