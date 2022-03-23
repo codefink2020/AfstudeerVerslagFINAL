@@ -398,7 +398,7 @@ analysisId: String </panel_attributes>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-
-report: JsValue</panel_attributes>
+analysisId:String</panel_attributes>
     <additional_attributes>10.0;20.0;610.0;20.0</additional_attributes>
   </element>
   <element>

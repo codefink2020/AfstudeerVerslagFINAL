@@ -1,9 +1,8 @@
 \chapter{Functioneel ontwerp analyse}\label{ch:impl-Jenkins}
 
-
 \section{Jenkins buildstraat}\label{sec:jenkins-buildtstraat}
 In Jenkins wordt de eerste analyse gedaan op een module waar de source code en daarmee potentieel ook de dependency declaraties veranderd zijn.
-Om dit mogelijk te maken moeten er in de pipeline een aantal aanpassingen worden gedaan die hieronder worden beschreven.
+Om dit mogelijk te maken moeten er in de pipeline een aantal aanpassingen worden gedaan.
 
 \section{Periodic Analysis Engine}\label{sec:pae-builstraat}
 Voor de Periodic Analysis Engine moeten de volgende stappen worden toegevoegd; aanroepen van de plugins/ script, en de upload.
@@ -11,10 +10,10 @@ Voor de Periodic Analysis Engine moeten de volgende stappen worden toegevoegd; a
 Hieronder is te lezen hoe deze stapppen worden uitgewerkt.
 
 \section{Informatie vergaring}\label{sec:informatie-vergaring}
-Om voor de SOUP-API duidelijk te maken op welke build de analyse gedaan moet worden en voor welke module in een project moeten er een aantal zaken worden opgeslagen in een metdata.json bestand die na het doen van de daadwerkelijke analyse meegestuurd wordt met het rapport. De JSON die te zien is in listing~\ref{lst:metadatajsonJenkins} moet worden verstuurt waarbij een groot aantal van de attributen onderdeel zijn van variabelen die in de pipeline aanwezig zijn.
-Door een bash script te ontwikkelen kunnen we op een relatief simpele manier gegevens uit jenkins in een JSON plaatsen.
+Om voor de SOUP-API duidelijk te maken op welke build de analyse gedaan moet worden en voor welke module in een project moeten er een aantal zaken worden opgeslagen in een metadata.json bestand die na het doen van de daadwerkelijke analyse meegestuurd wordt met het rapport. De JSON die te zien is in listing~\ref{lst:metadatajsonJenkins} moet worden verstuurd waarbij een groot aantal van de attributen onderdeel zijn van variabelen die in de pipeline aanwezig zijn.
+Door een bash script te ontwikkelen kan er op een relatief simpele manier gegevens uit Jenkins in een JSON file worden plaatsen.
 
-\begin{lstlisting}[caption={metadata JSON object behorende bij de case class}, label={lst:metadatajsonJenkins}]
+\begin{lstlisting}[caption={metadata JSON object behorende bij de case class}, label={lst:metadatajsonJenkins},captionpos=b]
 {
   "projectName": "testProject",
   "moduleName": "backend",
@@ -32,7 +31,7 @@ De in het hoofdstuk~\ref{ch:onderzoek-tool-methode} gevonden methode is de manie
 
 \subsection{NPM builds}\label{subsec:npm-builds}
 Voor het checken van de dependencies in NPM is een package beschikbaar die middels\\ \texttt{npm install -D owasp-dependency-check} aan de dependencies worden toegevoegd. Vervolgens moet er in de \texttt{package.json} het volgende script worden toegevoegd.\\ \texttt{$"$owasp:$"$ $"$owasp-dependency-check --project $"$YOUR PROJECT NAME$"$ -F JSON}\\
-Door in de docker file \texttt{npm run owasp} aan te roepen zal de analyse worden gestart.
+Door in de Docker file \texttt{npm run owasp} aan te roepen zal de analyse worden gestart.
 
 \subsection{SBT builds}\label{subsec:sbt-builds}
 Voor het checken van de dependencies in een SBT build is de volgende plugin beschikbaar genaamd $"$sbt-dependency-check$"$. Deze is al in het onderzoek naar een methode voor het zoeken naar kwetsbaarheden naarboven gekomen. Om deze methode te kunnen gebruiken moet de volgende declaratie" \\ \texttt{addSbtPlugin("net.vonbuchholtz" \% "sbt-dependency-check" \% "3.4.0")}"\\ worden toegevoegd aan \texttt{project/plugin.sbt}
@@ -44,7 +43,7 @@ Het commando \texttt{sbt dependencyCheck} start de analyse. Deze moet dan ook wo
 % https://github.com/albuch/sbt-dependency-check
 
 \section{Versturen van de gegevens}
-Op het moment dat er een deploy gedaan wordt moeten de gegevens worden verzonden naar de SOUP-API middels een CURL command waarin de benodigde bestanden(metadata.json, report.json, en de dependencyFiles) worden verstuurt. Een CURL zou er op de volgende manier uit kunnen zien: \\ \texttt{curl -F report@$"$report.json$"$ -F meta-date@"metadata.json$"$ http://[SOUPAPI/upload/[PROCES]]}
+Op het moment dat er een deploy gedaan wordt moeten de gegevens worden verzonden naar de SOUP-API middels een CURL command waarin de benodigde bestanden (metadata.json, report.json, en de dependencyFiles) worden verstuurt. Een CURL zou er op de volgende manier uit kunnen zien: \\ \texttt{curl -F $"$report@report.json$"$ -F $"$$meta-date@metadata.json$"$ http://[SOUPAPI/upload/[PROCES]]}
 Waarbij de SOUPAPI de url waar de SOUP-API draait en PROCES jenkins is voor de Jenkins pipeline en pae voor de periodic analysis engine.
 
 

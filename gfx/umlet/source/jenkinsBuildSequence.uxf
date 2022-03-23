@@ -319,26 +319,14 @@ FileSystem</panel_attributes>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-get DepFiles</panel_attributes>
-    <additional_attributes>10.0;20.0;350.0;20.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>550</x>
-      <y>390</y>
-      <w>370</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-
-DepFiles</panel_attributes>
+store DepFiles</panel_attributes>
     <additional_attributes>10.0;20.0;350.0;20.0</additional_attributes>
   </element>
   <element>
     <id>UMLSpecialState</id>
     <coordinates>
       <x>900</x>
-      <y>490</y>
+      <y>600</y>
       <w>20</w>
       <h>20</h>
     </coordinates>
@@ -351,10 +339,10 @@ DepFiles</panel_attributes>
       <x>900</x>
       <y>220</y>
       <w>30</w>
-      <h>180</h>
+      <h>70</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;160.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -362,10 +350,10 @@ DepFiles</panel_attributes>
       <x>900</x>
       <y>400</y>
       <w>30</w>
-      <h>120</h>
+      <h>230</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;210.0</additional_attributes>
   </element>
   <element>
     <id>UMLGeneric</id>
@@ -467,5 +455,39 @@ store meta.json </panel_attributes>
     </coordinates>
     <panel_attributes>type=termination</panel_attributes>
     <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>760</x>
+      <y>250</y>
+      <w>160</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;&gt;
+store report.json</panel_attributes>
+    <additional_attributes>10.0;20.0;140.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>900</x>
+      <y>270</y>
+      <w>20</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>900</x>
+      <y>290</y>
+      <w>30</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
   </element>
 </diagram>

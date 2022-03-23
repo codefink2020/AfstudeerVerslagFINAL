@@ -3,15 +3,12 @@
 \chapter{Requirements Specificatie}\label{ch:requirements-specificatie}
 
 
-\section{Inleiding}\label{sec:RS_inleiding}
-De basis van deze analyse is de opdracht die is uitgegeven in deze opdracht zijn een aantal requirement gespecificeerd en deze zullen worden overgenomen. Daarnaast zullen er nog een aantal andere requirements zijn die door andere betrokkenen worden aangedragen. Deze zullen ook worden geanalyseeerd en desgwenest mee worden genomen in de ontwikkeling van de de nieuwe module.
-
 \section{Huidige situatie}\label{sec:huidige-situatie}
-De huidige situatie is dat er handmatig analyses op $"$Software of Unkown Provenance$"$ op projecten gedaan worden. Deze analyses nemen veel tijd in beslag en geven resultaten die niet altijd gedeeld worden met andere teams. De tijd die wordt besteed kan veel beter worden besteed worden aan het actief ontwikkelen van de applicatie.
+De huidige situatie is dat er handmatig analyses op $"$Software of Unkown Provenance$"$ op projecten gedaan worden. Deze analyses nemen veel tijd in beslag en geven resultaten die niet altijd gedeeld worden met andere teams. De tijd die wordt besteed kan veel beter worden besteed aan het actief ontwikkelen van de applicatie.
 
 
 \section{Gewenste situatie}\label{sec:gewenste-situatie}
-De situatie waar Eaglescience naar toe wil is dat er geautomatiseerd en periodiek een analyse wordt uitgevoerd op projecten binnen het bedrijf. DE kennis die uit deze analyses komt dient gedeelt te worden door middel van een module in de portal die al reeds gebruikt wordt door EagleScience. Door de resultaten weer te geven in de portal ontstaat er een beter inzicht in welke bibliotheken er gebruikt worden en welke er potentieel kwetsbaarheden bevatten. Wat op zijn beurt weer voor veiligere applicaties kan zorgen.
+De situatie waar Eaglescience naar toe wil is dat er geautomatiseerd en periodiek een analyse wordt uitgevoerd op projecten binnen het bedrijf. De kennis die uit deze analyses komt diend gedeeld te worden door middel van een module in de portal die al reeds gebruikt wordt door Eaglescience. Door de resultaten weer te geven in de portal ontstaat er een beter inzicht in welke bibliotheken er gebruikt worden en welke er potentieel kwetsbaarheden bevatten wat op zijn beurt weer voor veiligere applicaties kan zorgen.
 
 \section{Requirements}\label{sec:requirements}
 Aan de module die ontwikkeld moet worden zijn de volgende requirements verbonden welke opgedeeld zijn in functionele en niet functionele requirements. Vervolgens zijn de requirements ingedeeld volgens het MoSCoW principe\footnote{Must, Should, Could, Won't Have} .
@@ -25,19 +22,19 @@ Requirements voor de module die niet direct met de functionaliteit te maken hebb
     \end{itemize}
     \item Omgeving requirements
     \begin{itemize}
-        \item \textbf{Must} De module dient te worden ontwikkeld in Angular en Play(Scala), overeenkomstig met bestaande portal.
+        \item \textbf{Must} De module dient te worden ontwikkeld in Angular en Play(Scala), overeenkomstig met de bestaande portal.
         \item \textbf{Must} De module dient gescheiden componenten te bevatten: Frontend(Angular), Backend(Play, Scala), API\@.
         \item \textbf{Could} De module dient in het Azure cluster te kunnen draaien binnen het huidige portal project.
     \end{itemize}
     \item Performance requirements
     \begin{itemize}
-        \item \textbf{Should}De module moet op een zo efficient mogelijke manier een raport genereren.
+        \item \textbf{Should} De module moet op een zo efficient mogelijke manier een rapport genereren.
         \item \textbf{Should} De module mag geen invloed hebben op de performance van de buildstraat.
     \end{itemize}
-    \item security requirements
+    \item Security requirements
     \begin{itemize}
         \item \textbf{Must} Er dienen geen persoonsgegevens opgeslagen te worden die niet nodig zijn voor het functioneren van de module.
-        \item \textbf{Should} Source code dient minimaal 70\% test coverage te hebben.
+        \item \textbf{Should} Source-code dient minimaal 70\% test coverage te hebben.
     \end{itemize}
 \end{itemize}
 
@@ -46,8 +43,8 @@ Requirements voor de module die niet direct met de functionaliteit te maken hebb
     \item \textbf{Must} De module dient eenvoudig gebruikt te kunnen worden in de huidige CI/CD pipeline voor bestaande en nieuwe projecten.
     \item \textbf{Should} De module dient ondersteuning te bieden voor meerdere omgevingen (OTAP)
     \item \textbf{Could} De module dient met een instelbaar interval een analyse uit te voeren op bestaande projecten.
-    \item \textbf{Should} De module moet op project en omgevings niveau te rapporteren over bekende kwetsbaarheden.
-    \item \textbf{Must} De module dient kwetsbaarheden op minimaal drie niveau's in te schalen(Kritish, gemiddeld en laag)
+    \item \textbf{Should} De module moet op project en omgevings niveau rapporteren over bekende kwetsbaarheden.
+    \item \textbf{Must} De module dient kwetsbaarheden op minimaal drie niveau's in te schalen (Kritish, gemiddeld en laag)
     \item \textbf{Should} De module dient ondersteuning te bieden voor het instellen van quality gates over meldingen die het vind op ieder niveau, per project, per omgeving.
 \end{itemize}
 

@@ -145,8 +145,7 @@
       <h>120</h>
     </coordinates>
     <panel_attributes>report
---
-inner</panel_attributes>
+--</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -249,7 +248,7 @@ parseMetaData(File) </panel_attributes>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-
-report: JsValue</panel_attributes>
+analysisId:String</panel_attributes>
     <additional_attributes>10.0;20.0;400.0;20.0</additional_attributes>
   </element>
   <element>
